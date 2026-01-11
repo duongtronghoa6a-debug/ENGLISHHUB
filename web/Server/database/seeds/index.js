@@ -12,7 +12,10 @@
  *   Then run: npm run seed
  */
 
-require('dotenv').config();
+// Only load .env if DATABASE_URL is not already set (local dev only)
+if (!process.env.DATABASE_URL) {
+    require('dotenv').config();
+}
 const { sequelize } = require('../../src/config/db/connect');
 const db = require('../../src/app/models');
 

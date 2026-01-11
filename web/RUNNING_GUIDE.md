@@ -1,98 +1,148 @@
 # HƯỚNG DẪN CHẠY DỰ ÁN (ENGLISH STUDY WEB)
 
-Tài liệu hướng dẫn cài đặt và vận hành hệ thống English Study Web.
+---
 
-## 1. Yêu cầu hệ thống
-*   **Node.js**: v18 trở lên (Khuyến nghị mới nhất).
-*   **PostgreSQL**: Cài đặt trực tiếp hoặc chạy qua Docker.
-*   **Git**: Để quản lý source code.
+## 🚀 TRƯỜNG HỢP 1: Chạy Client với Railway Backend (Nhanh nhất)
+
+> Backend đã deploy trên Railway. Bạn chỉ cần chạy Frontend local.
+
+### Bước 1: Tạo file `client/.env`
+```env
+VITE_API_URL=https://motivated-motivation-production.up.railway.app
+```
+
+### Bước 2: Chạy Client
+```bash
+cd client
+npm install
+npm start
+```
+
+### Bước 3: Truy cập
+- Web: `http://localhost:5173`
 
 ---
 
-## 2. Cấu hình Database
+## 💻 TRƯỜNG HỢP 2: Chạy Full Local (Server + Client)
 
-Bạn có thể chọn 1 trong 2 cách:
-
-### Cách 1: Sử dụng Docker (Khuyến nghị)
-1.  Mở terminal tại thư mục gốc `.../web`.
-2.  Chạy lệnh:
-    ```bash
-    docker-compose up -d
-    ```
-    *   Sẽ khởi tạo PostgreSQL (port 5432) và pgAdmin (port 5050).
-    *   Tài khoản: `postgres` / `password123`.
-    *   Database: `english_study_db`.
-
-### Cách 2: Cài PostgreSQL Local
-1.  Tạo Database mới tên `english_study_db`.
-2.  Cập nhật file `server/.env` với thông tin kết nối DB của bạn.
+### Yêu cầu
+- **Node.js**: v18+
+- **Docker** (hoặc PostgreSQL local)
 
 ---
 
-## 3. Cài đặt Backend (Server)
+### Bước 1: Tạo file `docker-compose.yml` (trong thư mục `web/`)
+```yaml
+version: '3.8'
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: english_web_db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password123
+      POSTGRES_DB: english_study_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
 
-1.  Mở terminal, vào thư mục `server`:
-    ```bash
-    cd server
-    ```
-2.  Cài đặt thư viện:
-    ```bash
-    npm install
-    ```
-3.  **Khởi tạo & Nạp dữ liệu mẫu (Seed)**:
-    Chạy lệnh sau để XÓA sạch DB cũ và tạo dữ liệu mới (Admin, Teacher, Course mẫu):
-    ```bash
-    node seed.js
-    ```
-    *(Lưu ý: Lệnh này sẽ xóa toàn bộ dữ liệu hiện có trong DB)*
-4.  Khởi động Server:
-    ```bash
-    npm run dev
-    ```
-    *   Server chạy tại: `http://localhost:5000`
-    *   Tài liệu API (Swagger): `http://localhost:5000/api-docs`
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: english_web_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: password123
+    ports:
+      - "5050:80"
+    depends_on:
+      - db
 
----
+volumes:
+  postgres_data:
+```
 
-## 4. Cài đặt Frontend (Client)
-
-1.  Mở terminal mới, vào thư mục `client`:
-    ```bash
-    cd client
-    ```
-2.  Cài đặt thư viện:
-    ```bash
-    npm install
-    ```
-3.  Fix lỗi font (nếu có, tùy môi trường):
-    *   Trong `node_modules`, `slick-carousel` đôi khi thiếu font, nhưng npm install thường đã đủ.
-4.  Khởi động Client:
-    ```bash
-    npm start
-    ```
-    *   Web chạy tại: `http://localhost:3000`
+### Bước 2: Khởi động Database
+```bash
+cd web
+docker-compose up -d
+```
 
 ---
 
-## 5. Tài khoản Đăng nhập Mẫu
+### Bước 3: Tạo file `server/.env`
+```env
+PORT=5000
+JWT_SECRET=N01-NM_CNPM-HETHONGHOCTIENGANH
 
-Hệ thống sau khi chạy `node seed.js` sẽ có 3 tài khoản:
+# Database (Docker)
+DB_HOST=127.0.0.1
+DB_PORT=5432
+DB_USERNAME=postgres
+DB_PASSWORD=password123
+DB_NAME=english_study_db
+DB_DIALECT=postgres
 
-| Vai trò | Email | Mật khẩu | Ghi chú |
-| :--- | :--- | :--- | :--- |
-| **Admin** | `admin@english.com` | `123456` | Quản trị toàn hệ thống |
-| **Teacher** | `teacher@english.com` | `123456` | Giáo viên, tạo khóa học |
-| **Learner** (Student) | `student@english.com` | `123456` | Học viên, đăng ký học |
+# Cloudinary
+CLOUDINARY_NAME=dovb1ylnk
+CLOUDINARY_KEY=789884671489359
+CLOUDINARY_SECRET=ahWjfklYHp4Tz_t2e3MYTuYEglo
+
+# Cloudflare R2
+R2_ACCOUNT_ID=b5d71da19095315267ca4581b48cfb52
+R2_ACCESS_KEY_ID=ebe512c516835d4aeb49b427765d3120
+R2_SECRET_ACCESS_KEY=b55f70e438a580ca66029908635d8f9fba3ee24bd963e05c48bc3bb4ac66cd01
+R2_BUCKET_NAME=english-hub-storage
+R2_PUBLIC_URL=https://pub-6d07f507d8fe46d9b39f2fc6d63eb8ff.r2.dev
+
+# Gemini AI
+GEMINI_API_KEY=AIzaSyCyvQZD7TnVBRid2wa7lzIM3uwAhb85ZCE
+```
+
+### Bước 4: Chạy Backend
+```bash
+cd server
+npm install
+npm run seed      # Tạo dữ liệu mẫu (lần đầu)
+npm run dev       # Khởi động server
+```
+- Server: `http://localhost:5000`
 
 ---
 
-## 6. Các tính năng chính (Kiểm thử)
-1.  **Swagger API**: Truy cập `http://localhost:5000/api-docs` để test API trực tiếp.
-2.  **Đăng ký/Đăng nhập**: Test flow auth với JWT.
-3.  **Khóa học**: Admin/Teacher tạo khóa, User xem và đăng ký.
-4.  **Thi thử (Exams)**: Vào mục Tests để làm bài kiểm tra.
-5.  **Offline Schedule**: Xem lịch học Offline.
+### Bước 5: Tạo file `client/.env`
+```env
+VITE_API_URL=http://localhost:5000
+```
 
-## Xử lý sự cố
-*   **Lỗi `Course.hasMany...`**: Thường do lỗi định nghĩa Model, hãy đảm bảo đã `npm install` đủ và không sửa file core model sai cách.
-*   **Lỗi DB Connection**: Kiểm tra Docker hoặc file `.env`.
+### Bước 6: Chạy Frontend
+```bash
+cd client
+npm install
+npm run dev
+```
+- Web: `http://localhost:5173`
+
+---
+
+## 👤 Tài khoản Đăng nhập Mẫu( đã seed)
+
+| Vai trò | Email | Mật khẩu |
+|---------|-------|----------|
+| Admin | `03@gmail.com` | `111111` |
+| Teacher | `02@gmail.com` | `111111` |
+| Learner | `01@gmail.com` | `111111` |
+
+---
+
+## 🛠️ Xử lý sự cố
+
+| Lỗi | Giải pháp |
+|-----|-----------|
+| DB Connection failed | Chạy `docker-compose up -d` |
+| CORS error | Kiểm tra `VITE_API_URL` |
+| 404 API | Server chưa chạy |
+
+
+

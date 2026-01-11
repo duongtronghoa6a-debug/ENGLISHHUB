@@ -23,7 +23,10 @@
 // module.exports = { sequelize, connect };
 
 const Sequelize = require('sequelize');
-require('dotenv').config();
+// Only load .env if DATABASE_URL is not already set (for Railway compatibility)
+if (!process.env.DATABASE_URL) {
+    require('dotenv').config();
+}
 
 let sequelize;
 
