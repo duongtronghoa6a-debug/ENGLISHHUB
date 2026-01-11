@@ -1,3 +1,41 @@
+# Dependencies
 node_modules/
+
+# Environment variables (sensitive)
+.env
+.env.local
+.env.production.local
+*.env
+
+# Keep example files
+!.env.example
+!.env.production
+
+# Database
 PostgreSQL_Info.env
+
+# Build outputs
+dist/
+build/
+.next/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Test
 test_html/
+coverage/
+
+# Docker volumes (local only)
+postgres_data/
