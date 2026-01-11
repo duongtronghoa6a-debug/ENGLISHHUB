@@ -1,0 +1,134 @@
+const db = require('../models');
+const { Course, Learner, Enrollment, Teacher } = db;
+const HttpError = require('http-errors');
+
+// 1. [POST] /enrollments or /enrollments/enroll/:courseId - Enroll in a course
+exports.createEnrollment = async (req, res, next) => {
+    try {
+        // Accept courseId from URL params or body
+        const courseId = req.params.courseId || req.body.courseId;
+        const accountId = req.user.id;
+
+        if (!courseId) {
+            throw HttpError(400, 'Course ID is required');
+        }
+
+        const course = await Course.findByPk(courseId);
+        if (!course) {
+            throw HttpError(404, 'Course not found');
+        }
+
+        // Find or create learner profile
+        let learner = await Learner.findOne({
+            where: { account_id: accountId }
+        });
+
+        if (!learner) {
+            // Auto-create learner profile for this account
+            learner = await Learner.create({
+                account_id: accountId,
+                full_name: req.user.email?.split('@')[0] || 'Learner',
+                study_goal: 'General English'
+            });
+        }
+
+        // Check if already enrolled
+        const existingEnrollment = await Enrollment.findOne({
+            where: { learner_id: learner.id, course_id: courseId }
+        });
+        if (existingEnrollment) {
+            throw HttpError(409, 'Already enrolled in this course');
+        }
+
+        const newEnrollment = await Enrollment.create({
+            learner_id: learner.id,
+            course_id: courseId,
+            status: 'active'
+        });
+
+        res.status(201).json({
+            success: true,
+            message: 'Enrollment created successfully',
+            data: newEnrollment
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+// 2. [GET] /enrollments/check/:courseId - Check enrollment status
+exports.getEnrollmentById = async (req, res, next) => {
+    try {
+        const { courseId } = req.params;
+        const accountId = req.user.id;
+
+        const learner = await Learner.findOne({
+            where: { account_id: accountId }
+        });
+        if (!learner) {
+            throw HttpError(404, 'Learner profile not found');
+        }
+
+        const course = await Course.findByPk(courseId);
+        if (!course) {
+            throw HttpError(404, 'Course not found');
+        }
+
+        const enrollment = await Enrollment.findOne({
+            where: { learner_id: learner.id, course_id: courseId }
+        });
+
+        res.status(200).json({
+            success: true,
+            isEnrolled: !!enrollment,
+            status: enrollment ? enrollment.status : null
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+// 3. [GET] /enrollments/my-courses - Get all enrolled courses
+exports.getAllEnrollments = async (req, res, next) => {
+    try {
+        const accountId = req.user.id;
+
+        const learner = await Learner.findOne({
+            where: { account_id: accountId }
+        });
+
+        // If no learner profile, return empty array
+        if (!learner) {
+            return res.status(200).json({
+                success: true,
+                data: []
+            });
+        }
+
+        const enrollments = await Enrollment.findAll({
+            where: { learner_id: learner.id },
+            include: [
+                {
+                    model: Course,
+                    as: 'course',
+                    include: [
+                        {
+                            model: Teacher,
+                            as: 'teacher',
+                            attributes: ['id', 'full_name', 'avatar_url']
+                        }
+                    ]
+                }
+            ],
+            order: [['enrolled_at', 'DESC']]
+        });
+
+        res.status(200).json({
+            success: true,
+            message: 'Enrollments retrieved successfully',
+            data: enrollments
+        });
+    } catch (error) {
+        next(error);
+    }
+};

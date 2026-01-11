@@ -1,0 +1,80 @@
+[
+    {
+        "id": "c0000000-0000-0000-0000-000000000001",
+        "teacher_id": "00000000-0000-0000-0000-000000000002",
+        "title": "IELTS Writing Masterclass",
+        "description": "Master IELTS Writing Task 1 and Task 2 with proven strategies and templates. Learn how to achieve Band 7+.",
+        "thumbnail_url": "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=800",
+        "price": 299000,
+        "level": "B2",
+        "category": "IELTS",
+        "is_published": true,
+        "total_lessons": 24,
+        "total_duration_minutes": 720
+    },
+    {
+        "id": "c0000000-0000-0000-0000-000000000002",
+        "teacher_id": "00000000-0000-0000-0000-000000000002",
+        "title": "English Grammar Fundamentals",
+        "description": "Build a strong foundation in English grammar. From basic sentence structure to advanced tenses.",
+        "thumbnail_url": "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800",
+        "price": 0,
+        "level": "A2",
+        "category": "Grammar",
+        "is_published": true,
+        "total_lessons": 18,
+        "total_duration_minutes": 540
+    },
+    {
+        "id": "c0000000-0000-0000-0000-000000000003",
+        "teacher_id": "00000000-0000-0000-0000-000000000002",
+        "title": "Business English Communication",
+        "description": "Professional English for the workplace. Emails, presentations, meetings, and negotiations.",
+        "thumbnail_url": "https://images.unsplash.com/photo-1552664730-d307ca884978?w=800",
+        "price": 399000,
+        "level": "B1",
+        "category": "Business",
+        "is_published": true,
+        "total_lessons": 20,
+        "total_duration_minutes": 600
+    },
+    {
+        "id": "c0000000-0000-0000-0000-000000000004",
+        "teacher_id": "00000000-0000-0000-0000-000000000002",
+        "title": "TOEIC Listening Practice",
+        "description": "Intensive TOEIC Listening preparation with practice tests and strategies for each part.",
+        "thumbnail_url": "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=800",
+        "price": 199000,
+        "level": "B1",
+        "category": "TOEIC",
+        "is_published": true,
+        "total_lessons": 15,
+        "total_duration_minutes": 450
+    },
+    {
+        "id": "c0000000-0000-0000-0000-000000000005",
+        "teacher_id": "00000000-0000-0000-0000-000000000002",
+        "title": "English Pronunciation & Accent",
+        "description": "Improve your pronunciation and reduce your accent with video lessons and audio practice.",
+        "thumbnail_url": "https://images.unsplash.com/photo-1516321497487-e288fb19713f?w=800",
+        "price": 0,
+        "level": "A1",
+        "category": "Pronunciation",
+        "is_published": true,
+        "total_lessons": 12,
+        "total_duration_minutes": 360
+    },
+    {
+        "id": "c0000000-0000-0000-0000-000000000006",
+        "teacher_id": "00000000-0000-0000-0000-000000000002",
+        "title": "Advanced Vocabulary Builder",
+        "description": "Expand your vocabulary with 2000+ academic and professional words. Perfect for IELTS/TOEFL.",
+        "thumbnail_url": "https://images.unsplash.com/photo-1457369804613-52c61a468e7d?w=800",
+        "price": 249000,
+        "level": "C1",
+        "category": "Vocabulary",
+        "is_published": true,
+        "total_lessons": 30,
+        "total_duration_minutes": 900
+    }
+]

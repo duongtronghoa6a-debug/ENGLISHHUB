@@ -1,0 +1,297 @@
+[
+    {
+        "teacher_id": "00000000-0000-0000-0000-000000000002",
+        "class_name": "IELTS Foundation (Mục tiêu 4.5+)",
+        "organizer_name": "Giáo viên English Hub",
+        "address": "Tầng 3, Tòa nhà Tech, 123 Xuân Thủy, Cầu Giấy, Hà Nội",
+        "room": "Phòng 301",
+        "schedule_text": "Thứ 2 - 4 - 6 (19:30 - 21:00)",
+        "start_date": "2026-03-01",
+        "end_date": "2026-06-01",
+        "syllabus_json": [
+            {
+                "session": 1,
+                "topic": "Introduction & IPA",
+                "content": "Kiểm tra đầu vào và học bảng phiên âm."
+            },
+            {
+                "session": 2,
+                "topic": "Present Simple Tense",
+                "content": "Ngữ pháp thì hiện tại đơn và ứng dụng Speaking Part 1."
+            },
+            {
+                "session": 3,
+                "topic": "Listening Section 1",
+                "content": "Kỹ năng nghe điền từ (Form filling)."
+            }
+        ],
+        "commitment_text": "Cam kết đầu ra 4.5+. Học viên đi học đầy đủ và làm bài tập sẽ được học lại miễn phí nếu thi trượt.",
+        "price": 5500000,
+        "capacity": 20,
+        "current_enrolled": 12,
+        "thumbnail_url": "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=800&auto=format&fit=crop",
+        "status": "open"
+    },
+    {
+        "teacher_id": "00000000-0000-0000-0000-000000000002",
+        "class_name": "Luyện đề TOEIC cấp tốc 650+",
+        "organizer_name": "Giáo viên English Hub",
+        "address": "Số 45 Lê Văn Lương, Thanh Xuân, Hà Nội",
+        "room": "Phòng Lab A",
+        "schedule_text": "Thứ 3 - 5 - 7 (18:00 - 19:30)",
+        "start_date": "2026-03-10",
+        "end_date": "2026-05-10",
+        "syllabus_json": [
+            {
+                "session": 1,
+                "topic": "Phân tích cấu trúc đề mới",
+                "content": "Tổng quan đề thi TOEIC format mới."
+            },
+            {
+                "session": 2,
+                "topic": "Part 5 Grammar",
+                "content": "Các bẫy ngữ pháp thường gặp."
+            },
+            {
+                "session": 3,
+                "topic": "Part 7 Reading",
+                "content": "Kỹ năng Skimming & Scanning."
+            }
+        ],
+        "commitment_text": "Tăng ít nhất 150 điểm so với đầu vào. Hỗ trợ lệ phí thi thật 200k.",
+        "price": 3500000,
+        "capacity": 30,
+        "current_enrolled": 5,
+        "thumbnail_url": "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=800&auto=format&fit=crop",
+        "status": "open"
+    },
+    {
+        "teacher_id": "00000000-0000-0000-0000-000000000002",
+        "class_name": "Giao tiếp Tiếng Anh đi làm (Biz English)",
+        "organizer_name": "Giáo viên English Hub",
+        "address": "12 Đường 3/2, Quận 10, TP. HCM",
+        "room": "Phòng VIP 1",
+        "schedule_text": "Cuối tuần (Sáng T7 - CN, 09:00 - 11:00)",
+        "start_date": "2026-04-01",
+        "end_date": "2026-06-01",
+        "syllabus_json": [
+            {
+                "session": 1,
+                "topic": "Self Introduction",
+                "content": "Giới thiệu bản thân và công việc chuyên nghiệp."
+            },
+            {
+                "session": 2,
+                "topic": "Email Writing",
+                "content": "Viết email báo cáo, xin nghỉ phép, trao đổi đối tác."
+            }
+        ],
+        "commitment_text": "Tự tin giao tiếp trong môi trường công sở sau 2 tháng.",
+        "price": 4000000,
+        "capacity": 15,
+        "current_enrolled": 15,
+        "thumbnail_url": "https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&auto=format&fit=crop",
+        "status": "full"
+    },
+    {
+        "teacher_id": "00000000-0000-0000-0000-000000000002",
+        "class_name": "Tiếng Anh trẻ em (Kids Starters)",
+        "organizer_name": "Giáo viên English Hub",
+        "address": "Biệt thự số 5, KĐT Linh Đàm, Hà Nội",
+        "room": "Kids Zone",
+        "schedule_text": "Thứ 2 - 4 (17:30 - 19:00)",
+        "start_date": "2026-02-15",
+        "end_date": "2026-05-15",
+        "syllabus_json": [
+            {
+                "session": 1,
+                "topic": "Colors & Shapes",
+                "content": "Học từ vựng qua bài hát và trò chơi."
+            },
+            {
+                "session": 2,
+                "topic": "Animals",
+                "content": "Tham quan sở thú qua màn hình lớn."
+            }
+        ],
+        "commitment_text": "Bé yêu thích tiếng Anh, phát âm chuẩn giọng Mỹ.",
+        "price": 6000000,
+        "capacity": 10,
+        "current_enrolled": 8,
+        "thumbnail_url": "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800&auto=format&fit=crop",
+        "status": "in_progress"
+    },
+    {
+        "teacher_id": "00000000-0000-0000-0000-000000000002",
+        "class_name": "IELTS Speaking & Writing Chuyên sâu",
+        "organizer_name": "Giáo viên English Hub",
+        "address": "Online qua Zoom & Offline tại Q1, HCM",
+        "room": "Hybrid Room 2",
+        "schedule_text": "Thứ 3 - 5 (19:30 - 21:00)",
+        "start_date": "2026-05-01",
+        "end_date": "2026-07-01",
+        "syllabus_json": [
+            {
+                "session": 1,
+                "topic": "Writing Task 1",
+                "content": "Phân tích biểu đồ Line & Bar."
+            },
+            {
+                "session": 2,
+                "topic": "Speaking Part 2",
+                "content": "Phương pháp kể chuyện (Storytelling method)."
+            }
+        ],
+        "commitment_text": "Chấm chữa bài chi tiết 1:1. Cam kết tăng 1.0 band Writing.",
+        "price": 7000000,
+        "capacity": 12,
+        "current_enrolled": 0,
+        "thumbnail_url": "https://images.unsplash.com/photo-1516321497487-e288fb19713f?w=800&auto=format&fit=crop",
+        "status": "open"
+    },
+    {
+        "teacher_id": "00000000-0000-0000-0000-000000000002",
+        "class_name": "Lớp ôn thi VSTEP B1-B2",
+        "organizer_name": "Giáo viên English Hub",
+        "address": "Giảng đường B2, Đại học Quốc Gia",
+        "room": "P.205",
+        "schedule_text": "Thứ 7 - CN (14:00 - 16:30)",
+        "start_date": "2025-12-01",
+        "end_date": "2026-01-30",
+        "syllabus_json": [
+            {
+                "session": 1,
+                "topic": "Tổng quan VSTEP",
+                "content": "Cấu trúc đề thi và thang điểm."
+            },
+            {
+                "session": 2,
+                "topic": "VSTEP Speaking",
+                "content": "Thực hành 3 phần thi nói."
+            }
+        ],
+        "commitment_text": "Đảm bảo đỗ B1. Hỗ trợ tài liệu độc quyền.",
+        "price": 2500000,
+        "capacity": 40,
+        "current_enrolled": 40,
+        "thumbnail_url": "https://images.unsplash.com/photo-1509062522246-3755977927d7?w=800&auto=format&fit=crop",
+        "status": "completed"
+    },
+    {
+        "teacher_id": "00000000-0000-0000-0000-000000000002",
+        "class_name": "Phát âm chuẩn IPA (Pronunciation Master)",
+        "organizer_name": "Giáo viên English Hub",
+        "address": "Tầng 5, Coworking Space, 88 Láng Hạ",
+        "room": "Meeting Room 1",
+        "schedule_text": "Thứ 2 - 4 (18:00 - 19:30)",
+        "start_date": "2026-03-05",
+        "end_date": "2026-04-05",
+        "syllabus_json": [
+            {
+                "session": 1,
+                "topic": "Vowels",
+                "content": "Nguyên âm đơn và nguyên âm đôi."
+            },
+            {
+                "session": 2,
+                "topic": "Consonants",
+                "content": "Phụ âm vô thanh và hữu thanh."
+            },
+            {
+                "session": 3,
+                "topic": "Intonation",
+                "content": "Ngữ điệu câu hỏi và câu trần thuật."
+            }
+        ],
+        "commitment_text": "Sửa ngọng, sửa giọng địa phương, nói có ngữ điệu tây.",
+        "price": 1500000,
+        "capacity": 15,
+        "current_enrolled": 15,
+        "thumbnail_url": "https://images.unsplash.com/photo-1571260899304-55e4c06a07db?w=800&auto=format&fit=crop",
+        "status": "full"
+    },
+    {
+        "teacher_id": "00000000-0000-0000-0000-000000000002",
+        "class_name": "SAT Math & English (Du học Mỹ)",
+        "organizer_name": "Giáo viên English Hub",
+        "address": "Tòa nhà 72 Keangnam, Hà Nội",
+        "room": "Phòng Premium",
+        "schedule_text": "Thứ 7 (08:00 - 11:00) & CN (08:00 - 11:00)",
+        "start_date": "2026-06-01",
+        "end_date": "2026-09-01",
+        "syllabus_json": [
+            {
+                "session": 1,
+                "topic": "Digital SAT Overview",
+                "content": "Làm quen với phần mềm thi Bluebook."
+            },
+            {
+                "session": 2,
+                "topic": "Math Module 1",
+                "content": "Algebra and Advanced Math."
+            }
+        ],
+        "commitment_text": "Mục tiêu 1400+. Tư vấn hồ sơ du học miễn phí.",
+        "price": 15000000,
+        "capacity": 10,
+        "current_enrolled": 2,
+        "thumbnail_url": "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=800&auto=format&fit=crop",
+        "status": "open"
+    },
+    {
+        "teacher_id": "00000000-0000-0000-0000-000000000002",
+        "class_name": "Workshop: Bí kíp chinh phục IELTS Reading 9.0",
+        "organizer_name": "Giáo viên English Hub",
+        "address": "Hội trường A, Khách sạn Daewoo",
+        "room": "Grand Ballroom",
+        "schedule_text": "Duy nhất Chủ Nhật (09:00 - 12:00) ngày 20/03/2026",
+        "start_date": "2026-03-20",
+        "end_date": "2026-03-20",
+        "syllabus_json": [
+            {
+                "session": 1,
+                "topic": "Chiến thuật làm bài",
+                "content": "Cách xử lý dạng bài True/False/Not Given."
+            },
+            {
+                "session": 2,
+                "topic": "Q&A",
+                "content": "Giải đáp thắc mắc trực tiếp."
+            }
+        ],
+        "commitment_text": "Nắm vững tư duy logic của người ra đề.",
+        "price": 200000,
+        "capacity": 200,
+        "current_enrolled": 150,
+        "thumbnail_url": "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=800&auto=format&fit=crop",
+        "status": "open"
+    },
+    {
+        "teacher_id": "00000000-0000-0000-0000-000000000002",
+        "class_name": "Tiếng Anh mất gốc (Beginner A1)",
+        "organizer_name": "Giáo viên English Hub",
+        "address": "Số 10, Ngõ 5, Nguyễn Trãi, Hà Nội",
+        "room": "P.101",
+        "schedule_text": "Thứ 2 - 4 - 6 (17:30 - 19:00)",
+        "start_date": "2026-01-01",
+        "end_date": "2026-03-01",
+        "syllabus_json": [
+            {
+                "session": 1,
+                "topic": "To be & Pronouns",
+                "content": "Động từ to be và đại từ nhân xưng."
+            },
+            {
+                "session": 2,
+                "topic": "Daily Routine",
+                "content": "Từ vựng về hoạt động hàng ngày."
+            }
+        ],
+        "commitment_text": "Lấy lại căn bản, không sợ tiếng Anh nữa.",
+        "price": 2000000,
+        "capacity": 25,
+        "current_enrolled": 25,
+        "thumbnail_url": "https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?w=800&auto=format&fit=crop",
+        "status": "closed"
+    }
+]

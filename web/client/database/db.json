@@ -1,0 +1,393 @@
+{
+    "accounts": [
+        {
+            "idACCOUNT": 1,
+            "email": "admin@studyhub.com",
+            "password": "Admin@123",
+            "role": "ADMIN",
+            "status": "active",
+            "createdAt": "2026-01-06T08:00:00Z"
+        },
+        {
+            "idACCOUNT": 2,
+            "email": "emma.carter@studyhub.com",
+            "password": "Teacher@123",
+            "role": "TEACHER",
+            "status": "active",
+            "createdAt": "2026-01-06T08:15:00Z"
+        },
+        {
+            "idACCOUNT": 3,
+            "email": "liam.turner@studyhub.com",
+            "password": "Teacher@123",
+            "role": "TEACHER",
+            "status": "active",
+            "createdAt": "2026-01-06T08:20:00Z"
+        },
+        {
+            "idACCOUNT": 4,
+            "email": "alex.nguyen@learners.com",
+            "password": "Learner@123",
+            "role": "LEARNER",
+            "status": "active",
+            "createdAt": "2026-01-06T08:30:00Z"
+        },
+        {
+            "idACCOUNT": 5,
+            "email": "sophia.tran@learners.com",
+            "password": "Learner@123",
+            "role": "LEARNER",
+            "status": "active",
+            "createdAt": "2026-01-06T08:35:00Z"
+        }
+    ],
+    "teachers": [
+        {
+            "idTEACHER": 1,
+            "idACCOUNT": 2,
+            "fullName": "Emma Carter",
+            "avatarUrl": "https://images.unsplash.com/photo-1544723795-3fb6469f5b39?auto=format&fit=crop&w=400",
+            "bio": "CELTA certified teacher with 8 years of Business English coaching.",
+            "phoneNumber": "+84-901-234-567",
+            "specialization": "Business English",
+            "jobTitle": "Senior Instructor",
+            "gender": "female",
+            "dateOfBirth": "1990-05-17",
+            "address": "HCMC Campus",
+            "nativeLanguage": "English"
+        },
+        {
+            "idTEACHER": 2,
+            "idACCOUNT": 3,
+            "fullName": "Liam Turner",
+            "avatarUrl": "https://images.unsplash.com/photo-1504595403659-9088ce801e29?auto=format&fit=crop&w=400",
+            "bio": "IELTS specialist focusing on Listening and Speaking strategies.",
+            "phoneNumber": "+84-945-888-222",
+            "specialization": "IELTS",
+            "jobTitle": "IELTS Coach",
+            "gender": "male",
+            "dateOfBirth": "1988-11-09",
+            "address": "Hanoi Campus",
+            "nativeLanguage": "English"
+        }
+    ],
+    "learners": [
+        {
+            "idLEARNER": 1,
+            "idACCOUNT": 4,
+            "fullName": "Alex Nguyen",
+            "avatarUrl": "https://images.unsplash.com/photo-1527980965255-d3b416303d12?auto=format&fit=crop&w=400",
+            "currentXp": 1200,
+            "currentStreak": 5,
+            "englishLevel": "B1",
+            "gender": "male",
+            "dateOfBirth": "2001-03-14",
+            "address": "Da Nang",
+            "phoneNumber": "+84-977-000-123",
+            "nativeLanguage": "Vietnamese"
+        },
+        {
+            "idLEARNER": 2,
+            "idACCOUNT": 5,
+            "fullName": "Sophia Tran",
+            "avatarUrl": "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=400",
+            "currentXp": 450,
+            "currentStreak": 2,
+            "englishLevel": "A2",
+            "gender": "female",
+            "dateOfBirth": "2003-08-22",
+            "address": "Ho Chi Minh City",
+            "phoneNumber": "+84-936-111-789",
+            "nativeLanguage": "Vietnamese"
+        }
+    ],
+    "courses": [
+        {
+            "idCOURSE": 101,
+            "title": "Speaking Fundamentals",
+            "description": "Improve pronunciation, fluency, and everyday conversation skills.",
+            "price": 49.99,
+            "type": "Online",
+            "status": "PUBLISHED",
+            "thumbnailUrl": "https://images.unsplash.com/photo-1489515217757-5fd1be406fef?auto=format&fit=crop&w=800",
+            "level": "B1",
+            "courseCode": "ENG-OL-101",
+            "category": "Speaking",
+            "syllabus": "Pronunciation basics, real-life dialogues, feedback loops.",
+            "idTEACHER": 1,
+            "createdAt": "2026-01-06T09:00:00Z"
+        },
+        {
+            "idCOURSE": 102,
+            "title": "Business English Intensive",
+            "description": "Email etiquette, presentations, and negotiation language for work.",
+            "price": 129.0,
+            "type": "Offline",
+            "status": "PUBLISHED",
+            "thumbnailUrl": "https://images.unsplash.com/photo-1522881451255-f59ad836fdfb?auto=format&fit=crop&w=800",
+            "level": "B2",
+            "courseCode": "ENG-OF-102",
+            "category": "Business",
+            "syllabus": "Presentation drills, meeting role-plays, negotiation labs.",
+            "idTEACHER": 2,
+            "createdAt": "2026-01-06T09:15:00Z"
+        },
+        {
+            "idCOURSE": 103,
+            "title": "IELTS Listening Booster",
+            "description": "Targeted listening practice with exam-style tasks and feedback.",
+            "price": 79.0,
+            "type": "Online",
+            "status": "PUBLISHED",
+            "thumbnailUrl": "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=800",
+            "level": "B2",
+            "courseCode": "IELTS-103",
+            "category": "IELTS",
+            "syllabus": "Section 1-4 drills, accent variety, time management.",
+            "idTEACHER": 1,
+            "createdAt": "2026-01-06T09:30:00Z"
+        }
+    ],
+    "lessons": [
+        {
+            "idLESSON": 1001,
+            "title": "Pronunciation Basics",
+            "orderIndex": 1,
+            "contentType": "Video",
+            "mediaUrl": "https://cdn.studyhub.com/videos/pronunciation-basics.mp4",
+            "textContent": "Intro to English sounds and stress patterns.",
+            "durationMinutes": 15,
+            "TRANSCRIPT": "Welcome to pronunciation basics...",
+            "totalQuestions": 0,
+            "learningType": "Speaking",
+            "idCOURSE": 101
+        },
+        {
+            "idLESSON": 1002,
+            "title": "Everyday Dialogues",
+            "orderIndex": 2,
+            "contentType": "Quiz",
+            "mediaUrl": "https://cdn.studyhub.com/audio/dialogues-set1.mp3",
+            "textContent": "Common phrases for daily situations.",
+            "durationMinutes": 20,
+            "TRANSCRIPT": "Dialogue samples covering greetings and small talk.",
+            "totalQuestions": 3,
+            "learningType": "Grammar",
+            "idCOURSE": 101
+        },
+        {
+            "idLESSON": 1003,
+            "title": "Kickoff Workshop",
+            "orderIndex": 1,
+            "contentType": "Reading",
+            "mediaUrl": "https://cdn.studyhub.com/docs/business-english-orientation.pdf",
+            "textContent": "Orientation notes and class expectations.",
+            "durationMinutes": 30,
+            "TRANSCRIPT": "",
+            "totalQuestions": 0,
+            "learningType": "Vocabulary",
+            "idCOURSE": 102
+        },
+        {
+            "idLESSON": 1004,
+            "title": "Audio Gaps Practice",
+            "orderIndex": 1,
+            "contentType": "Quiz",
+            "mediaUrl": "https://cdn.studyhub.com/audio/ielts-listening-set1.mp3",
+            "textContent": "Fill the gaps while listening to short talks.",
+            "durationMinutes": 25,
+            "TRANSCRIPT": "",
+            "totalQuestions": 2,
+            "learningType": "Listening",
+            "idCOURSE": 103
+        }
+    ],
+    "questions": [
+        {
+            "idQUESTION": 501,
+            "questionText": "Choose the correct reply: 'How is your day going?'",
+            "mediaUrl": null,
+            "optionsJson": [
+                "It goes to work.",
+                "Pretty good, thanks!",
+                "I am going shopping yesterday.",
+                "He is my friend."
+            ],
+            "correctAnswer": "B",
+            "idLESSON": 1002
+        },
+        {
+            "idQUESTION": 502,
+            "questionText": "Select the best phrase to schedule a meeting.",
+            "mediaUrl": null,
+            "optionsJson": [
+                "Do you want coffee?",
+                "Can we lock in 3 PM Thursday?",
+                "Where are you from?",
+                "What color is it?"
+            ],
+            "correctAnswer": "B",
+            "idLESSON": 1002
+        },
+        {
+            "idQUESTION": 503,
+            "questionText": "Listen and choose the missing word (Section 1).",
+            "mediaUrl": "https://cdn.studyhub.com/audio/ielts-gap-01.mp3",
+            "optionsJson": ["station", "studio", "stadium", "stadion"],
+            "correctAnswer": "C",
+            "idLESSON": 1004
+        }
+    ],
+    "offlineSchedules": [
+        {
+            "idOFFLINE_SCHEDULE": 301,
+            "location": "Ho Chi Minh City Campus",
+            "startTime": "2026-03-05T11:30:00Z",
+            "maxStudents": 25,
+            "syllabus": "Week 1-2: email writing; Week 3-4: presentation labs; Week 5-6: negotiations.",
+            "idCOURSE": 102
+        }
+    ],
+    "enrollments": [
+        {
+            "idENROLLMENT": 401,
+            "enrolledAt": "2026-01-06T10:00:00Z",
+            "status": "ACTIVE",
+            "progressPercent": 35.5,
+            "idLEARNER": 1,
+            "idCOURSE": 101
+        },
+        {
+            "idENROLLMENT": 402,
+            "enrolledAt": "2026-01-06T10:10:00Z",
+            "status": "ACTIVE",
+            "progressPercent": 10.0,
+            "idLEARNER": 1,
+            "idCOURSE": 102
+        },
+        {
+            "idENROLLMENT": 403,
+            "enrolledAt": "2026-01-06T10:20:00Z",
+            "status": "ACTIVE",
+            "progressPercent": 0.0,
+            "idLEARNER": 2,
+            "idCOURSE": 103
+        }
+    ],
+    "learningProgress": [
+        {
+            "idLEARNING_PROGRESS": 601,
+            "isCompleted": true,
+            "lastVideoPosition": 900,
+            "lastAccessedAt": "2026-01-06T10:30:00Z",
+            "ENROLLMENT_idENROLLMENT": 401,
+            "LESSON_idLESSON": 1001
+        },
+        {
+            "idLEARNING_PROGRESS": 602,
+            "isCompleted": false,
+            "lastVideoPosition": 420,
+            "lastAccessedAt": "2026-01-06T10:45:00Z",
+            "ENROLLMENT_idENROLLMENT": 401,
+            "LESSON_idLESSON": 1002
+        }
+    ],
+    "cartItems": [
+        {
+            "idCART_ITEM": 701,
+            "addedAt": "2026-01-06T11:00:00Z",
+            "isSelected": true,
+            "idLEARNER": 2,
+            "idCOURSE": 101
+        }
+    ],
+    "orders": [
+        {
+            "idORDER": 801,
+            "totalPrice": 178.99,
+            "subTotal": 178.99,
+            "discountCode": null,
+            "paymentMethod": "Momo",
+            "status": "Paid",
+            "createdAt": "2026-01-06T11:15:00Z",
+            "idLEARNER": 1
+        },
+        {
+            "idORDER": 802,
+            "totalPrice": 79.0,
+            "subTotal": 79.0,
+            "discountCode": "NEWUSER10",
+            "paymentMethod": "Bank Transfer",
+            "status": "Pending",
+            "createdAt": "2026-01-06T11:20:00Z",
+            "idLEARNER": 2
+        }
+    ],
+    "orderItems": [
+        {
+            "idORDER_ITEM": 901,
+            "priceAtPurchase": 49.99,
+            "idORDER": 801,
+            "idCOURSE": 101
+        },
+        {
+            "idORDER_ITEM": 902,
+            "priceAtPurchase": 129.0,
+            "idORDER": 801,
+            "idCOURSE": 102
+        },
+        {
+            "idORDER_ITEM": 903,
+            "priceAtPurchase": 79.0,
+            "idORDER": 802,
+            "idCOURSE": 103
+        }
+    ],
+    "reviews": [
+        {
+            "idREVIEW": 1001,
+            "rating": 5,
+            "comment": "Great pacing and practical dialogues.",
+            "isVisible": true,
+            "createdAt": "2026-01-06T12:00:00Z",
+            "idLEARNER": 1,
+            "idCOURSE": 101
+        },
+        {
+            "idREVIEW": 1002,
+            "rating": 4,
+            "comment": "Audio quality is clear and helpful for IELTS.",
+            "isVisible": true,
+            "createdAt": "2026-01-06T12:05:00Z",
+            "idLEARNER": 2,
+            "idCOURSE": 103
+        }
+    ],
+    "testSessions": [
+        {
+            "idTEST_SESSION": 1101,
+            "testPurpose": "Placement follow-up",
+            "score": 85,
+            "resultAnalysisJson": {
+                "correct": 4,
+                "total": 5,
+                "notes": "Good control of tenses."
+            },
+            "receiveResultEmail": "alex.nguyen@learners.com",
+            "submittedAt": "2026-01-06T12:30:00Z",
+            "LEARNER_idLEARNER": 1,
+            "LESSON_idLESSON": 1002
+        }
+    ],
+    "speakingResults": [
+        {
+            "idSPEAKING_RESULT": 1201,
+            "aiScore": 7.8,
+            "aiFeedback": "Clear pronunciation; improve intonation on questions.",
+            "userAudioUrl": "https://cdn.studyhub.com/audio/submissions/learner1-lesson1001.mp3",
+            "submittedAt": "2026-01-06T12:45:00Z",
+            "idLEARNER": 1,
+            "idLESSON": 1001
+        }
+    ]
+}

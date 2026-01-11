@@ -1,0 +1,649 @@
+{
+    "questions": [
+        {
+            "comment": "=== SECTION 1: LISTENING (10 Questions) ==="
+        },
+        {
+            "id": "q-01",
+            "skill": "listening",
+            "type": "multiple_choice",
+            "level": "A1",
+            "content_text": "Look at the picture. What is the man doing?",
+            "media_url": "/assets/audio/q01.mp3",
+            "media_type": "image",
+            "options": {
+                "A": "He is reading a book.",
+                "B": "He is opening the door.",
+                "C": "He is drinking water.",
+                "D": "He is typing on a computer."
+            },
+            "correct_answer": "A",
+            "explanation": "Script: (Man sitting in library with a book open). A. He is reading a book."
+        },
+        {
+            "id": "q-02",
+            "skill": "listening",
+            "type": "multiple_choice",
+            "level": "A2",
+            "content_text": "Where are the people?",
+            "media_url": "/assets/audio/q02.mp3",
+            "media_type": "audio",
+            "options": {
+                "A": "In a restaurant.",
+                "B": "At a bus stop.",
+                "C": "In a meeting room.",
+                "D": "At the beach."
+            },
+            "correct_answer": "C",
+            "explanation": "Script: 'Okay everyone, let's look at the sales report on the screen.'"
+        },
+        {
+            "id": "q-03",
+            "skill": "listening",
+            "type": "multiple_choice",
+            "level": "A2",
+            "content_text": "When does the train leave?",
+            "media_url": "/assets/audio/q03.mp3",
+            "media_type": "audio",
+            "options": {
+                "A": "Platform 5.",
+                "B": "At 10:30.",
+                "C": "To London.",
+                "D": "It is late."
+            },
+            "correct_answer": "B",
+            "explanation": "Script: Q: When does the train leave? A: At 10:30."
+        },
+        {
+            "id": "q-04",
+            "skill": "listening",
+            "type": "multiple_choice",
+            "level": "B1",
+            "content_text": "Why is the woman calling?",
+            "media_url": "/assets/audio/q04.mp3",
+            "media_type": "audio",
+            "options": {
+                "A": "To buy a ticket.",
+                "B": "To cancel an appointment.",
+                "C": "To ask for directions.",
+                "D": "To order food."
+            },
+            "correct_answer": "B",
+            "explanation": "Script: 'Hi, I'm afraid I can't make it to the dentist today. Can we reschedule?'"
+        },
+        {
+            "id": "q-05",
+            "skill": "listening",
+            "type": "multiple_choice",
+            "level": "B1",
+            "content_text": "What does the man suggest doing?",
+            "media_url": "/assets/audio/q05.mp3",
+            "media_type": "audio",
+            "options": {
+                "A": "Working late.",
+                "B": "Going to the cinema.",
+                "C": "Trying a new Italian restaurant.",
+                "D": "Cooking at home."
+            },
+            "correct_answer": "C",
+            "explanation": "Script: 'There's a new Italian place downtown. Why don't we try it tonight?'"
+        },
+        {
+            "id": "q-06",
+            "skill": "listening",
+            "type": "multiple_choice",
+            "level": "B1",
+            "content_text": "What is the problem with the computer?",
+            "media_url": "/assets/audio/q06.mp3",
+            "media_type": "audio",
+            "options": {
+                "A": "It won't turn on.",
+                "B": "The screen is frozen.",
+                "C": "The internet is slow.",
+                "D": "The keyboard is broken."
+            },
+            "correct_answer": "B",
+            "explanation": "Script: 'My mouse is moving, but the screen is completely frozen.'"
+        },
+        {
+            "id": "q-07",
+            "skill": "listening",
+            "type": "multiple_choice",
+            "level": "B2",
+            "content_text": "Where is the announcement taking place?",
+            "media_url": "/assets/audio/q07.mp3",
+            "media_type": "audio",
+            "options": {
+                "A": "At an airport.",
+                "B": "On a train.",
+                "C": "In a shopping mall.",
+                "D": "In a theater."
+            },
+            "correct_answer": "A",
+            "explanation": "Script: 'Passengers for flight VN123 to Hanoi please proceed to gate 4.'"
+        },
+        {
+            "id": "q-08",
+            "skill": "listening",
+            "type": "multiple_choice",
+            "level": "B2",
+            "content_text": "What will the speaker do next?",
+            "media_url": "/assets/audio/q08.mp3",
+            "media_type": "audio",
+            "options": {
+                "A": "End the meeting.",
+                "B": "Introduce a new product.",
+                "C": "Take a break.",
+                "D": "Answer questions."
+            },
+            "correct_answer": "D",
+            "explanation": "Script: 'That concludes my presentation. Now, I'd be happy to take any questions.'"
+        },
+        {
+            "id": "q-09",
+            "skill": "listening",
+            "type": "multiple_choice",
+            "level": "B2",
+            "content_text": "According to the speaker, why sales dropped?",
+            "media_url": "/assets/audio/q09.mp3",
+            "media_type": "audio",
+            "options": {
+                "A": "Bad weather.",
+                "B": "New competitor.",
+                "C": "Poor marketing.",
+                "D": "High prices."
+            },
+            "correct_answer": "B",
+            "explanation": "Script: 'Our numbers are down mainly because a new competitor entered the market last month.'"
+        },
+        {
+            "id": "q-10",
+            "skill": "listening",
+            "type": "multiple_choice",
+            "level": "C1",
+            "content_text": "What is the main topic of the lecture?",
+            "media_url": "/assets/audio/q10.mp3",
+            "media_type": "audio",
+            "options": {
+                "A": "Climate change effects.",
+                "B": "Renewable energy sources.",
+                "C": "Economic growth.",
+                "D": "Urban planning."
+            },
+            "correct_answer": "B",
+            "explanation": "Script: (Lecture about solar and wind power efficiency)."
+        },
+        {
+            "comment": "=== SECTION 2: GRAMMAR & VOCABULARY (15 Questions) ==="
+        },
+        {
+            "id": "q-11",
+            "skill": "grammar",
+            "type": "multiple_choice",
+            "level": "A1",
+            "content_text": "She ______ from Vietnam.",
+            "media_url": null,
+            "media_type": "none",
+            "options": {
+                "A": "are",
+                "B": "is",
+                "C": "am",
+                "D": "be"
+            },
+            "correct_answer": "B",
+            "explanation": "Subject 'She' goes with 'is'."
+        },
+        {
+            "id": "q-12",
+            "skill": "grammar",
+            "type": "multiple_choice",
+            "level": "A1",
+            "content_text": "I usually ______ up at 6 AM.",
+            "media_url": null,
+            "media_type": "none",
+            "options": {
+                "A": "get",
+                "B": "gets",
+                "C": "getting",
+                "D": "got"
+            },
+            "correct_answer": "A",
+            "explanation": "Present simple with 'I'."
+        },
+        {
+            "id": "q-13",
+            "skill": "vocabulary",
+            "type": "multiple_choice",
+            "level": "A2",
+            "content_text": "Can you pass me the ______? I want to write a note.",
+            "media_url": null,
+            "media_type": "none",
+            "options": {
+                "A": "chair",
+                "B": "pen",
+                "C": "lamp",
+                "D": "phone"
+            },
+            "correct_answer": "B",
+            "explanation": "Context requires a writing instrument."
+        },
+        {
+            "id": "q-14",
+            "skill": "grammar",
+            "type": "multiple_choice",
+            "level": "A2",
+            "content_text": "There are ______ apples on the table.",
+            "media_url": null,
+            "media_type": "none",
+            "options": {
+                "A": "some",
+                "B": "any",
+                "C": "much",
+                "D": "a little"
+            },
+            "correct_answer": "A",
+            "explanation": "Affirmative sentence with countable nouns."
+        },
+        {
+            "id": "q-15",
+            "skill": "grammar",
+            "type": "multiple_choice",
+            "level": "A2",
+            "content_text": "He is ______ than his brother.",
+            "media_url": null,
+            "media_type": "none",
+            "options": {
+                "A": "tall",
+                "B": "tallest",
+                "C": "taller",
+                "D": "more tall"
+            },
+            "correct_answer": "C",
+            "explanation": "Comparative adjective."
+        },
+        {
+            "id": "q-16",
+            "skill": "grammar",
+            "type": "multiple_choice",
+            "level": "B1",
+            "content_text": "I haven't seen him ______ 2010.",
+            "media_url": null,
+            "media_type": "none",
+            "options": {
+                "A": "for",
+                "B": "since",
+                "C": "in",
+                "D": "at"
+            },
+            "correct_answer": "B",
+            "explanation": "Present perfect with a specific point in time."
+        },
+        {
+            "id": "q-17",
+            "skill": "vocabulary",
+            "type": "multiple_choice",
+            "level": "B1",
+            "content_text": "The meeting was ______ because the manager was sick.",
+            "media_url": null,
+            "media_type": "none",
+            "options": {
+                "A": "cancelled",
+                "B": "opened",
+                "C": "continued",
+                "D": "started"
+            },
+            "correct_answer": "A",
+            "explanation": "Context of sickness implies cancellation."
+        },
+        {
+            "id": "q-18",
+            "skill": "grammar",
+            "type": "multiple_choice",
+            "level": "B1",
+            "content_text": "If it rains tomorrow, we ______ inside.",
+            "media_url": null,
+            "media_type": "none",
+            "options": {
+                "A": "stay",
+                "B": "will stay",
+                "C": "stayed",
+                "D": "would stay"
+            },
+            "correct_answer": "B",
+            "explanation": "First conditional."
+        },
+        {
+            "id": "q-19",
+            "skill": "vocabulary",
+            "type": "multiple_choice",
+            "level": "B1",
+            "content_text": "He is responsible ______ hiring new staff.",
+            "media_url": null,
+            "media_type": "none",
+            "options": {
+                "A": "of",
+                "B": "with",
+                "C": "for",
+                "D": "to"
+            },
+            "correct_answer": "C",
+            "explanation": "Collocation: responsible for."
+        },
+        {
+            "id": "q-20",
+            "skill": "grammar",
+            "type": "multiple_choice",
+            "level": "B2",
+            "content_text": "The letter ______ by the secretary yesterday.",
+            "media_url": null,
+            "media_type": "none",
+            "options": {
+                "A": "sent",
+                "B": "was sent",
+                "C": "has been sent",
+                "D": "is sent"
+            },
+            "correct_answer": "B",
+            "explanation": "Passive voice in past simple."
+        },
+        {
+            "id": "q-21",
+            "skill": "vocabulary",
+            "type": "multiple_choice",
+            "level": "B2",
+            "content_text": "The company needs to ______ a new marketing strategy.",
+            "media_url": null,
+            "media_type": "none",
+            "options": {
+                "A": "develop",
+                "B": "enlarge",
+                "C": "increase",
+                "D": "grow"
+            },
+            "correct_answer": "A",
+            "explanation": "Collocation: develop a strategy."
+        },
+        {
+            "id": "q-22",
+            "skill": "grammar",
+            "type": "multiple_choice",
+            "level": "B2",
+            "content_text": "I regret ______ you that your application was unsuccessful.",
+            "media_url": null,
+            "media_type": "none",
+            "options": {
+                "A": "tell",
+                "B": "to tell",
+                "C": "telling",
+                "D": "told"
+            },
+            "correct_answer": "B",
+            "explanation": "Regret to do sth (announce bad news)."
+        },
+        {
+            "id": "q-23",
+            "skill": "vocabulary",
+            "type": "multiple_choice",
+            "level": "C1",
+            "content_text": "The evidence was ______; there was no doubt he was guilty.",
+            "media_url": null,
+            "media_type": "none",
+            "options": {
+                "A": "ambiguous",
+                "B": "conclusive",
+                "C": "tentative",
+                "D": "fictional"
+            },
+            "correct_answer": "B",
+            "explanation": "Conclusive means proving something definitely."
+        },
+        {
+            "id": "q-24",
+            "skill": "grammar",
+            "type": "multiple_choice",
+            "level": "C1",
+            "content_text": "Not only ______ late, but he also forgot the report.",
+            "media_url": null,
+            "media_type": "none",
+            "options": {
+                "A": "he arrived",
+                "B": "did he arrive",
+                "C": "he did arrive",
+                "D": "arrived he"
+            },
+            "correct_answer": "B",
+            "explanation": "Inversion after 'Not only'."
+        },
+        {
+            "id": "q-25",
+            "skill": "vocabulary",
+            "type": "multiple_choice",
+            "level": "C1",
+            "content_text": "She has a ______ knowledge of history.",
+            "media_url": null,
+            "media_type": "none",
+            "options": {
+                "A": "profound",
+                "B": "heavy",
+                "C": "steep",
+                "D": "tall"
+            },
+            "correct_answer": "A",
+            "explanation": "Collocation: profound knowledge."
+        },
+        {
+            "comment": "=== SECTION 3: READING COMPREHENSION (5 Questions) ==="
+        },
+        {
+            "id": "q-26",
+            "skill": "reading",
+            "type": "multiple_choice",
+            "level": "A2",
+            "content_text": "NOTICE: The office elevator is under maintenance today. Please use the stairs. \n\nQ: What is the problem?",
+            "media_url": null,
+            "media_type": "none",
+            "options": {
+                "A": "The stairs are broken.",
+                "B": "The office is closed.",
+                "C": "The elevator is not working.",
+                "D": "The maintenance team is late."
+            },
+            "correct_answer": "C",
+            "explanation": "Synonym: under maintenance = not working."
+        },
+        {
+            "id": "q-27",
+            "skill": "reading",
+            "type": "multiple_choice",
+            "level": "B1",
+            "content_text": "EMAIL: \nTo: Staff\nFrom: Manager\nSubj: Holiday Party\nThe annual holiday party will be held this Friday at 6 PM at the Grand Hotel. Dinner and drinks will be served.\n\nQ: Where is the party?",
+            "media_url": null,
+            "media_type": "none",
+            "options": {
+                "A": "At the office.",
+                "B": "At the Grand Hotel.",
+                "C": "At a restaurant.",
+                "D": "On Friday."
+            },
+            "correct_answer": "B",
+            "explanation": "Scanning for location."
+        },
+        {
+            "id": "q-28",
+            "skill": "reading",
+            "type": "multiple_choice",
+            "level": "B1",
+            "content_text": "(Referring to previous email) Q: What will be provided?",
+            "media_url": null,
+            "media_type": "none",
+            "options": {
+                "A": "Gifts.",
+                "B": "Money.",
+                "C": "Dinner and drinks.",
+                "D": "Transportation."
+            },
+            "correct_answer": "C",
+            "explanation": "Scanning for details."
+        },
+        {
+            "id": "q-29",
+            "skill": "reading",
+            "type": "multiple_choice",
+            "level": "B2",
+            "content_text": "Passage: 'Many companies are adopting remote work policies. While this offers flexibility to employees, it can also lead to feelings of isolation and reduced team cohesion.'\n\nQ: What is a disadvantage of remote work mentioned?",
+            "media_url": null,
+            "media_type": "none",
+            "options": {
+                "A": "Low productivity.",
+                "B": "High costs.",
+                "C": "Isolation.",
+                "D": "Less flexibility."
+            },
+            "correct_answer": "C",
+            "explanation": "Understanding text details."
+        },
+        {
+            "id": "q-30",
+            "skill": "reading",
+            "type": "multiple_choice",
+            "level": "B2",
+            "content_text": "(Referring to previous passage) Q: The word 'cohesion' is closest in meaning to:",
+            "media_url": null,
+            "media_type": "none",
+            "options": {
+                "A": "Unity",
+                "B": "Separation",
+                "C": "Conflict",
+                "D": "Speed"
+            },
+            "correct_answer": "A",
+            "explanation": "Vocabulary in context."
+        },
+        {
+            "comment": "=== SECTION 4: WRITING (5 Questions) ==="
+        },
+        {
+            "id": "q-31",
+            "skill": "writing",
+            "type": "essay",
+            "level": "A2",
+            "content_text": "Write a sentence using these words: (yesterday / go / I / market / to).",
+            "media_url": null,
+            "media_type": "none",
+            "options": null,
+            "correct_answer": "I went to the market yesterday.",
+            "explanation": "Teacher check: Sentence structure and past tense."
+        },
+        {
+            "id": "q-32",
+            "skill": "writing",
+            "type": "essay",
+            "level": "B1",
+            "content_text": "Rewrite the sentence so it has the same meaning: 'This car is too expensive for me to buy.' -> 'I cannot...'",
+            "media_url": null,
+            "media_type": "none",
+            "options": null,
+            "correct_answer": "I cannot afford to buy this car. / I cannot buy this car because it is too expensive.",
+            "explanation": "Teacher check: Grammar transformation."
+        },
+        {
+            "id": "q-33",
+            "skill": "writing",
+            "type": "essay",
+            "level": "B1",
+            "content_text": "Write a short email (30-50 words) to your friend inviting them to coffee this weekend.",
+            "media_url": null,
+            "media_type": "none",
+            "options": null,
+            "correct_answer": null,
+            "explanation": "Teacher check: Informal email format, suggestion structures."
+        },
+        {
+            "id": "q-34",
+            "skill": "writing",
+            "type": "essay",
+            "level": "B2",
+            "content_text": "Write a paragraph (100 words) about the advantages of learning English.",
+            "media_url": null,
+            "media_type": "none",
+            "options": null,
+            "correct_answer": null,
+            "explanation": "Teacher check: Topic sentence, supporting ideas, linking words."
+        },
+        {
+            "id": "q-35",
+            "skill": "writing",
+            "type": "essay",
+            "level": "C1",
+            "content_text": "Essay: 'Some people think technology makes us less social. Do you agree or disagree?' Write 200 words.",
+            "media_url": null,
+            "media_type": "none",
+            "options": null,
+            "correct_answer": null,
+            "explanation": "Teacher check: Argumentation, vocabulary, coherence."
+        },
+        {
+            "comment": "=== SECTION 5: SPEAKING (5 Questions) ==="
+        },
+        {
+            "id": "q-36",
+            "skill": "speaking",
+            "type": "recording",
+            "level": "A1",
+            "content_text": "Read the following sentence aloud: 'My name is John and I live in New York.'",
+            "media_url": null,
+            "media_type": "none",
+            "options": null,
+            "correct_answer": null,
+            "explanation": "Teacher check: Pronunciation, intonation."
+        },
+        {
+            "id": "q-37",
+            "skill": "speaking",
+            "type": "recording",
+            "level": "A2",
+            "content_text": "Please introduce yourself (Name, Age, Hobby). You have 30 seconds.",
+            "media_url": null,
+            "media_type": "none",
+            "options": null,
+            "correct_answer": null,
+            "explanation": "Teacher check: Fluency, basic grammar."
+        },
+        {
+            "id": "q-38",
+            "skill": "speaking",
+            "type": "recording",
+            "level": "B1",
+            "content_text": "Look at the picture (provided in media) and describe what you see in 1 minute.",
+            "media_url": "/assets/images/speaking_q38.jpg",
+            "media_type": "image",
+            "options": null,
+            "correct_answer": null,
+            "explanation": "Teacher check: Vocabulary description, present continuous tense."
+        },
+        {
+            "id": "q-39",
+            "skill": "speaking",
+            "type": "recording",
+            "level": "B2",
+            "content_text": "Talk about your favorite travel destination. Why do you like it?",
+            "media_url": null,
+            "media_type": "none",
+            "options": null,
+            "correct_answer": null,
+            "explanation": "Teacher check: Narrative skills, past tenses, adjectives."
+        },
+        {
+            "id": "q-40",
+            "skill": "speaking",
+            "type": "recording",
+            "level": "C1",
+            "content_text": "Question: 'What are the pros and cons of living in a big city?' Speak for 2 minutes.",
+            "media_url": null,
+            "media_type": "none",
+            "options": null,
+            "correct_answer": null,
+            "explanation": "Teacher check: Complex sentence structures, logical flow, advanced vocabulary."
+        }
+    ]
+}

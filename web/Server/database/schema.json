@@ -1,0 +1,783 @@
+{
+    "database": "PostgreSQL",
+    "orm": "Sequelize",
+    "version": "2.0",
+    "updated_at": "2026-01-09",
+    "tables": {
+        "users": {
+            "description": "Bảng người dùng chính",
+            "columns": {
+                "id": {
+                    "type": "UUID",
+                    "primaryKey": true
+                },
+                "email": {
+                    "type": "STRING",
+                    "unique": true
+                },
+                "password_hash": {
+                    "type": "STRING"
+                },
+                "role": {
+                    "type": "ENUM",
+                    "values": [
+                        "learner",
+                        "teacher",
+                        "admin"
+                    ]
+                },
+                "status": {
+                    "type": "ENUM",
+                    "values": [
+                        "active",
+                        "pending",
+                        "blocked"
+                    ]
+                },
+                "created_at": {
+                    "type": "DATE"
+                },
+                "updated_at": {
+                    "type": "DATE"
+                }
+            }
+        },
+        "profiles": {
+            "description": "Thông tin chi tiết người dùng",
+            "columns": {
+                "id": {
+                    "type": "UUID",
+                    "primaryKey": true
+                },
+                "user_id": {
+                    "type": "UUID",
+                    "foreignKey": "users.id"
+                },
+                "full_name": {
+                    "type": "STRING"
+                },
+                "phone": {
+                    "type": "STRING"
+                },
+                "avatar_url": {
+                    "type": "STRING"
+                },
+                "bio": {
+                    "type": "TEXT"
+                },
+                "address": {
+                    "type": "STRING"
+                }
+            }
+        },
+        "courses": {
+            "description": "Khóa học online",
+            "columns": {
+                "id": {
+                    "type": "UUID",
+                    "primaryKey": true
+                },
+                "teacher_id": {
+                    "type": "UUID",
+                    "foreignKey": "users.id"
+                },
+                "title": {
+                    "type": "STRING"
+                },
+                "slug": {
+                    "type": "STRING",
+                    "unique": true
+                },
+                "description": {
+                    "type": "TEXT"
+                },
+                "price": {
+                    "type": "DECIMAL(10,2)"
+                },
+                "level": {
+                    "type": "ENUM",
+                    "values": [
+                        "beginner",
+                        "intermediate",
+                        "advanced"
+                    ]
+                },
+                "category": {
+                    "type": "STRING"
+                },
+                "thumbnail_url": {
+                    "type": "STRING"
+                },
+                "status": {
+                    "type": "ENUM",
+                    "values": [
+                        "draft",
+                        "published",
+                        "archived"
+                    ]
+                },
+                "created_at": {
+                    "type": "DATE"
+                },
+                "updated_at": {
+                    "type": "DATE"
+                }
+            }
+        },
+        "modules": {
+            "description": "Chương/Module trong khóa học",
+            "columns": {
+                "id": {
+                    "type": "UUID",
+                    "primaryKey": true
+                },
+                "course_id": {
+                    "type": "UUID",
+                    "foreignKey": "courses.id"
+                },
+                "title": {
+                    "type": "STRING"
+                },
+                "order_index": {
+                    "type": "INTEGER"
+                }
+            }
+        },
+        "lessons": {
+            "description": "Bài học trong module",
+            "columns": {
+                "id": {
+                    "type": "UUID",
+                    "primaryKey": true
+                },
+                "module_id": {
+                    "type": "UUID",
+                    "foreignKey": "modules.id"
+                },
+                "title": {
+                    "type": "STRING(500)"
+                },
+                "content_type": {
+                    "type": "ENUM",
+                    "values": [
+                        "video",
+                        "pdf",
+                        "audio",
+                        "link",
+                        "quiz",
+                        "text"
+                    ]
+                },
+                "content_url": {
+                    "type": "TEXT"
+                },
+                "duration_seconds": {
+                    "type": "INTEGER"
+                },
+                "order_index": {
+                    "type": "INTEGER"
+                },
+                "is_free": {
+                    "type": "BOOLEAN",
+                    "default": false
+                }
+            }
+        },
+        "enrollments": {
+            "description": "Đăng ký học của học viên",
+            "columns": {
+                "id": {
+                    "type": "UUID",
+                    "primaryKey": true
+                },
+                "learner_id": {
+                    "type": "UUID",
+                    "foreignKey": "users.id"
+                },
+                "course_id": {
+                    "type": "UUID",
+                    "foreignKey": "courses.id"
+                },
+                "enrolled_at": {
+                    "type": "DATE"
+                },
+                "status": {
+                    "type": "ENUM",
+                    "values": [
+                        "active",
+                        "completed",
+                        "dropped"
+                    ]
+                },
+                "progress": {
+                    "type": "FLOAT",
+                    "default": 0
+                }
+            }
+        },
+        "orders": {
+            "description": "Đơn hàng thanh toán",
+            "columns": {
+                "id": {
+                    "type": "UUID",
+                    "primaryKey": true
+                },
+                "user_id": {
+                    "type": "UUID",
+                    "foreignKey": "users.id"
+                },
+                "total_amount": {
+                    "type": "DECIMAL(12,2)"
+                },
+                "status": {
+                    "type": "ENUM",
+                    "values": [
+                        "pending",
+                        "completed",
+                        "cancelled",
+                        "refunded"
+                    ]
+                },
+                "payment_method": {
+                    "type": "STRING"
+                },
+                "items_json": {
+                    "type": "JSON"
+                },
+                "created_at": {
+                    "type": "DATE"
+                }
+            }
+        },
+        "reviews": {
+            "description": "Đánh giá khóa học",
+            "columns": {
+                "id": {
+                    "type": "UUID",
+                    "primaryKey": true
+                },
+                "user_id": {
+                    "type": "UUID",
+                    "foreignKey": "users.id"
+                },
+                "course_id": {
+                    "type": "UUID",
+                    "foreignKey": "courses.id"
+                },
+                "rating": {
+                    "type": "INTEGER",
+                    "range": "1-5"
+                },
+                "comment": {
+                    "type": "TEXT"
+                },
+                "created_at": {
+                    "type": "DATE"
+                }
+            }
+        },
+        "questions": {
+            "description": "Ngân hàng câu hỏi nâng cao (Hỗ trợ Audio/Image cho Listening/Reading)",
+            "columns": {
+                "id": {
+                    "type": "UUID",
+                    "primaryKey": true
+                },
+                "creator_id": {
+                    "type": "UUID",
+                    "foreignKey": "users.id"
+                },
+                "skill": {
+                    "type": "ENUM",
+                    "values": [
+                        "listening",
+                        "speaking",
+                        "reading",
+                        "writing",
+                        "grammar",
+                        "vocabulary"
+                    ]
+                },
+                "type": {
+                    "type": "ENUM",
+                    "values": [
+                        "multiple_choice",
+                        "fill_in_blank",
+                        "essay",
+                        "recording",
+                        "matching"
+                    ],
+                    "notes": {
+                        "multiple_choice": "Trắc nghiệm",
+                        "fill_in_blank": "Điền từ",
+                        "essay": "Viết luận (Writing)",
+                        "recording": "Ghi âm (Speaking)",
+                        "matching": "Nối từ"
+                    }
+                },
+                "level": {
+                    "type": "ENUM",
+                    "values": [
+                        "A1",
+                        "A2",
+                        "B1",
+                        "B2",
+                        "C1",
+                        "C2"
+                    ]
+                },
+                "content_text": {
+                    "type": "TEXT",
+                    "note": "Nội dung câu hỏi hoặc đề bài essay"
+                },
+                "media_url": {
+                    "type": "STRING",
+                    "note": "Link file Audio (Listening) hoặc Ảnh (Reading)"
+                },
+                "media_type": {
+                    "type": "ENUM",
+                    "values": [
+                        "image",
+                        "audio",
+                        "video",
+                        "none"
+                    ]
+                },
+                "options": {
+                    "type": "JSON",
+                    "note": "Các lựa chọn A,B,C,D (nếu là trắc nghiệm)"
+                },
+                "correct_answer": {
+                    "type": "TEXT",
+                    "note": "Đáp án đúng (nếu chấm tự động)"
+                },
+                "explanation": {
+                    "type": "TEXT",
+                    "note": "Giải thích đáp án"
+                },
+                "rubric_id": {
+                    "type": "UUID",
+                    "foreignKey": "rubrics.id",
+                    "note": "Link tới tiêu chí chấm (Speaking/Writing)"
+                },
+                "created_at": {
+                    "type": "DATE"
+                }
+            }
+        },
+        "exams": {
+            "description": "Đề thi (Hỗ trợ chấm điểm tự động/thủ công/hybrid)",
+            "columns": {
+                "id": {
+                    "type": "UUID",
+                    "primaryKey": true
+                },
+                "creator_id": {
+                    "type": "UUID",
+                    "foreignKey": "users.id"
+                },
+                "title": {
+                    "type": "STRING"
+                },
+                "description": {
+                    "type": "TEXT"
+                },
+                "duration_minutes": {
+                    "type": "INTEGER"
+                },
+                "pass_score": {
+                    "type": "INTEGER",
+                    "note": "Điểm đậu (VD: 60)"
+                },
+                "grading_method": {
+                    "type": "ENUM",
+                    "values": [
+                        "auto",
+                        "manual",
+                        "hybrid"
+                    ],
+                    "note": "Hybrid: Máy chấm trắc nghiệm, GV chấm viết/nói"
+                },
+                "list_question_ids": {
+                    "type": "JSON",
+                    "note": "Mảng chứa ID các câu hỏi trong đề"
+                },
+                "status": {
+                    "type": "ENUM",
+                    "values": [
+                        "draft",
+                        "published"
+                    ]
+                },
+                "created_at": {
+                    "type": "DATE"
+                }
+            }
+        },
+        "exam_submissions": {
+            "description": "Bài làm tổng quát của học viên",
+            "columns": {
+                "id": {
+                    "type": "UUID",
+                    "primaryKey": true
+                },
+                "exam_id": {
+                    "type": "UUID",
+                    "foreignKey": "exams.id"
+                },
+                "learner_id": {
+                    "type": "UUID",
+                    "foreignKey": "users.id"
+                },
+                "started_at": {
+                    "type": "DATE"
+                },
+                "submitted_at": {
+                    "type": "DATE"
+                },
+                "total_score": {
+                    "type": "FLOAT",
+                    "default": 0
+                },
+                "status": {
+                    "type": "ENUM",
+                    "values": [
+                        "in_progress",
+                        "submitted",
+                        "grading",
+                        "completed"
+                    ]
+                },
+                "teacher_general_feedback": {
+                    "type": "TEXT",
+                    "note": "Nhận xét chung toàn bài"
+                }
+            }
+        },
+        "submission_answers": {
+            "description": "Chi tiết từng câu trả lời (Quan trọng cho Speaking/Writing)",
+            "columns": {
+                "id": {
+                    "type": "UUID",
+                    "primaryKey": true
+                },
+                "submission_id": {
+                    "type": "UUID",
+                    "foreignKey": "exam_submissions.id"
+                },
+                "question_id": {
+                    "type": "UUID",
+                    "foreignKey": "questions.id"
+                },
+                "answer_type": {
+                    "type": "ENUM",
+                    "values": [
+                        "text",
+                        "audio_url",
+                        "file_url",
+                        "option_id"
+                    ]
+                },
+                "content_text": {
+                    "type": "TEXT",
+                    "note": "Lưu bài essay hoặc đáp án điền từ"
+                },
+                "content_url": {
+                    "type": "STRING",
+                    "note": "Lưu link file ghi âm (Speaking) upload lên Cloud"
+                },
+                "selected_options": {
+                    "type": "JSON",
+                    "note": "Mảng các đáp án chọn (Multiple Choice)"
+                },
+                "is_correct": {
+                    "type": "BOOLEAN",
+                    "note": "Kết quả chấm máy (cho trắc nghiệm)"
+                },
+                "score": {
+                    "type": "FLOAT",
+                    "note": "Điểm đạt được của câu này"
+                },
+                "teacher_feedback": {
+                    "type": "TEXT",
+                    "note": "GV nhận xét cụ thể (sửa ngữ pháp, phát âm)"
+                },
+                "ai_analysis": {
+                    "type": "JSON",
+                    "note": "Kết quả phân tích từ AI (nếu có)"
+                }
+            }
+        },
+        "rubrics": {
+            "description": "Tiêu chí chấm điểm (Cho Writing/Speaking)",
+            "columns": {
+                "id": {
+                    "type": "UUID",
+                    "primaryKey": true
+                },
+                "name": {
+                    "type": "STRING",
+                    "note": "VD: IELTS Writing Task 1 Rubric"
+                },
+                "criteria": {
+                    "type": "JSON",
+                    "note": "[{name: 'Grammar', max_score: 10}, {name: 'Fluency', max_score: 10}]"
+                },
+                "created_at": {
+                    "type": "DATE"
+                }
+            }
+        },
+        "offline_classes": {
+            "description": "Lớp học offline (đã nâng cấp với đầy đủ thông tin)",
+            "columns": {
+                "id": {
+                    "type": "UUID",
+                    "primaryKey": true
+                },
+                "teacher_id": {
+                    "type": "UUID",
+                    "foreignKey": "users.id",
+                    "note": "Link tới user để quản lý quyền"
+                },
+                "class_name": {
+                    "type": "STRING",
+                    "note": "Tên lớp: Lớp IELTS 6.5 cấp tốc"
+                },
+                "organizer_name": {
+                    "type": "STRING",
+                    "note": "Tên trung tâm hoặc tên GV (VD: Ms. Hoa TOEIC)"
+                },
+                "address": {
+                    "type": "STRING",
+                    "note": "Địa chỉ học (VD: Số 1 Đại Cồ Việt)"
+                },
+                "room": {
+                    "type": "STRING",
+                    "note": "Phòng cụ thể (VD: P.301)"
+                },
+                "schedule_text": {
+                    "type": "STRING",
+                    "note": "Lịch học (VD: Thứ 2-4-6, 19:30 - 21:00)"
+                },
+                "start_date": {
+                    "type": "DATE",
+                    "note": "Ngày khai giảng"
+                },
+                "end_date": {
+                    "type": "DATE",
+                    "note": "Ngày bế giảng dự kiến"
+                },
+                "syllabus_json": {
+                    "type": "JSON",
+                    "note": "Lộ trình chi tiết theo sessions"
+                },
+                "commitment_text": {
+                    "type": "TEXT",
+                    "note": "Cam kết đầu ra (tăng band, hoàn tiền...)"
+                },
+                "price": {
+                    "type": "DECIMAL(10,2)",
+                    "note": "Giá khóa học offline"
+                },
+                "capacity": {
+                    "type": "INTEGER"
+                },
+                "current_enrolled": {
+                    "type": "INTEGER"
+                },
+                "thumbnail_url": {
+                    "type": "STRING",
+                    "note": "Ảnh bìa lớp học"
+                },
+                "status": {
+                    "type": "ENUM",
+                    "values": [
+                        "open",
+                        "closed",
+                        "full",
+                        "in_progress",
+                        "completed"
+                    ]
+                }
+            }
+        },
+        "attendances": {
+            "description": "Điểm danh lớp offline",
+            "columns": {
+                "id": {
+                    "type": "UUID",
+                    "primaryKey": true
+                },
+                "class_id": {
+                    "type": "UUID",
+                    "foreignKey": "offline_classes.id"
+                },
+                "user_id": {
+                    "type": "UUID",
+                    "foreignKey": "users.id"
+                },
+                "status": {
+                    "type": "ENUM",
+                    "values": [
+                        "registered",
+                        "present",
+                        "absent"
+                    ]
+                }
+            }
+        },
+        "user_stats": {
+            "description": "Thống kê học tập của user",
+            "columns": {
+                "id": {
+                    "type": "UUID",
+                    "primaryKey": true
+                },
+                "user_id": {
+                    "type": "UUID",
+                    "foreignKey": "users.id"
+                },
+                "total_xp": {
+                    "type": "INTEGER",
+                    "default": 0
+                },
+                "current_streak": {
+                    "type": "INTEGER",
+                    "default": 0
+                },
+                "longest_streak": {
+                    "type": "INTEGER",
+                    "default": 0
+                },
+                "last_activity_date": {
+                    "type": "DATE"
+                }
+            }
+        }
+    },
+    "seed_samples": {
+        "question_listening": {
+            "skill": "listening",
+            "type": "multiple_choice",
+            "level": "B2",
+            "content_text": "Listen to the audio and answer: What is the speaker's main concern?",
+            "media_url": "https://r2.example.com/audio/listening-test-1.mp3",
+            "media_type": "audio",
+            "options": {
+                "A": "The price",
+                "B": "Delivery time",
+                "C": "Quality",
+                "D": "Service"
+            },
+            "correct_answer": "B"
+        },
+        "question_speaking": {
+            "skill": "speaking",
+            "type": "recording",
+            "level": "B1",
+            "content_text": "Describe your hometown. You have 2 minutes.",
+            "media_type": "none",
+            "rubric_id": "uuid-of-speaking-rubric"
+        },
+        "exam": {
+            "title": "IELTS Practice Test - Full Skills",
+            "duration_minutes": 180,
+            "pass_score": 60,
+            "grading_method": "hybrid",
+            "list_question_ids": [
+                "uuid-q1",
+                "uuid-q2",
+                "uuid-q3"
+            ],
+            "status": "published"
+        },
+        "rubric_speaking": {
+            "name": "Speaking Assessment Rubric",
+            "criteria": [
+                {
+                    "name": "Fluency",
+                    "max_score": 10
+                },
+                {
+                    "name": "Pronunciation",
+                    "max_score": 10
+                },
+                {
+                    "name": "Vocabulary",
+                    "max_score": 10
+                },
+                {
+                    "name": "Grammar",
+                    "max_score": 10
+                }
+            ]
+        },
+        "offline_class": {
+            "class_name": "Lớp IELTS 6.5 Cấp Tốc",
+            "organizer_name": "Ms. Hoa TOEIC",
+            "address": "Số 1 Đại Cồ Việt, Hai Bà Trưng, Hà Nội",
+            "room": "P.301",
+            "schedule_text": "Thứ 2-4-6, 19:30 - 21:00",
+            "start_date": "2026-02-10",
+            "end_date": "2026-05-10",
+            "syllabus_json": [
+                {
+                    "session": 1,
+                    "title": "Placement Test & Introduction",
+                    "content": "Kiểm tra đầu vào."
+                },
+                {
+                    "session": 2,
+                    "title": "IPA Pronunciation",
+                    "content": "Học bảng phiên âm."
+                },
+                {
+                    "session": 3,
+                    "title": "Listening Part 1-2",
+                    "content": "Kỹ thuật nghe Section 1-2."
+                },
+                {
+                    "session": 4,
+                    "title": "Reading Skills",
+                    "content": "Skimming & Scanning."
+                },
+                {
+                    "session": 5,
+                    "title": "Writing Task 1",
+                    "content": "Viết mô tả biểu đồ."
+                },
+                {
+                    "session": 6,
+                    "title": "Writing Task 2",
+                    "content": "Viết luận argumentative."
+                },
+                {
+                    "session": 7,
+                    "title": "Speaking Part 1",
+                    "content": "Trả lời câu hỏi cá nhân."
+                },
+                {
+                    "session": 8,
+                    "title": "Speaking Part 2-3",
+                    "content": "Nói theo chủ đề dài."
+                },
+                {
+                    "session": 9,
+                    "title": "Mock Test 1",
+                    "content": "Thi thử lần 1."
+                },
+                {
+                    "session": 10,
+                    "title": "Final Review",
+                    "content": "Ôn tập trước thi thật."
+                }
+            ],
+            "commitment_text": "Cam kết tăng tối thiểu 1.0 band. Hoàn tiền 100% nếu không đạt.",
+            "price": 4500000,
+            "capacity": 20,
+            "current_enrolled": 12,
+            "status": "open"
+        }
+    }
+}
