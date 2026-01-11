@@ -120,7 +120,7 @@ VITE_API_URL=http://localhost:5000
 ```bash
 cd client
 npm install
-npm run dev
+npm start
 ```
 - Web: `http://localhost:5173`
 
