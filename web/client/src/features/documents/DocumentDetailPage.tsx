@@ -8,6 +8,7 @@ import { offlineService } from '../../services/offline.service';
 import { enrollmentService } from '../../services/enrollment.service';
 import { useAuth } from '../../context/AuthContext';
 import api from '../../services/api';
+import CourseReviews from '../../components/reviews/CourseReviews';
 
 const DocumentDetailPage = () => {
     const { id } = useParams();
@@ -372,6 +373,9 @@ const DocumentDetailPage = () => {
                                     </div>
                                 </div>
                             </div>
+
+                            {/* Reviews Section for Offline */}
+                            {id && <CourseReviews courseId={id} isDarkMode={isDarkMode} />}
                         </div>
                     ) : isVideoLayout ? (
                         // VIDEO LAYOUT WITH YOUTUBE PLAYLIST EMBED
@@ -478,6 +482,8 @@ const DocumentDetailPage = () => {
                                             {enrolling ? 'Đang xử lý...' : 'Vào học ngay'}
                                         </button>
                                     </div>
+                                    {/* Reviews Section */}
+                                    {id && <CourseReviews courseId={id} isDarkMode={isDarkMode} />}
                                 </div>
                             </div>
                         </div>
@@ -548,6 +554,9 @@ const DocumentDetailPage = () => {
                                     </button>
                                 </div>
                             </div>
+
+                            {/* Reviews Section */}
+                            {id && <CourseReviews courseId={id} isDarkMode={isDarkMode} />}
 
                         </div>
                     )}

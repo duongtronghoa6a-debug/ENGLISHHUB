@@ -23,6 +23,7 @@ const streakRouter = require('./streak');
 const chatRouter = require('./chat');
 const aiRouter = require('./ai');
 const classEnrollmentRouter = require('./classEnrollments');
+const resourceRouter = require('./resources');
 
 function route(app) {
   app.use('/api/v1/auth', authRouter);
@@ -47,6 +48,7 @@ function route(app) {
   app.use('/api/v1/chat', chatRouter);
   app.use('/api/v1/ai', aiRouter);
   app.use('/api/v1/class-enrollments', classEnrollmentRouter);
+  app.use('/api/v1/resources', resourceRouter);
 
 }
 

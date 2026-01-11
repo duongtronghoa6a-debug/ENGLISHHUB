@@ -5,16 +5,15 @@ import {
     BookOpen,
     FileText,
     ClipboardList,
-    Download,
     Settings,
     LogOut,
     Bell,
-    Search,
     Menu,
     User,
     Sun,
     Moon,
-    Calendar
+    Calendar,
+    MessageCircle
 } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import { useAuth } from '../context/AuthContext';
@@ -33,7 +32,7 @@ const TeacherLayout = () => {
             navigate('/login');
             return;
         }
-        if (user?.role !== 'teacher') {
+        if (user?.role !== 'teacher' && user?.role !== 'admin') {
             alert('Bạn không có quyền truy cập trang này. Chỉ dành cho giáo viên.');
             navigate('/home');
         }
@@ -43,9 +42,10 @@ const TeacherLayout = () => {
         { path: '/teacher', icon: Home, label: 'Trang chủ' },
         { path: '/teacher/courses', icon: BookOpen, label: 'Khóa học của tôi' },
         { path: '/teacher/lessons', icon: FileText, label: 'Bài học' },
-        { path: '/teacher/offline', icon: Calendar, label: 'Khóa học offline' },
+        { path: '/teacher/offline-classes', icon: Calendar, label: 'Khóa học offline' },
         { path: '/teacher/exams', icon: ClipboardList, label: 'Quản lí đề thi' },
-        { path: '/teacher/resources', icon: Download, label: 'Tài nguyên' },
+        { path: '/teacher/chat', icon: MessageCircle, label: 'Tin nhắn' },
+        { path: '/teacher/settings', icon: Settings, label: 'Cài đặt' },
         { path: '/teacher/profile', icon: User, label: 'Hồ sơ' },
     ];
 

@@ -16,6 +16,7 @@ import { teacherService } from '../../services/teacher.service';
 interface DashboardStats {
     totalCourses: number;
     totalEnrollments: number;
+    totalStudents: number; // API returns this
     totalLessons: number;
     avgRating: number;
     totalReviews: number;
@@ -24,7 +25,7 @@ interface DashboardStats {
 interface Activity {
     type: string;
     message: string;
-    date: string;
+    timestamp: string; // API returns timestamp, not date
 }
 
 const TeacherDashboard = () => {
@@ -60,26 +61,12 @@ const TeacherDashboard = () => {
             desc: 'Tạo bài tập và đề thi mới cho học viên của bạn',
             color: 'bg-blue-500',
             onClick: () => navigate('/teacher/exams')
-        },
-        {
-            icon: Building2,
-            title: 'Tạo đề từ ngân hàng chung',
-            desc: 'Sử dụng câu hỏi từ ngân hàng đề chung',
-            color: 'bg-green-500',
-            onClick: () => navigate('/teacher/resources')
-        },
-        {
-            icon: Download,
-            title: 'Tài đề từ kho English HUB',
-            desc: 'Tải xuống đề thi từ kho tài liệu Azota',
-            color: 'bg-purple-500',
-            onClick: () => navigate('/teacher/resources')
         }
     ];
 
     const statCards = [
         { label: 'Khóa học', value: stats?.totalCourses || 0, icon: BookOpen, color: 'text-blue-500' },
-        { label: 'Học viên', value: stats?.totalEnrollments || 0, icon: Users, color: 'text-green-500' },
+        { label: 'Học viên', value: stats?.totalStudents || stats?.totalEnrollments || 0, icon: Users, color: 'text-green-500' },
         { label: 'Bài học', value: stats?.totalLessons || 0, icon: Clock, color: 'text-purple-500' },
         { label: 'Đánh giá', value: stats?.avgRating || 0, icon: Star, color: 'text-yellow-500', suffix: '★' }
     ];
@@ -100,7 +87,7 @@ const TeacherDashboard = () => {
             </div>
 
             {/* Quick Actions */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 gap-6">
                 {quickActions.map((action, index) => (
                     <button
                         key={index}
@@ -161,13 +148,13 @@ const TeacherDashboard = () => {
                                 <div className="flex-1">
                                     <p className="font-medium">{activity.message}</p>
                                     <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                                        {new Date(activity.date).toLocaleDateString('vi-VN', {
+                                        {activity.timestamp ? new Date(activity.timestamp).toLocaleDateString('vi-VN', {
                                             day: 'numeric',
                                             month: 'long',
                                             year: 'numeric',
                                             hour: '2-digit',
                                             minute: '2-digit'
-                                        })}
+                                        }) : 'Gần đây'}
                                     </p>
                                 </div>
                             </div>

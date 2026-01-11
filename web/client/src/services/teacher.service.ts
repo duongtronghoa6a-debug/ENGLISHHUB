@@ -19,12 +19,12 @@ export interface RecentActivity {
 
 export const teacherService = {
     // ============ DASHBOARD ============
-    getDashboardStats: async (): Promise<TeacherStats> => {
+    getDashboardStats: async (): Promise<any> => {
         const response = await api.get('/teacher/dashboard-stats');
         return response.data;
     },
 
-    getRecentActivity: async (): Promise<RecentActivity[]> => {
+    getRecentActivity: async (): Promise<any> => {
         const response = await api.get('/teacher/recent-activity');
         return response.data;
     },
@@ -102,6 +102,31 @@ export const teacherService = {
         return response.data;
     },
 
+    // ============ MODULES ============
+    getCourseModules: async (courseId: string) => {
+        const response = await api.get(`/teacher/courses/${courseId}/modules`);
+        return response.data;
+    },
+
+    createModule: async (data: {
+        course_id: string;
+        title: string;
+        description?: string;
+    }) => {
+        const response = await api.post('/teacher/modules', data);
+        return response.data;
+    },
+
+    updateModule: async (id: string, data: { title?: string; description?: string; order_index?: number }) => {
+        const response = await api.put(`/teacher/modules/${id}`, data);
+        return response.data;
+    },
+
+    deleteModule: async (id: string) => {
+        const response = await api.delete(`/teacher/modules/${id}`);
+        return response.data;
+    },
+
     // ============ EXAMS ============
     getMyExams: async (params?: { status?: string; page?: number; limit?: number }) => {
         const response = await api.get('/exams', { params });
@@ -164,7 +189,7 @@ export const teacherService = {
 
     // ============ OFFLINE CLASSES ============
     getMyOfflineClasses: async () => {
-        const response = await api.get('/offline-classes');
+        const response = await api.get('/teacher/my-offline-classes');
         return response.data;
     },
 
@@ -186,5 +211,28 @@ export const teacherService = {
     getOfflineClassAttendees: async (classId: string) => {
         const response = await api.get(`/offline-classes/${classId}/attendees`);
         return response.data;
+    },
+
+    // ============ COURSE STUDENTS ============
+    getCourseStudents: async (courseId: string) => {
+        const response = await api.get(`/teacher/courses/${courseId}/students`);
+        return response.data;
+    },
+
+    // ============ OFFLINE CLASS ENROLLMENT REQUESTS ============
+    getPendingRequests: async () => {
+        const response = await api.get('/teacher/pending-requests');
+        return response.data;
+    },
+
+    approveEnrollmentRequest: async (id: string) => {
+        const response = await api.put(`/class-enrollments/${id}/approve`);
+        return response.data;
+    },
+
+    rejectEnrollmentRequest: async (id: string) => {
+        const response = await api.put(`/class-enrollments/${id}/reject`);
+        return response.data;
     }
 };
+

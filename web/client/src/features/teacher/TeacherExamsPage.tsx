@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
     Plus,
@@ -8,12 +8,17 @@ import {
     FileText,
     Clock,
     CheckCircle,
-    Eye
+    Eye,
+    Upload,
+    Headphones,
+    PenTool,
+    BookOpen
 } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
 import { teacherService } from '../../services/teacher.service';
 import { type Exam, type Question } from '../../services/exam.service';
 import { useNotification } from '../../context/NotificationContext';
+import api from '../../services/api';
 
 const TeacherExamsPage = () => {
     const { isDarkMode } = useTheme();
@@ -28,6 +33,20 @@ const TeacherExamsPage = () => {
     const [showCreateModal, setShowCreateModal] = useState(false);
     const [showQuestionModal, setShowQuestionModal] = useState(false);
     const [editingExam, setEditingExam] = useState<Exam | null>(null);
+    const [showCreateQuestionModal, setShowCreateQuestionModal] = useState(false);
+    const [questionFile, setQuestionFile] = useState<File | null>(null);
+    const [isCreatingQuestion, setIsCreatingQuestion] = useState(false);
+    const questionFileRef = useRef<HTMLInputElement>(null);
+
+    const [questionFormData, setQuestionFormData] = useState({
+        skill: 'reading' as 'listening' | 'reading' | 'writing' | 'grammar' | 'vocabulary',
+        type: 'multiple_choice' as 'multiple_choice' | 'fill_in_blank' | 'essay' | 'matching',
+        level: 'B1' as 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2',
+        content_text: '',
+        options: ['', '', '', ''],
+        correct_answer: '',
+        explanation: ''
+    });
 
     const [formData, setFormData] = useState({
         title: '',
@@ -77,6 +96,59 @@ const TeacherExamsPage = () => {
         });
         setSelectedQuestions([]);
         setEditingExam(null);
+    };
+
+    const resetQuestionForm = () => {
+        setQuestionFormData({
+            skill: 'reading',
+            type: 'multiple_choice',
+            level: 'B1',
+            content_text: '',
+            options: ['', '', '', ''],
+            correct_answer: '',
+            explanation: ''
+        });
+        setQuestionFile(null);
+        if (questionFileRef.current) questionFileRef.current.value = '';
+    };
+
+    const handleCreateQuestion = async () => {
+        if (!questionFormData.content_text.trim()) {
+            addNotification('Lỗi', 'Vui lòng nhập nội dung câu hỏi', 'error');
+            return;
+        }
+        setIsCreatingQuestion(true);
+        try {
+            const formData = new FormData();
+            formData.append('skill', questionFormData.skill);
+            formData.append('type', questionFormData.type);
+            formData.append('level', questionFormData.level);
+            formData.append('content_text', questionFormData.content_text);
+            formData.append('correct_answer', questionFormData.correct_answer);
+            formData.append('explanation', questionFormData.explanation || '');
+
+            if (questionFormData.type === 'multiple_choice') {
+                formData.append('options', JSON.stringify(questionFormData.options.filter(o => o.trim())));
+            }
+
+            if (questionFile) {
+                formData.append('file', questionFile);
+            }
+
+            await api.post('/teacher/questions', formData, {
+                headers: { 'Content-Type': 'multipart/form-data' }
+            });
+
+            addNotification('Thành công', 'Đã tạo câu hỏi mới!', 'success');
+            setShowCreateQuestionModal(false);
+            resetQuestionForm();
+            fetchQuestions();
+        } catch (error: any) {
+            console.error('Failed to create question:', error);
+            addNotification('Lỗi', error.response?.data?.message || 'Lỗi khi tạo câu hỏi', 'error');
+        } finally {
+            setIsCreatingQuestion(false);
+        }
     };
 
     const handleCreateOrUpdateExam = async () => {
@@ -463,7 +535,13 @@ const TeacherExamsPage = () => {
                                 </div>
                             ) : (
                                 <div className="text-center py-10 text-gray-500">
-                                    Chưa có câu hỏi nào
+                                    <p>Chưa có câu hỏi nào</p>
+                                    <button
+                                        onClick={() => setShowCreateQuestionModal(true)}
+                                        className="mt-3 text-blue-500 hover:underline"
+                                    >
+                                        Tạo câu hỏi mới
+                                    </button>
                                 </div>
                             )}
                         </div>
@@ -474,6 +552,188 @@ const TeacherExamsPage = () => {
                                 className="flex-1 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium"
                             >
                                 Xong ({selectedQuestions.length} câu)
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Create Question Modal */}
+            {showCreateQuestionModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+                    <div className={`w-full max-w-2xl mx-4 ${isDarkMode ? 'bg-[#151e32]' : 'bg-white'} rounded-2xl shadow-2xl p-6 max-h-[90vh] overflow-y-auto`}>
+                        <h2 className="text-xl font-bold mb-6 flex items-center gap-2">
+                            <Plus size={20} className="text-blue-500" />
+                            Tạo câu hỏi mới
+                        </h2>
+
+                        <div className="space-y-4">
+                            {/* Skill Selection */}
+                            <div className="grid grid-cols-3 gap-3">
+                                {[
+                                    { value: 'listening', icon: Headphones, label: 'Nghe' },
+                                    { value: 'reading', icon: BookOpen, label: 'Đọc' },
+                                    { value: 'writing', icon: PenTool, label: 'Viết' }
+                                ].map(skill => (
+                                    <button
+                                        key={skill.value}
+                                        onClick={() => setQuestionFormData({ ...questionFormData, skill: skill.value as any })}
+                                        className={`p-3 rounded-xl border-2 flex flex-col items-center gap-2 transition-all ${questionFormData.skill === skill.value
+                                            ? 'border-blue-500 bg-blue-500/10'
+                                            : isDarkMode ? 'border-white/10 hover:border-white/30' : 'border-gray-200 hover:border-gray-300'
+                                            }`}
+                                    >
+                                        <skill.icon size={24} className={questionFormData.skill === skill.value ? 'text-blue-500' : ''} />
+                                        <span className="text-sm font-medium">{skill.label}</span>
+                                    </button>
+                                ))}
+                            </div>
+
+                            {/* Question Type & Level */}
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-sm font-medium mb-1">Loại câu hỏi</label>
+                                    <select
+                                        value={questionFormData.type}
+                                        onChange={(e) => setQuestionFormData({ ...questionFormData, type: e.target.value as any })}
+                                        className={`w-full px-4 py-2 rounded-lg border ${isDarkMode ? 'bg-black/20 border-white/10' : 'bg-gray-50 border-gray-200'} outline-none`}
+                                    >
+                                        <option value="multiple_choice">Trắc nghiệm</option>
+                                        <option value="fill_in_blank">Điền khuyết</option>
+                                        <option value="essay">Tự luận</option>
+                                        <option value="matching">Nối</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium mb-1">Cấp độ</label>
+                                    <select
+                                        value={questionFormData.level}
+                                        onChange={(e) => setQuestionFormData({ ...questionFormData, level: e.target.value as any })}
+                                        className={`w-full px-4 py-2 rounded-lg border ${isDarkMode ? 'bg-black/20 border-white/10' : 'bg-gray-50 border-gray-200'} outline-none`}
+                                    >
+                                        <option value="A1">A1</option>
+                                        <option value="A2">A2</option>
+                                        <option value="B1">B1</option>
+                                        <option value="B2">B2</option>
+                                        <option value="C1">C1</option>
+                                        <option value="C2">C2</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            {/* File Upload for Listening/Reading */}
+                            {(questionFormData.skill === 'listening' || questionFormData.skill === 'reading') && (
+                                <div>
+                                    <label className="block text-sm font-medium mb-1">
+                                        {questionFormData.skill === 'listening' ? 'Tải lên file Audio (MP3)' : 'Tải lên file PDF/Hình ảnh'}
+                                    </label>
+                                    <div className={`border-2 border-dashed rounded-lg p-4 text-center ${isDarkMode ? 'border-white/20' : 'border-gray-300'}`}>
+                                        <input
+                                            ref={questionFileRef}
+                                            type="file"
+                                            accept={questionFormData.skill === 'listening' ? '.mp3,.wav,.ogg' : '.pdf,.png,.jpg,.jpeg'}
+                                            onChange={(e) => setQuestionFile(e.target.files?.[0] || null)}
+                                            className="hidden"
+                                            id="question-file-input"
+                                        />
+                                        {questionFile ? (
+                                            <div className="flex items-center justify-center gap-2">
+                                                <span className="text-green-500">✓ {questionFile.name}</span>
+                                                <button onClick={() => { setQuestionFile(null); if (questionFileRef.current) questionFileRef.current.value = ''; }} className="text-red-500">×</button>
+                                            </div>
+                                        ) : (
+                                            <label htmlFor="question-file-input" className="cursor-pointer">
+                                                <Upload className={`mx-auto mb-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`} size={24} />
+                                                <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Click để chọn file (max 30MB)</p>
+                                            </label>
+                                        )}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Question Content */}
+                            <div>
+                                <label className="block text-sm font-medium mb-1">Nội dung câu hỏi *</label>
+                                <textarea
+                                    value={questionFormData.content_text}
+                                    onChange={(e) => setQuestionFormData({ ...questionFormData, content_text: e.target.value })}
+                                    className={`w-full px-4 py-2 rounded-lg border ${isDarkMode ? 'bg-black/20 border-white/10' : 'bg-gray-50 border-gray-200'} outline-none h-24 resize-none`}
+                                    placeholder="Nhập nội dung câu hỏi..."
+                                />
+                            </div>
+
+                            {/* Multiple Choice Options */}
+                            {questionFormData.type === 'multiple_choice' && (
+                                <div>
+                                    <label className="block text-sm font-medium mb-2">Các đáp án</label>
+                                    <div className="space-y-2">
+                                        {questionFormData.options.map((opt, idx) => (
+                                            <div key={idx} className="flex items-center gap-2">
+                                                <span className={`w-6 h-6 rounded-full flex items-center justify-center text-sm font-medium ${questionFormData.correct_answer === String.fromCharCode(65 + idx) ? 'bg-green-500 text-white' : isDarkMode ? 'bg-white/10' : 'bg-gray-100'}`}>
+                                                    {String.fromCharCode(65 + idx)}
+                                                </span>
+                                                <input
+                                                    type="text"
+                                                    value={opt}
+                                                    onChange={(e) => {
+                                                        const newOpts = [...questionFormData.options];
+                                                        newOpts[idx] = e.target.value;
+                                                        setQuestionFormData({ ...questionFormData, options: newOpts });
+                                                    }}
+                                                    className={`flex-1 px-3 py-2 rounded-lg border ${isDarkMode ? 'bg-black/20 border-white/10' : 'bg-gray-50 border-gray-200'} outline-none`}
+                                                    placeholder={`Đáp án ${String.fromCharCode(65 + idx)}`}
+                                                />
+                                                <button
+                                                    onClick={() => setQuestionFormData({ ...questionFormData, correct_answer: String.fromCharCode(65 + idx) })}
+                                                    className={`px-2 py-1 text-xs rounded ${questionFormData.correct_answer === String.fromCharCode(65 + idx) ? 'bg-green-500 text-white' : 'bg-gray-200 text-gray-600'}`}
+                                                >
+                                                    Đáp án đúng
+                                                </button>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Correct Answer for other types */}
+                            {questionFormData.type !== 'multiple_choice' && (
+                                <div>
+                                    <label className="block text-sm font-medium mb-1">Đáp án đúng / Gợi ý</label>
+                                    <input
+                                        type="text"
+                                        value={questionFormData.correct_answer}
+                                        onChange={(e) => setQuestionFormData({ ...questionFormData, correct_answer: e.target.value })}
+                                        className={`w-full px-4 py-2 rounded-lg border ${isDarkMode ? 'bg-black/20 border-white/10' : 'bg-gray-50 border-gray-200'} outline-none`}
+                                        placeholder="Nhập đáp án đúng hoặc gợi ý chấm điểm"
+                                    />
+                                </div>
+                            )}
+
+                            {/* Explanation */}
+                            <div>
+                                <label className="block text-sm font-medium mb-1">Giải thích (tùy chọn)</label>
+                                <textarea
+                                    value={questionFormData.explanation}
+                                    onChange={(e) => setQuestionFormData({ ...questionFormData, explanation: e.target.value })}
+                                    className={`w-full px-4 py-2 rounded-lg border ${isDarkMode ? 'bg-black/20 border-white/10' : 'bg-gray-50 border-gray-200'} outline-none h-16 resize-none`}
+                                    placeholder="Giải thích đáp án..."
+                                />
+                            </div>
+                        </div>
+
+                        <div className="flex gap-3 mt-6">
+                            <button
+                                onClick={() => { setShowCreateQuestionModal(false); resetQuestionForm(); }}
+                                className={`flex-1 py-2 rounded-lg ${isDarkMode ? 'bg-white/10' : 'bg-gray-100'} font-medium`}
+                            >
+                                Hủy
+                            </button>
+                            <button
+                                onClick={handleCreateQuestion}
+                                disabled={isCreatingQuestion}
+                                className="flex-1 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium disabled:opacity-50"
+                            >
+                                {isCreatingQuestion ? 'Đang tạo...' : 'Tạo câu hỏi'}
                             </button>
                         </div>
                     </div>

@@ -22,4 +22,36 @@ router.patch('/users/:id/status', adminController.updateAccountStatus);
 router.get('/dashboard', adminController.getDashboardStats);
 router.get('/accounts', adminController.getAllAccounts);
 
+// Content review/approval routes
+router.get('/pending-reviews', adminController.getPendingReviews);
+router.put('/courses/:id/approve', adminController.approveCourse);
+router.put('/courses/:id/reject', adminController.rejectCourse);
+
+// Course CRUD
+router.get('/courses', adminController.getAllCourses);
+router.post('/courses', adminController.createCourse);
+router.put('/courses/:id', adminController.updateCourse);
+router.delete('/courses/:id', adminController.deleteCourse);
+
+// User CRUD
+router.post('/users', adminController.createUser);
+router.put('/users/:id', adminController.updateUser);
+router.delete('/users/:id', adminController.deleteUser);
+
+// Exam CRUD
+router.get('/exams', adminController.getAllExams);
+router.post('/exams', adminController.createExam);
+router.put('/exams/:id', adminController.updateExam);
+router.delete('/exams/:id', adminController.deleteExam);
+
+// Question CRUD (within exams)
+router.get('/exams/:examId/questions', adminController.getExamQuestions);
+router.post('/exams/:examId/questions', adminController.addQuestionToExam);
+router.delete('/exams/:examId/questions/:questionId', adminController.removeQuestionFromExam);
+
+// Course lessons (for viewing any course)
+router.get('/courses/:courseId/lessons', adminController.getCourseLessons);
+router.post('/courses/:courseId/lessons', adminController.addLessonToCourse);
+router.delete('/courses/:courseId/lessons/:lessonId', adminController.deleteLesson);
+
 module.exports = router;

@@ -1,4 +1,4 @@
-const { Account, Learner, Admin, Teacher } = require('../models');
+const { Account, Learner, Admin, Teacher, Achievement } = require('../models');
 const HttpError = require('http-errors');
 
 exports.getProfile = async (req, res, next) => {
@@ -22,7 +22,12 @@ exports.getProfile = async (req, res, next) => {
 
         if (lowerRole === 'learner') {
             const learnerDetails = await Learner.findOne({ where: { account_id: id } });
+
             if (learnerDetails) {
+                // Get stats from Achievement table (same source as GamificationPage)
+                // Achievement uses account_id, not learner_id
+                const achievement = await Achievement.findOne({ where: { account_id: id } });
+
                 profileInfo = {
                     full_name: learnerDetails.full_name,
                     phone: learnerDetails.phone_number,
@@ -30,9 +35,9 @@ exports.getProfile = async (req, res, next) => {
                     avatar_url: learnerDetails.avatar_url
                 };
                 stats = {
-                    total_xp: learnerDetails.current_xp || 0,
-                    current_streak: learnerDetails.current_streak || 0,
-                    longest_streak: 0
+                    total_xp: achievement?.total_score || learnerDetails.current_xp || 0,
+                    current_streak: achievement?.current_streak || learnerDetails.current_streak || 0,
+                    longest_streak: achievement?.max_streak || 0
                 };
             }
         } else if (lowerRole === 'teacher') {
@@ -41,7 +46,8 @@ exports.getProfile = async (req, res, next) => {
                 profileInfo = {
                     full_name: teacherDetails.full_name,
                     phone: teacherDetails.phone,
-                    bio_html: teacherDetails.bio,
+                    bio: teacherDetails.bio,
+                    specialization: teacherDetails.specialization,
                     avatar_url: teacherDetails.avatar_url
                 };
             }
@@ -75,7 +81,7 @@ exports.getProfile = async (req, res, next) => {
 exports.updateProfile = async (req, res, next) => {
     try {
         const { id, role } = req.user;
-        const { full_name, phone, bio, avatar } = req.body;
+        const { full_name, phone, bio, specialization, avatar } = req.body;
 
         console.log('=== UPDATE PROFILE DEBUG ===');
         console.log('User ID:', id);
@@ -117,11 +123,11 @@ exports.updateProfile = async (req, res, next) => {
                 updateResult = await Learner.update(profileUpdates, { where: { account_id: id } });
                 console.log('Learner update result:', updateResult);
             } else if (lowerRole === 'teacher') {
-                // Teacher model may have different column names - adjust as needed
                 const teacherUpdates = {};
                 if (full_name !== undefined) teacherUpdates.full_name = full_name;
                 if (phone !== undefined) teacherUpdates.phone = phone;
                 if (bio !== undefined) teacherUpdates.bio = bio;
+                if (specialization !== undefined) teacherUpdates.specialization = specialization;
                 if (avatar !== undefined) teacherUpdates.avatar_url = avatar;
                 // First, ensure Teacher record exists
                 await Teacher.findOrCreate({

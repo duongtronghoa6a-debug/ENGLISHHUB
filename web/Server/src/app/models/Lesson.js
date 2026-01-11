@@ -7,6 +7,10 @@ module.exports = (sequelize, DataTypes) => {
                 foreignKey: 'course_id',
                 as: 'course'
             });
+            Lesson.belongsTo(models.Module, {
+                foreignKey: 'module_id',
+                as: 'module'
+            });
             Lesson.hasMany(models.LearningProgress, {
                 foreignKey: 'lesson_id',
                 as: 'progress'
@@ -23,6 +27,10 @@ module.exports = (sequelize, DataTypes) => {
         course_id: {
             type: DataTypes.UUID,
             allowNull: false
+        },
+        module_id: {
+            type: DataTypes.UUID,
+            allowNull: true // Lessons can exist without module
         },
         title: {
             type: DataTypes.STRING(255),

@@ -52,7 +52,7 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: []
         },
         status: {
-            type: DataTypes.ENUM('draft', 'published'),
+            type: DataTypes.ENUM('draft', 'published', 'archived'),
             defaultValue: 'draft'
         },
         created_at: {

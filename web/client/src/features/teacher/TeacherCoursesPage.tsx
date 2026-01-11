@@ -57,7 +57,10 @@ const TeacherCoursesPage = () => {
             if (statusFilter !== 'all') params.status = statusFilter;
 
             const response = await teacherService.getMyCourses(params);
-            setCourses(response.courses || []);
+            // API returns {success, data: {courses, total}}, Axios unwraps response.data
+            // So response = {success: true, data: {courses: [...]}}
+            const courses = response?.data?.courses || response?.courses || [];
+            setCourses(courses);
         } catch (error) {
             console.error('Failed to fetch courses:', error);
         } finally {

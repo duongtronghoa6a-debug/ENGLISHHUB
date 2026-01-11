@@ -4,6 +4,7 @@ import { useTheme } from '../../context/ThemeContext';
 import { useAuth } from '../../context/AuthContext';
 import { User, Mail, Phone, Lock, Save, Camera, Loader2 } from 'lucide-react';
 import { userService, type UserProfile, type UpdateProfileData } from '../../services/user.service';
+import MyReviews from '../../components/reviews/MyReviews';
 
 const ProfilePage = () => {
     const { isDarkMode } = useTheme();
@@ -181,6 +182,11 @@ const ProfilePage = () => {
                                             </div>
                                         </div>
                                     )}
+                                </div>
+
+                                {/* My Reviews */}
+                                <div className="mt-6">
+                                    <MyReviews isDarkMode={isDarkMode} />
                                 </div>
                             </div>
 

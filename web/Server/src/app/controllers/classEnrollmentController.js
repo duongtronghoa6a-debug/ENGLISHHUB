@@ -181,6 +181,15 @@ const approveEnrollment = async (req, res) => {
             return res.status(403).json({ success: false, message: 'Bạn không có quyền duyệt yêu cầu này' });
         }
 
+        // Check if class has capacity
+        const offlineClass = enrollment.offlineClass;
+        if (offlineClass.current_enrolled >= offlineClass.capacity) {
+            return res.status(400).json({
+                success: false,
+                message: `Lớp đã đạt sĩ số tối đa (${offlineClass.capacity} học viên). Không thể duyệt thêm.`
+            });
+        }
+
         await enrollment.update({
             status: 'approved',
             reviewed_at: new Date()

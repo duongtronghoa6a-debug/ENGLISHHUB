@@ -11,6 +11,7 @@ db.Teacher = require('./Teacher')(sequelize, Sequelize.DataTypes);
 
 // --- Course Models ---
 db.Course = require('./Course')(sequelize, Sequelize.DataTypes);
+db.Module = require('./Module')(sequelize, Sequelize.DataTypes);
 db.Lesson = require('./Lesson')(sequelize, Sequelize.DataTypes);
 
 // --- Exam & Question Models ---

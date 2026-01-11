@@ -1,0 +1,393 @@
+{
+    "resources": [
+        {
+            "id": "res-001",
+            "title": "IELTS Speaking Band 7+ Vocabulary List",
+            "description": "Bộ từ vựng nâng cao cho phần Speaking IELTS, giúp đạt band 7+",
+            "type": "document",
+            "category": "ielts",
+            "skill": "speaking",
+            "level": "B2",
+            "file_url": "https://pub-c0e1f2fbbda7411c8e21a5c8ca1d3d66.r2.dev/resources/ielts-speaking-vocabulary.pdf",
+            "thumbnail_url": "https://pub-c0e1f2fbbda7411c8e21a5c8ca1d3d66.r2.dev/thumbnails/ielts-speaking.png",
+            "file_type": "pdf",
+            "file_size": 2048000,
+            "is_premium": false,
+            "tags": [
+                "ielts",
+                "speaking",
+                "vocabulary",
+                "band 7"
+            ]
+        },
+        {
+            "id": "res-002",
+            "title": "TOEIC Listening Practice - Part 1 to 4",
+            "description": "Audio luyện nghe TOEIC với transcript và đáp án chi tiết",
+            "type": "audio",
+            "category": "toeic",
+            "skill": "listening",
+            "level": "B1",
+            "file_url": "https://pub-c0e1f2fbbda7411c8e21a5c8ca1d3d66.r2.dev/resources/toeic-listening-practice.mp3",
+            "thumbnail_url": "https://pub-c0e1f2fbbda7411c8e21a5c8ca1d3d66.r2.dev/thumbnails/toeic-listening.png",
+            "file_type": "mp3",
+            "file_size": 15360000,
+            "is_premium": false,
+            "tags": [
+                "toeic",
+                "listening",
+                "practice"
+            ]
+        },
+        {
+            "id": "res-003",
+            "title": "Grammar Cheat Sheet - Essential Rules",
+            "description": "Tổng hợp các quy tắc ngữ pháp quan trọng nhất trong tiếng Anh",
+            "type": "document",
+            "category": "grammar",
+            "skill": "all",
+            "level": "A2",
+            "file_url": "https://pub-c0e1f2fbbda7411c8e21a5c8ca1d3d66.r2.dev/resources/grammar-cheatsheet.pdf",
+            "thumbnail_url": "https://pub-c0e1f2fbbda7411c8e21a5c8ca1d3d66.r2.dev/thumbnails/grammar.png",
+            "file_type": "pdf",
+            "file_size": 1024000,
+            "is_premium": false,
+            "tags": [
+                "grammar",
+                "beginner",
+                "cheatsheet"
+            ]
+        },
+        {
+            "id": "res-004",
+            "title": "IELTS Writing Task 2 Template",
+            "description": "Template viết bài Essay IELTS Writing Task 2 cho các dạng đề phổ biến",
+            "type": "template",
+            "category": "ielts",
+            "skill": "writing",
+            "level": "B2",
+            "file_url": "https://pub-c0e1f2fbbda7411c8e21a5c8ca1d3d66.r2.dev/resources/ielts-writing-template.docx",
+            "thumbnail_url": "https://pub-c0e1f2fbbda7411c8e21a5c8ca1d3d66.r2.dev/thumbnails/ielts-writing.png",
+            "file_type": "docx",
+            "file_size": 512000,
+            "is_premium": true,
+            "tags": [
+                "ielts",
+                "writing",
+                "template",
+                "essay"
+            ]
+        },
+        {
+            "id": "res-005",
+            "title": "English Pronunciation Guide - Audio Course",
+            "description": "Khóa học phát âm chuẩn Anh-Mỹ với 50+ bài audio",
+            "type": "audio",
+            "category": "speaking",
+            "skill": "speaking",
+            "level": "A2",
+            "file_url": "https://pub-c0e1f2fbbda7411c8e21a5c8ca1d3d66.r2.dev/resources/pronunciation-guide.mp3",
+            "thumbnail_url": "https://pub-c0e1f2fbbda7411c8e21a5c8ca1d3d66.r2.dev/thumbnails/pronunciation.png",
+            "file_type": "mp3",
+            "file_size": 25600000,
+            "is_premium": false,
+            "tags": [
+                "pronunciation",
+                "speaking",
+                "audio"
+            ]
+        },
+        {
+            "id": "res-006",
+            "title": "TOEIC Reading Practice Tests",
+            "description": "Bộ đề luyện đọc TOEIC với 5 bài test hoàn chỉnh",
+            "type": "document",
+            "category": "toeic",
+            "skill": "reading",
+            "level": "B1",
+            "file_url": "https://pub-c0e1f2fbbda7411c8e21a5c8ca1d3d66.r2.dev/resources/toeic-reading-tests.pdf",
+            "thumbnail_url": "https://pub-c0e1f2fbbda7411c8e21a5c8ca1d3d66.r2.dev/thumbnails/toeic-reading.png",
+            "file_type": "pdf",
+            "file_size": 3072000,
+            "is_premium": false,
+            "tags": [
+                "toeic",
+                "reading",
+                "practice test"
+            ]
+        },
+        {
+            "id": "res-007",
+            "title": "Business Email Templates",
+            "description": "50+ mẫu email tiếng Anh thương mại cho các tình huống công việc",
+            "type": "template",
+            "category": "business",
+            "skill": "writing",
+            "level": "B1",
+            "file_url": "https://pub-c0e1f2fbbda7411c8e21a5c8ca1d3d66.r2.dev/resources/business-email-templates.docx",
+            "thumbnail_url": "https://pub-c0e1f2fbbda7411c8e21a5c8ca1d3d66.r2.dev/thumbnails/business-email.png",
+            "file_type": "docx",
+            "file_size": 768000,
+            "is_premium": false,
+            "tags": [
+                "business",
+                "email",
+                "template",
+                "writing"
+            ]
+        },
+        {
+            "id": "res-008",
+            "title": "IELTS Listening Practice Tests Vol.1",
+            "description": "4 bài test luyện nghe IELTS hoàn chỉnh với audio và transcript",
+            "type": "audio",
+            "category": "ielts",
+            "skill": "listening",
+            "level": "B2",
+            "file_url": "https://pub-c0e1f2fbbda7411c8e21a5c8ca1d3d66.r2.dev/resources/ielts-listening-vol1.mp3",
+            "thumbnail_url": "https://pub-c0e1f2fbbda7411c8e21a5c8ca1d3d66.r2.dev/thumbnails/ielts-listening.png",
+            "file_type": "mp3",
+            "file_size": 45000000,
+            "is_premium": true,
+            "tags": [
+                "ielts",
+                "listening",
+                "practice test"
+            ]
+        },
+        {
+            "id": "res-009",
+            "title": "Academic Vocabulary Excel Tracker",
+            "description": "Bảng Excel theo dõi học từ vựng học thuật với 3000+ từ",
+            "type": "template",
+            "category": "vocabulary",
+            "skill": "all",
+            "level": "B2",
+            "file_url": "https://pub-c0e1f2fbbda7411c8e21a5c8ca1d3d66.r2.dev/resources/academic-vocabulary-tracker.xlsx",
+            "thumbnail_url": "https://pub-c0e1f2fbbda7411c8e21a5c8ca1d3d66.r2.dev/thumbnails/vocabulary-tracker.png",
+            "file_type": "xlsx",
+            "file_size": 2560000,
+            "is_premium": false,
+            "tags": [
+                "vocabulary",
+                "academic",
+                "excel",
+                "tracker"
+            ]
+        },
+        {
+            "id": "res-010",
+            "title": "Common English Idioms & Phrases",
+            "description": "500+ thành ngữ và cụm từ thông dụng trong tiếng Anh giao tiếp",
+            "type": "document",
+            "category": "vocabulary",
+            "skill": "speaking",
+            "level": "B1",
+            "file_url": "https://pub-c0e1f2fbbda7411c8e21a5c8ca1d3d66.r2.dev/resources/english-idioms.pdf",
+            "thumbnail_url": "https://pub-c0e1f2fbbda7411c8e21a5c8ca1d3d66.r2.dev/thumbnails/idioms.png",
+            "file_type": "pdf",
+            "file_size": 1536000,
+            "is_premium": false,
+            "tags": [
+                "idioms",
+                "vocabulary",
+                "speaking"
+            ]
+        },
+        {
+            "id": "res-011",
+            "title": "TOEIC Full Practice Test (LC+RC)",
+            "description": "Đề thi TOEIC hoàn chỉnh 200 câu với audio và đáp án chi tiết",
+            "type": "document",
+            "category": "toeic",
+            "skill": "all",
+            "level": "B1",
+            "file_url": "https://pub-c0e1f2fbbda7411c8e21a5c8ca1d3d66.r2.dev/resources/toeic-full-test.pdf",
+            "thumbnail_url": "https://pub-c0e1f2fbbda7411c8e21a5c8ca1d3d66.r2.dev/thumbnails/toeic-test.png",
+            "file_type": "pdf",
+            "file_size": 4096000,
+            "is_premium": true,
+            "tags": [
+                "toeic",
+                "full test",
+                "practice"
+            ]
+        },
+        {
+            "id": "res-012",
+            "title": "IELTS Reading Strategies Guide",
+            "description": "Chiến thuật làm bài đọc IELTS hiệu quả cho từng dạng câu hỏi",
+            "type": "document",
+            "category": "ielts",
+            "skill": "reading",
+            "level": "B2",
+            "file_url": "https://pub-c0e1f2fbbda7411c8e21a5c8ca1d3d66.r2.dev/resources/ielts-reading-strategies.pdf",
+            "thumbnail_url": "https://pub-c0e1f2fbbda7411c8e21a5c8ca1d3d66.r2.dev/thumbnails/ielts-reading.png",
+            "file_type": "pdf",
+            "file_size": 2048000,
+            "is_premium": false,
+            "tags": [
+                "ielts",
+                "reading",
+                "strategies"
+            ]
+        },
+        {
+            "id": "res-013",
+            "title": "Daily Conversation Phrases Audio",
+            "description": "Audio luyện các cụm từ giao tiếp hàng ngày với 100+ tình huống",
+            "type": "audio",
+            "category": "speaking",
+            "skill": "speaking",
+            "level": "A2",
+            "file_url": "https://pub-c0e1f2fbbda7411c8e21a5c8ca1d3d66.r2.dev/resources/daily-conversation.mp3",
+            "thumbnail_url": "https://pub-c0e1f2fbbda7411c8e21a5c8ca1d3d66.r2.dev/thumbnails/conversation.png",
+            "file_type": "mp3",
+            "file_size": 18000000,
+            "is_premium": false,
+            "tags": [
+                "conversation",
+                "speaking",
+                "daily",
+                "audio"
+            ]
+        },
+        {
+            "id": "res-014",
+            "title": "Phrasal Verbs Flashcards PDF",
+            "description": "200+ Phrasal Verbs quan trọng nhất với ví dụ và bài tập",
+            "type": "document",
+            "category": "vocabulary",
+            "skill": "all",
+            "level": "B1",
+            "file_url": "https://pub-c0e1f2fbbda7411c8e21a5c8ca1d3d66.r2.dev/resources/phrasal-verbs-flashcards.pdf",
+            "thumbnail_url": "https://pub-c0e1f2fbbda7411c8e21a5c8ca1d3d66.r2.dev/thumbnails/phrasal-verbs.png",
+            "file_type": "pdf",
+            "file_size": 1280000,
+            "is_premium": false,
+            "tags": [
+                "phrasal verbs",
+                "vocabulary",
+                "flashcards"
+            ]
+        },
+        {
+            "id": "res-015",
+            "title": "English Grammar Exercises Workbook",
+            "description": "300+ bài tập ngữ pháp từ cơ bản đến nâng cao với đáp án",
+            "type": "document",
+            "category": "grammar",
+            "skill": "all",
+            "level": "B1",
+            "file_url": "https://pub-c0e1f2fbbda7411c8e21a5c8ca1d3d66.r2.dev/resources/grammar-exercises.pdf",
+            "thumbnail_url": "https://pub-c0e1f2fbbda7411c8e21a5c8ca1d3d66.r2.dev/thumbnails/grammar-exercises.png",
+            "file_type": "pdf",
+            "file_size": 3584000,
+            "is_premium": false,
+            "tags": [
+                "grammar",
+                "exercises",
+                "workbook"
+            ]
+        },
+        {
+            "id": "res-016",
+            "title": "IELTS Speaking Part 1 Questions Bank",
+            "description": "Ngân hàng câu hỏi Speaking Part 1 IELTS với mẫu trả lời",
+            "type": "document",
+            "category": "ielts",
+            "skill": "speaking",
+            "level": "B1",
+            "file_url": "https://pub-c0e1f2fbbda7411c8e21a5c8ca1d3d66.r2.dev/resources/ielts-speaking-part1.pdf",
+            "thumbnail_url": "https://pub-c0e1f2fbbda7411c8e21a5c8ca1d3d66.r2.dev/thumbnails/speaking-part1.png",
+            "file_type": "pdf",
+            "file_size": 1792000,
+            "is_premium": false,
+            "tags": [
+                "ielts",
+                "speaking",
+                "part 1",
+                "questions"
+            ]
+        },
+        {
+            "id": "res-017",
+            "title": "Study Planner Template",
+            "description": "Template lập kế hoạch học tập tiếng Anh theo tuần/tháng",
+            "type": "template",
+            "category": "general",
+            "skill": "all",
+            "level": "A1",
+            "file_url": "https://pub-c0e1f2fbbda7411c8e21a5c8ca1d3d66.r2.dev/resources/study-planner.xlsx",
+            "thumbnail_url": "https://pub-c0e1f2fbbda7411c8e21a5c8ca1d3d66.r2.dev/thumbnails/planner.png",
+            "file_type": "xlsx",
+            "file_size": 256000,
+            "is_premium": false,
+            "tags": [
+                "planner",
+                "study",
+                "template",
+                "organization"
+            ]
+        },
+        {
+            "id": "res-018",
+            "title": "Business English Vocabulary List",
+            "description": "1000+ từ vựng tiếng Anh thương mại theo chủ đề",
+            "type": "document",
+            "category": "business",
+            "skill": "all",
+            "level": "B2",
+            "file_url": "https://pub-c0e1f2fbbda7411c8e21a5c8ca1d3d66.r2.dev/resources/business-vocabulary.pdf",
+            "thumbnail_url": "https://pub-c0e1f2fbbda7411c8e21a5c8ca1d3d66.r2.dev/thumbnails/business-vocab.png",
+            "file_type": "pdf",
+            "file_size": 2304000,
+            "is_premium": false,
+            "tags": [
+                "business",
+                "vocabulary",
+                "professional"
+            ]
+        },
+        {
+            "id": "res-019",
+            "title": "TOEIC Part 5 Grammar Drills",
+            "description": "500 câu bài tập ngữ pháp TOEIC Part 5 với giải thích chi tiết",
+            "type": "document",
+            "category": "toeic",
+            "skill": "reading",
+            "level": "B1",
+            "file_url": "https://pub-c0e1f2fbbda7411c8e21a5c8ca1d3d66.r2.dev/resources/toeic-part5-drills.pdf",
+            "thumbnail_url": "https://pub-c0e1f2fbbda7411c8e21a5c8ca1d3d66.r2.dev/thumbnails/toeic-part5.png",
+            "file_type": "pdf",
+            "file_size": 2816000,
+            "is_premium": false,
+            "tags": [
+                "toeic",
+                "part 5",
+                "grammar",
+                "drills"
+            ]
+        },
+        {
+            "id": "res-020",
+            "title": "English Shadowing Exercise Audio",
+            "description": "Audio luyện Shadowing với tốc độ chậm/trung bình/nhanh",
+            "type": "audio",
+            "category": "speaking",
+            "skill": "speaking",
+            "level": "B1",
+            "file_url": "https://pub-c0e1f2fbbda7411c8e21a5c8ca1d3d66.r2.dev/resources/shadowing-exercises.mp3",
+            "thumbnail_url": "https://pub-c0e1f2fbbda7411c8e21a5c8ca1d3d66.r2.dev/thumbnails/shadowing.png",
+            "file_type": "mp3",
+            "file_size": 30720000,
+            "is_premium": true,
+            "tags": [
+                "shadowing",
+                "speaking",
+                "audio",
+                "pronunciation"
+            ]
+        }
+    ]
+}

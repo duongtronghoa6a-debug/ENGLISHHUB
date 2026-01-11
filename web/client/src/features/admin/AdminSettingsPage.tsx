@@ -1,9 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Settings, Moon, Sun, Bell, Lock, Globe, Mail, Save, Shield, Database, Palette } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
+import { useNotification } from '../../context/NotificationContext';
 
 const AdminSettingsPage = () => {
     const { isDarkMode, toggleTheme } = useTheme();
+    const { addNotification } = useNotification();
+    const [isSaving, setIsSaving] = useState(false);
     const [settings, setSettings] = useState({
         siteName: 'English HUB',
         siteEmail: 'support@englishhub.com',
@@ -19,12 +22,37 @@ const AdminSettingsPage = () => {
         defaultCurrency: 'VND'
     });
 
+    // Load settings from localStorage on mount
+    useEffect(() => {
+        const savedSettings = localStorage.getItem('adminSettings');
+        if (savedSettings) {
+            try {
+                setSettings(JSON.parse(savedSettings));
+            } catch (e) {
+                console.error('Error loading settings:', e);
+            }
+        }
+    }, []);
+
     const handleChange = (key: string, value: any) => {
         setSettings(prev => ({ ...prev, [key]: value }));
     };
 
-    const handleSave = () => {
-        alert('Cài đặt đã được lưu thành công!');
+    const handleSave = async () => {
+        setIsSaving(true);
+        try {
+            // Save to localStorage (for MVP - can be replaced with API call later)
+            localStorage.setItem('adminSettings', JSON.stringify(settings));
+
+            // Simulate API delay
+            await new Promise(resolve => setTimeout(resolve, 500));
+
+            addNotification('Thành công', 'Cài đặt đã được lưu thành công!', 'success');
+        } catch (error) {
+            addNotification('Lỗi', 'Không thể lưu cài đặt', 'error');
+        } finally {
+            setIsSaving(false);
+        }
     };
 
     return (
@@ -41,9 +69,10 @@ const AdminSettingsPage = () => {
                 </div>
                 <button
                     onClick={handleSave}
-                    className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-xl font-bold shadow-lg hover:bg-blue-700"
+                    disabled={isSaving}
+                    className={`flex items-center gap-2 px-4 py-2 ${isSaving ? 'bg-blue-400' : 'bg-blue-600 hover:bg-blue-700'} text-white rounded-xl font-bold shadow-lg transition-colors`}
                 >
-                    <Save size={18} /> Lưu thay đổi
+                    <Save size={18} className={isSaving ? 'animate-spin' : ''} /> {isSaving ? 'Đang lưu...' : 'Lưu thay đổi'}
                 </button>
             </div>
 

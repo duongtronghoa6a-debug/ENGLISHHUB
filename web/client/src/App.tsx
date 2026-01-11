@@ -33,8 +33,12 @@ import TeacherDashboard from './features/teacher/TeacherDashboard';
 import TeacherCoursesPage from './features/teacher/TeacherCoursesPage';
 import TeacherLessonsPage from './features/teacher/TeacherLessonsPage';
 import TeacherExamsPage from './features/teacher/TeacherExamsPage';
-import TeacherResourcesPage from './features/teacher/TeacherResourcesPage';
 import TeacherProfilePage from './features/teacher/TeacherProfilePage';
+import TeacherOfflineClassesPage from './features/teacher/TeacherOfflineClassesPage';
+import TeacherChatPage from './features/teacher/TeacherChatPage';
+import TeacherSettingsPage from './features/teacher/TeacherSettingsPage';
+import TeacherCourseStudentsPage from './features/teacher/TeacherCourseStudentsPage';
+import TeacherOfflineClassDetailPage from './features/teacher/TeacherOfflineClassDetailPage';
 
 // Admin imports
 import AdminCoursesPage from './features/admin/AdminCoursesPage';
@@ -43,6 +47,7 @@ import AdminStatsPage from './features/admin/AdminStatsPage';
 import AdminSettingsPage from './features/admin/AdminSettingsPage';
 import AdminAccountPage from './features/admin/AdminAccountPage';
 import AdminExamsPage from './features/admin/AdminExamsPage';
+import AdminCourseLessonsPage from './features/admin/AdminCourseLessonsPage';
 
 import { NotificationProvider } from './context/NotificationContext';
 
@@ -85,10 +90,14 @@ function App() {
                   <Route index element={<TeacherDashboard />} />
                   <Route path="courses" element={<TeacherCoursesPage />} />
                   <Route path="lessons" element={<TeacherLessonsPage />} />
+                  <Route path="offline-classes" element={<TeacherOfflineClassesPage />} />
+                  <Route path="offline-classes/:id" element={<TeacherOfflineClassDetailPage />} />
                   <Route path="exams" element={<TeacherExamsPage />} />
-                  <Route path="resources" element={<TeacherResourcesPage />} />
                   <Route path="profile" element={<TeacherProfilePage />} />
-                  <Route path="*" element={<div className="p-10">Page under construction</div>} />
+                  <Route path="courses/:id/lessons" element={<TeacherLessonsPage />} />
+                  <Route path="courses/:id/students" element={<TeacherCourseStudentsPage />} />
+                  <Route path="chat" element={<TeacherChatPage />} />
+                  <Route path="settings" element={<TeacherSettingsPage />} />
                 </Route>
 
                 {/* Admin Routes */}
@@ -96,6 +105,7 @@ function App() {
                   <Route index element={<AdminDashboard />} />
                   <Route path="users" element={<AdminUsersPage />} />
                   <Route path="courses" element={<AdminCoursesPage />} />
+                  <Route path="courses/:courseId/lessons" element={<AdminCourseLessonsPage />} />
                   <Route path="exams" element={<AdminExamsPage />} />
                   <Route path="library" element={<AdminLibraryPage />} />
                   <Route path="stats" element={<AdminStatsPage />} />

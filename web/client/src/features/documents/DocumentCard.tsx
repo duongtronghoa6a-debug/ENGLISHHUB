@@ -1,10 +1,11 @@
 import { useState } from 'react';
-import { Star, CheckCircle, Send, Loader2 } from 'lucide-react';
+import { Star, CheckCircle } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { enrollmentService } from '../../services/enrollment.service';
 import { classEnrollmentService } from '../../services/classEnrollment.service';
+import api from '../../services/api';
 
 interface DocumentProps {
     data: {
@@ -19,6 +20,7 @@ interface DocumentProps {
         price?: number;
         author?: string;
         rating?: number;
+        reviewCount?: number;
     };
 }
 
@@ -27,6 +29,21 @@ const DocumentCard = ({ data }: DocumentProps) => {
     const { isAuthenticated } = useAuth();
     const navigate = useNavigate();
     const [isRequesting, setIsRequesting] = useState(false);
+    const [ratingInfo, setRatingInfo] = useState<{ avg: number; count: number } | null>(null);
+    const [ratingFetched, setRatingFetched] = useState(false);
+
+    // Fetch rating on hover
+    const fetchRating = async () => {
+        if (ratingFetched) return;
+        setRatingFetched(true);
+        try {
+            const res = await api.get(`/reviews/course/${data.id}`);
+            const { averageRating, count } = res.data;
+            setRatingInfo({ avg: averageRating || 0, count: count || 0 });
+        } catch {
+            setRatingInfo({ avg: 0, count: 0 });
+        }
+    };
 
     // Check login before allowing access
     const requireLogin = (): boolean => {
@@ -153,6 +170,7 @@ const DocumentCard = ({ data }: DocumentProps) => {
         <div
             className={`group relative rounded-2xl overflow-hidden cursor-pointer h-80 transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 select-none ${data.isEnrolled ? 'ring-2 ring-green-500 ring-offset-2 ring-offset-transparent' : ''}`}
             onClick={handleCardClick}
+            onMouseEnter={fetchRating}
         >
             {/* Enrolled Badge */}
             {data.isEnrolled && (
@@ -203,10 +221,22 @@ const DocumentCard = ({ data }: DocumentProps) => {
                 {/* Hover Details (Slides up) */}
                 <div className="absolute inset-x-6 bottom-6 flex flex-col items-center text-center transform translate-y-8 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 delay-75">
                     <h3 className="text-xl font-bold text-white mb-1 line-clamp-1">{data.title}</h3>
-                    <div className="flex items-center gap-1 text-yellow-400 mb-2">
-                        <span className="font-bold text-sm">{data.rating || 4.5}</span>
-                        <Star size={14} fill="currentColor" />
-                    </div>
+                    {ratingInfo ? (
+                        ratingInfo.count > 0 ? (
+                            <div className="flex items-center gap-1 text-yellow-400 mb-2">
+                                <span className="font-bold text-sm">{ratingInfo.avg.toFixed(1)}</span>
+                                <Star size={14} fill="currentColor" />
+                                <span className="text-xs text-gray-400">({ratingInfo.count})</span>
+                            </div>
+                        ) : (
+                            <div className="text-gray-400 text-xs mb-2">Chưa có đánh giá</div>
+                        )
+                    ) : (
+                        <div className="flex items-center gap-1 text-yellow-400 mb-2">
+                            <span className="font-bold text-sm">{data.rating || '-'}</span>
+                            <Star size={14} fill="currentColor" />
+                        </div>
+                    )}
 
                     <p className="text-gray-300 text-sm mb-4 line-clamp-2">
                         {data.description}

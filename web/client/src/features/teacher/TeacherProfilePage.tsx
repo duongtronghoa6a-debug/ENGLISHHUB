@@ -3,6 +3,7 @@ import { User, Mail, Phone, BookOpen, Users, DollarSign, Star, TrendingUp, Award
 import { useTheme } from '../../context/ThemeContext';
 import { useAuth } from '../../context/AuthContext';
 import { teacherService } from '../../services/teacher.service';
+import api from '../../services/api';
 
 interface TeacherStats {
     totalCourses: number;
@@ -16,16 +17,37 @@ interface TeacherStats {
     draftCourses: number;
 }
 
+interface TeacherProfile {
+    full_name: string;
+    email: string;
+    phone: string;
+    bio: string;
+    specialization: string;
+    avatar: string;
+}
+
 const TeacherProfilePage = () => {
     const { isDarkMode } = useTheme();
     const { user } = useAuth();
     const [stats, setStats] = useState<TeacherStats | null>(null);
+    const [profile, setProfile] = useState<TeacherProfile | null>(null);
     const [isLoading, setIsLoading] = useState(true);
-    const [activeTab, setActiveTab] = useState('overview');
 
     useEffect(() => {
         fetchStats();
+        fetchProfile();
     }, []);
+
+    const fetchProfile = async () => {
+        try {
+            const response = await api.get('/teacher/profile');
+            if (response.data?.success) {
+                setProfile(response.data.data);
+            }
+        } catch (error) {
+            console.error('Failed to fetch profile:', error);
+        }
+    };
 
     const fetchStats = async () => {
         try {
@@ -82,18 +104,18 @@ const TeacherProfilePage = () => {
                 <div className="relative z-10 flex flex-col md:flex-row items-center gap-6">
                     <div className="relative">
                         <div className="w-32 h-32 rounded-full bg-white/20 flex items-center justify-center text-5xl font-bold border-4 border-white/30">
-                            {user?.name?.[0] || 'T'}
+                            {profile?.full_name?.[0] || user?.name?.[0] || 'T'}
                         </div>
                         <button className="absolute bottom-0 right-0 p-2 bg-white text-blue-600 rounded-full shadow-lg hover:bg-gray-100">
                             <Camera size={18} />
                         </button>
                     </div>
                     <div className="text-center md:text-left flex-1">
-                        <h1 className="text-3xl font-bold mb-2">{user?.name || 'Giáo viên Demo'}</h1>
-                        <p className="text-blue-200 mb-4">Giảng viên tiếng Anh tại English HUB</p>
+                        <h1 className="text-3xl font-bold mb-2">{profile?.full_name || user?.name || 'Giáo viên Demo'}</h1>
+                        <p className="text-blue-200 mb-4">{profile?.specialization || 'Giảng viên tiếng Anh tại English HUB'}</p>
                         <div className="flex flex-wrap justify-center md:justify-start gap-4 text-sm">
                             <span className="flex items-center gap-2">
-                                <Mail size={16} /> {user?.email || '02@gmail.com'}
+                                <Mail size={16} /> {profile?.email || user?.email || '02@gmail.com'}
                             </span>
                             <span className="flex items-center gap-2">
                                 <Calendar size={16} /> Tham gia từ 01/2024
@@ -161,7 +183,7 @@ const TeacherProfilePage = () => {
                     <DollarSign className="text-emerald-500" /> Tổng quan doanh thu
                 </h2>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className={`${isDarkMode ? 'bg-emerald-500/10' : 'bg-emerald-50'} p-6 rounded-xl`}>
                         <div className="text-emerald-600 text-sm font-bold uppercase mb-2">Tháng này</div>
                         <div className="text-3xl font-bold text-emerald-600">{formatCurrency(stats?.thisMonthRevenue || 0)}</div>
@@ -172,12 +194,6 @@ const TeacherProfilePage = () => {
                         <div className="text-blue-600 text-sm font-bold uppercase mb-2">Tổng doanh thu</div>
                         <div className="text-3xl font-bold text-blue-600">{formatCurrency(stats?.totalRevenue || 0)}</div>
                         <div className="text-sm text-blue-500 mt-2">Từ {stats?.totalEnrollments} đăng ký</div>
-                    </div>
-
-                    <div className={`${isDarkMode ? 'bg-purple-500/10' : 'bg-purple-50'} p-6 rounded-xl`}>
-                        <div className="text-purple-600 text-sm font-bold uppercase mb-2">Đang chờ thanh toán</div>
-                        <div className="text-3xl font-bold text-purple-600">{formatCurrency(1250000)}</div>
-                        <div className="text-sm text-purple-500 mt-2">Thanh toán vào 15/01</div>
                     </div>
                 </div>
             </div>
@@ -209,21 +225,21 @@ const TeacherProfilePage = () => {
                             <User className="text-gray-400" size={20} />
                             <div>
                                 <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Họ và tên</div>
-                                <div className="font-medium">{user?.name || 'Giáo viên Demo'}</div>
+                                <div className="font-medium">{profile?.full_name || user?.name || 'Chưa cập nhật'}</div>
                             </div>
                         </div>
                         <div className="flex items-center gap-3">
                             <Mail className="text-gray-400" size={20} />
                             <div>
                                 <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Email</div>
-                                <div className="font-medium">{user?.email || '02@gmail.com'}</div>
+                                <div className="font-medium">{profile?.email || user?.email || 'Chưa cập nhật'}</div>
                             </div>
                         </div>
                         <div className="flex items-center gap-3">
                             <Phone className="text-gray-400" size={20} />
                             <div>
                                 <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Số điện thoại</div>
-                                <div className="font-medium">0902 000 002</div>
+                                <div className="font-medium">{profile?.phone || 'Chưa cập nhật'}</div>
                             </div>
                         </div>
                     </div>

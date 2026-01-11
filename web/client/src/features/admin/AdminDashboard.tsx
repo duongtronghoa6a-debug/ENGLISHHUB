@@ -8,7 +8,8 @@ import {
     Clock,
     CheckCircle,
     XCircle,
-    ArrowRight
+    ArrowRight,
+    Plus
 } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
 import { adminService } from '../../services/admin.service';
@@ -103,7 +104,15 @@ const AdminDashboard = () => {
                 {/* Pending Actions */}
                 <div className={`${isDarkMode ? 'bg-[#151e32]' : 'bg-white'} rounded-2xl shadow-lg p-6`}>
                     <div className="flex justify-between items-center mb-6">
-                        <h2 className="text-xl font-bold">Công việc chờ xử lý</h2>
+                        <div className="flex items-center gap-3">
+                            <h2 className="text-xl font-bold">Công việc chờ xử lý</h2>
+                            <button
+                                className="p-1.5 bg-blue-500/20 text-blue-500 rounded-lg hover:bg-blue-500/30"
+                                title="Tạo công việc mới"
+                            >
+                                <Plus size={16} />
+                            </button>
+                        </div>
                         <span className={`px-3 py-1 rounded-full text-sm font-medium ${stats?.pendingActions
                             ? 'bg-red-500/10 text-red-500'
                             : 'bg-green-500/10 text-green-500'}`}>

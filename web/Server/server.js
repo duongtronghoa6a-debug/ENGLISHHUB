@@ -22,17 +22,26 @@ const cors = require('cors');
 app.use(cors());
 
 // 2. BẬT MORGAN để theo dõi mọi request 
-app.use(morgan('dev')); 
+app.use(morgan('dev'));
 
 // 3. Cấu hình Static files
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Giúp Server đọc được dữ liệu JSON từ client gửi lên (POST/PUT)
-app.use(express.json()); 
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // 4. tạo kết nối db
 connect();
+
+// Health check endpoint cho Railway
+app.get('/api/health', (req, res) => {
+    res.status(200).json({
+        status: 'ok',
+        timestamp: new Date().toISOString(),
+        environment: process.env.NODE_ENV || 'development'
+    });
+});
 
 // Đồng bộ tạo bảng
 models.sequelize.sync({ force: false, alter: true })
@@ -51,5 +60,5 @@ solvingError(app);
 
 // start server
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
+    console.log(`Example app listening on port ${port}`);
 });

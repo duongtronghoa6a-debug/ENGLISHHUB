@@ -7,6 +7,10 @@ module.exports = (sequelize, DataTypes) => {
                 foreignKey: 'teacher_id',
                 as: 'teacher'
             });
+            Course.belongsTo(models.Account, {
+                foreignKey: 'created_by',
+                as: 'creator'
+            });
             Course.hasMany(models.Lesson, {
                 foreignKey: 'course_id',
                 as: 'lessons'
@@ -29,6 +33,10 @@ module.exports = (sequelize, DataTypes) => {
             primaryKey: true
         },
         teacher_id: {
+            type: DataTypes.UUID,
+            allowNull: true
+        },
+        created_by: {
             type: DataTypes.UUID,
             allowNull: true
         },
@@ -74,6 +82,14 @@ module.exports = (sequelize, DataTypes) => {
         },
         video_playlist_url: {
             type: DataTypes.STRING(2048),
+            allowNull: true
+        },
+        approval_status: {
+            type: DataTypes.ENUM('draft', 'pending_review', 'approved', 'rejected'),
+            defaultValue: 'draft'
+        },
+        rejection_reason: {
+            type: DataTypes.TEXT,
             allowNull: true
         }
     }, {

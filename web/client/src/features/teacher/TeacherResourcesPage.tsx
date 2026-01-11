@@ -1,39 +1,66 @@
-import { useState } from 'react';
-import { Download, FileText, Video, BookOpen, Search, Filter, FolderOpen, ExternalLink, Clock, Eye } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Download, FileText, Video, BookOpen, Search, Filter, FolderOpen, ExternalLink, Clock, Eye, Headphones } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
+import api from '../../services/api';
 
 interface Resource {
     id: string;
     title: string;
-    type: 'document' | 'video' | 'template' | 'quiz';
+    description?: string;
+    type: 'document' | 'video' | 'template' | 'audio' | 'tool';
     category: string;
+    skill?: string;
+    level?: string;
+    file_url?: string;
+    file_type?: string;
+    file_size?: number;
     downloads: number;
-    size: string;
-    updatedAt: string;
+    is_premium?: boolean;
+    tags?: string[];
+    created_at?: string;
 }
 
 const TeacherResourcesPage = () => {
     const { isDarkMode } = useTheme();
     const [activeCategory, setActiveCategory] = useState('all');
     const [searchQuery, setSearchQuery] = useState('');
+    const [resources, setResources] = useState<Resource[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
 
-    // Mock resources data
-    const resources: Resource[] = [
-        { id: '1', title: 'Template Giáo án IELTS Speaking', type: 'document', category: 'template', downloads: 245, size: '2.5 MB', updatedAt: '2024-01-05' },
-        { id: '2', title: 'Bộ câu hỏi Grammar B1-B2', type: 'quiz', category: 'question-bank', downloads: 189, size: '1.2 MB', updatedAt: '2024-01-03' },
-        { id: '3', title: 'Video hướng dẫn tạo khóa học', type: 'video', category: 'guide', downloads: 567, size: '156 MB', updatedAt: '2024-01-01' },
-        { id: '4', title: 'Template bài giảng PowerPoint', type: 'template', category: 'template', downloads: 432, size: '15 MB', updatedAt: '2023-12-28' },
-        { id: '5', title: 'Bộ từ vựng TOEIC 600+', type: 'document', category: 'vocabulary', downloads: 892, size: '5.6 MB', updatedAt: '2023-12-25' },
-        { id: '6', title: 'Audio Listening Practice Set 1', type: 'video', category: 'listening', downloads: 321, size: '89 MB', updatedAt: '2023-12-20' },
-        { id: '7', title: 'Đề thi thử IELTS Reading', type: 'quiz', category: 'question-bank', downloads: 654, size: '3.2 MB', updatedAt: '2023-12-18' },
-        { id: '8', title: 'Template Certificate', type: 'template', category: 'template', downloads: 234, size: '1.8 MB', updatedAt: '2023-12-15' },
-    ];
+    // Fetch resources from API or fallback to static JSON
+    useEffect(() => {
+        fetchResources();
+    }, []);
+
+    const fetchResources = async () => {
+        setIsLoading(true);
+        try {
+            // Try API first
+            const response = await api.get('/resources');
+            setResources(response.data?.data || response.data?.resources || []);
+        } catch (error) {
+            // Fallback: load from static JSON (for demo)
+            console.log('Loading resources from static data...');
+            setResources([
+                { id: '1', title: 'Template Giáo án IELTS Speaking', type: 'document', category: 'template', downloads: 245, file_type: 'pdf' },
+                { id: '2', title: 'Bộ câu hỏi Grammar B1-B2', type: 'document', category: 'question-bank', downloads: 189, file_type: 'pdf' },
+                { id: '3', title: 'Video hướng dẫn tạo khóa học', type: 'video', category: 'guide', downloads: 567, file_type: 'mp4' },
+                { id: '4', title: 'Template bài giảng PowerPoint', type: 'template', category: 'template', downloads: 432, file_type: 'pptx' },
+                { id: '5', title: 'Bộ từ vựng TOEIC 600+', type: 'document', category: 'vocabulary', downloads: 892, file_type: 'pdf' },
+                { id: '6', title: 'Audio Listening Practice Set 1', type: 'audio', category: 'listening', downloads: 321, file_type: 'mp3' },
+                { id: '7', title: 'Đề thi thử IELTS Reading', type: 'document', category: 'question-bank', downloads: 654, file_type: 'pdf' },
+                { id: '8', title: 'Template Certificate', type: 'template', category: 'template', downloads: 234, file_type: 'docx' },
+            ]);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     const categories = [
-        { key: 'all', label: 'Tất cả', count: resources.length },
-        { key: 'template', label: 'Template', count: resources.filter(r => r.category === 'template').length },
-        { key: 'question-bank', label: 'Ngân hàng đề', count: resources.filter(r => r.category === 'question-bank').length },
-        { key: 'guide', label: 'Hướng dẫn', count: resources.filter(r => r.type === 'video').length },
+        { key: 'all', label: 'Tất cả', count: (resources || []).length },
+        { key: 'template', label: 'Template', count: (resources || []).filter(r => r.category === 'template').length },
+        { key: 'question-bank', label: 'Ngân hàng đề', count: (resources || []).filter(r => r.category === 'question-bank').length },
+        { key: 'guide', label: 'Hướng dẫn', count: (resources || []).filter(r => r.type === 'video').length },
     ];
 
     const getTypeIcon = (type: string) => {
@@ -81,8 +108,8 @@ const TeacherResourcesPage = () => {
                     <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Video</div>
                 </div>
                 <div className={`${isDarkMode ? 'bg-[#1e293b]' : 'bg-white'} p-4 rounded-xl shadow-sm`}>
-                    <div className="text-2xl font-bold text-green-500">{resources.filter(r => r.type === 'quiz').length}</div>
-                    <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Bộ đề</div>
+                    <div className="text-2xl font-bold text-green-500">{resources.filter(r => r.type === 'audio').length}</div>
+                    <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Audio</div>
                 </div>
             </div>
 
@@ -130,14 +157,14 @@ const TeacherResourcesPage = () => {
                                 <h3 className="font-bold mb-1 group-hover:text-blue-500 transition-colors">{resource.title}</h3>
                                 <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'} flex items-center gap-3`}>
                                     <span className="flex items-center gap-1"><Download size={12} /> {resource.downloads}</span>
-                                    <span>{resource.size}</span>
+                                    <span>{resource.file_type?.toUpperCase()}</span>
                                 </div>
                             </div>
                         </div>
 
                         <div className="mt-4 flex items-center justify-between">
                             <span className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-400'} flex items-center gap-1`}>
-                                <Clock size={12} /> {new Date(resource.updatedAt).toLocaleDateString('vi-VN')}
+                                <Clock size={12} /> {resource.created_at ? new Date(resource.created_at).toLocaleDateString('vi-VN') : ''}
                             </span>
                             <div className="flex gap-2">
                                 <button className="p-2 rounded-lg bg-blue-500/10 text-blue-500 hover:bg-blue-500/20">

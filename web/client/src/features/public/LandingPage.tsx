@@ -269,7 +269,7 @@ const LandingPage = () => {
                                             {APP_INFO.name.first} {APP_INFO.name.last} helps you check your English level from there to have a good orientation for yourself
                                         </p>
                                         <button
-                                            onClick={() => navigate(user?.hasTakenPlacementTest ? '/test/301/take' : '/test/301/take')} // Mock: In real app, /test/result/301
+                                            onClick={() => navigate('/test/00000000-0000-0000-0001-000000000001/take')}
                                             className="border-2 border-accent text-accent hover:bg-accent hover:text-white px-10 md:px-12 py-2.5 md:py-3 rounded-full font-bold transition-all w-full md:w-auto shadow-lg shadow-accent/20"
                                         >
                                             {user?.hasTakenPlacementTest ? 'Xem kết quả đánh giá' : 'Làm bài ngay'}
