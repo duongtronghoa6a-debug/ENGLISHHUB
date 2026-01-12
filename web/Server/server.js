@@ -26,8 +26,7 @@ app.use(cors({
     credentials: false
 }));
 
-// Handle preflight requests
-app.options('*', cors());
+// cors() middleware already handles preflight OPTIONS requests
 
 // 2. BẬT MORGAN để theo dõi mọi request 
 app.use(morgan('dev'));
