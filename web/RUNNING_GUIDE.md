@@ -8,7 +8,7 @@
 
 ### Bước 1: Tạo file `client/.env`
 ```env
-VITE_API_URL=https://motivated-motivation-production.up.railway.app
+VITE_API_URL=https://backuprepo-production.up.railway.app/api/v1
 ```
 
 ### Bước 2: Chạy Client
