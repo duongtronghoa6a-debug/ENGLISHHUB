@@ -17,9 +17,17 @@ const port = process.env.PORT || 3000;
 
 
 
-// 1. Cho phép mọi nơi gọi vào (Hoặc chỉ định rõ localhost:3000)
+// 1. Cấu hình CORS cho phép mọi origin (bao gồm localhost và production)
 const cors = require('cors');
-app.use(cors());
+app.use(cors({
+    origin: '*',
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: false
+}));
+
+// Handle preflight requests
+app.options('*', cors());
 
 // 2. BẬT MORGAN để theo dõi mọi request 
 app.use(morgan('dev'));
