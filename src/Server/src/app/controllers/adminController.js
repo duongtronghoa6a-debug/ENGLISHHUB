@@ -457,6 +457,9 @@ exports.deleteCourse = async (req, res, next) => {
         await t.commit();
         res.status(200).json({ success: true, message: 'Course and all related data deleted successfully' });
     } catch (error) {
+        console.error('[deleteCourse] Error:', error.message);
+        console.error('[deleteCourse] Stack:', error.stack);
+        console.error('[deleteCourse] Full error:', error);
         if (t) await t.rollback();
         next(error);
     }
