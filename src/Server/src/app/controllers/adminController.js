@@ -445,6 +445,9 @@ exports.deleteCourse = async (req, res, next) => {
         // Delete Modules
         await db.Module.destroy({ where: { course_id: id }, transaction: t });
 
+        // Delete OfflineSchedule (has course_id FK)
+        await db.OfflineSchedule.destroy({ where: { course_id: id }, transaction: t });
+
         // Finally delete the course
         await course.destroy({ transaction: t });
 
