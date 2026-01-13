@@ -411,6 +411,9 @@ exports.deleteCourse = async (req, res, next) => {
         // Delete LearningProgress (depends on lesson_id and enrollment_id)
         if (lessonIds.length > 0) {
             await db.LearningProgress.destroy({ where: { lesson_id: lessonIds }, transaction: t });
+            // Delete TestSession and SpeakingResult (depend on lesson_id)
+            await db.TestSession.destroy({ where: { lesson_id: lessonIds }, transaction: t });
+            await db.SpeakingResult.destroy({ where: { lesson_id: lessonIds }, transaction: t });
         }
         if (enrollmentIds.length > 0) {
             await db.LearningProgress.destroy({ where: { enrollment_id: enrollmentIds }, transaction: t });
