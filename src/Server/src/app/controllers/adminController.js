@@ -400,10 +400,41 @@ exports.deleteCourse = async (req, res, next) => {
             throw HttpError(400, 'Cannot delete course that has been ordered. Please archive it instead.');
         }
 
-        // Delete dependencies (Lessons, Enrollments, Reviews, Exams, CartItems)
+        // Get lesson IDs for this course
+        const lessons = await db.Lesson.findAll({ where: { course_id: id }, attributes: ['id'], transaction: t });
+        const lessonIds = lessons.map(l => l.id);
+
+        // Get enrollment IDs for this course
+        const enrollments = await db.Enrollment.findAll({ where: { course_id: id }, attributes: ['id'], transaction: t });
+        const enrollmentIds = enrollments.map(e => e.id);
+
+        // Delete LearningProgress (depends on lesson_id and enrollment_id)
+        if (lessonIds.length > 0) {
+            await db.LearningProgress.destroy({ where: { lesson_id: lessonIds }, transaction: t });
+        }
+        if (enrollmentIds.length > 0) {
+            await db.LearningProgress.destroy({ where: { enrollment_id: enrollmentIds }, transaction: t });
+        }
+
+        // Get exam IDs for this course
+        const exams = await db.Exam.findAll({ where: { course_id: id }, attributes: ['id'], transaction: t });
+        const examIds = exams.map(ex => ex.id);
+
+        if (examIds.length > 0) {
+            // Get ExamSubmission IDs
+            const submissions = await db.ExamSubmission.findAll({ where: { exam_id: examIds }, attributes: ['id'], transaction: t });
+            const submissionIds = submissions.map(s => s.id);
+
+            // Delete SubmissionAnswer first
+            if (submissionIds.length > 0) {
+                await db.SubmissionAnswer.destroy({ where: { submission_id: submissionIds }, transaction: t });
+            }
+            // Delete ExamSubmission
+            await db.ExamSubmission.destroy({ where: { exam_id: examIds }, transaction: t });
+        }
+
+        // Now delete direct dependencies
         await Promise.all([
-            // Lessons should be deleted before Modules (if constrained), or parallel if not.
-            // Safest to delete lessons first.
             db.Lesson.destroy({ where: { course_id: id }, transaction: t }),
             db.Enrollment.destroy({ where: { course_id: id }, transaction: t }),
             db.Review.destroy({ where: { course_id: id }, transaction: t }),
@@ -418,7 +449,7 @@ exports.deleteCourse = async (req, res, next) => {
         await course.destroy({ transaction: t });
 
         await t.commit();
-        res.status(200).json({ success: true, message: 'Course and specific related data deleted successfully' });
+        res.status(200).json({ success: true, message: 'Course and all related data deleted successfully' });
     } catch (error) {
         if (t) await t.rollback();
         next(error);
