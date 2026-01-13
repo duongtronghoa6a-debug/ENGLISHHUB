@@ -12,8 +12,10 @@ const api = axios.create({
 // Request Interceptor: Add Token
 api.interceptors.request.use(
     (config) => {
-        const token = localStorage.getItem('token');
+        let token = localStorage.getItem('token');
         if (token) {
+            // Remove any invalid characters (newlines, carriage returns, etc.)
+            token = token.trim().replace(/[\r\n]/g, '');
             config.headers.Authorization = `Bearer ${token}`;
         }
         return config;
