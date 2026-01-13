@@ -393,13 +393,22 @@ exports.deleteCourse = async (req, res, next) => {
             throw HttpError(404, 'Course not found');
         }
 
-        // TEMPORARY: Comment out for demo cleanup - will revert after
-        // // Check if course has been ordered (OrderItem)
-        // const orderCount = await db.OrderItem.count({ where: { course_id: id } });
-        // if (orderCount > 0) {
-        //     await t.rollback();
-        //     throw HttpError(400, 'Cannot delete course that has been ordered. Please archive it instead.');
-        // }
+        // Check if course has enrollments or orders
+        const enrollmentCount = await db.Enrollment.count({ where: { course_id: id } });
+        const orderCount = await db.OrderItem.count({ where: { course_id: id } });
+
+        // If course has data and force is not true, return warning for confirmation
+        const forceDelete = req.query.force === 'true';
+        if ((enrollmentCount > 0 || orderCount > 0) && !forceDelete) {
+            await t.rollback();
+            return res.status(200).json({
+                success: false,
+                requireConfirmation: true,
+                message: `Khóa học này có ${enrollmentCount} học viên đã đăng ký và ${orderCount} đơn hàng. Bạn có chắc chắn muốn xóa?`,
+                enrollmentCount,
+                orderCount
+            });
+        }
 
         // Get lesson IDs for this course
         const lessons = await db.Lesson.findAll({ where: { course_id: id }, attributes: ['id'], transaction: t });

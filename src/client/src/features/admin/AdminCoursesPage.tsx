@@ -81,13 +81,25 @@ const AdminCoursesPage = () => {
         navigate(`/admin/courses/${courseId}/lessons`);
     };
 
-    const handleDeleteCourse = async (id: string) => {
-        if (!window.confirm('Bạn có chắc muốn xóa khóa học này?')) return;
+    const handleDeleteCourse = async (id: string, force: boolean = false) => {
+        if (!force && !window.confirm('Bạn có chắc muốn xóa khóa học này?')) return;
         try {
-            await api.delete(`/admin/courses/${id}`);
+            const response = await api.delete(`/admin/courses/${id}${force ? '?force=true' : ''}`);
+
+            // Check if confirmation is required (course has enrollments/orders)
+            if (response.data.requireConfirmation) {
+                const confirmMsg = `⚠️ CẢNH BÁO:\n\n${response.data.message}\n\nNếu xóa, tất cả dữ liệu liên quan sẽ bị mất vĩnh viễn!\n\nBạn có CHẮC CHẮN muốn xóa?`;
+                if (window.confirm(confirmMsg)) {
+                    // Retry with force=true
+                    await handleDeleteCourse(id, true);
+                }
+                return;
+            }
+
             fetchCourses();
-        } catch (error) {
-            alert('Lỗi xóa khóa học');
+            alert('Đã xóa khóa học thành công!');
+        } catch (error: any) {
+            alert(error.response?.data?.message || 'Lỗi xóa khóa học');
         }
     };
 
