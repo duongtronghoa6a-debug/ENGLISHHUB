@@ -190,11 +190,11 @@ const TeacherProfilePage = () => {
                     <div className={`${isDarkMode ? 'bg-emerald-500/10' : 'bg-emerald-50'} p-6 rounded-xl`}>
                         <div className="text-emerald-600 text-sm font-bold uppercase mb-2">Tháng này</div>
                         <div className="text-3xl font-bold text-emerald-600">{formatCurrency(stats?.thisMonthRevenue || 0)}</div>
-                        {stats && stats.lastMonthRevenue > 0 ? (
-                            <div className={`text-sm mt-2 ${stats.thisMonthRevenue >= stats.lastMonthRevenue ? 'text-emerald-500' : 'text-red-500'
+                        {stats && stats.lastMonthRevenue > 0 && stats.thisMonthRevenue !== undefined ? (
+                            <div className={`text-sm mt-2 ${(stats.thisMonthRevenue || 0) >= stats.lastMonthRevenue ? 'text-emerald-500' : 'text-red-500'
                                 }`}>
-                                {stats.thisMonthRevenue >= stats.lastMonthRevenue ? '+' : ''}
-                                {Math.round(((stats.thisMonthRevenue - stats.lastMonthRevenue) / stats.lastMonthRevenue) * 100)}% so với tháng trước
+                                {(stats.thisMonthRevenue || 0) >= stats.lastMonthRevenue ? '+' : ''}
+                                {Math.round((((stats.thisMonthRevenue || 0) - stats.lastMonthRevenue) / stats.lastMonthRevenue) * 100)}% so với tháng trước
                             </div>
                         ) : (stats?.thisMonthRevenue ?? 0) > 0 ? (
                             <div className="text-sm text-emerald-500 mt-2">Tháng đầu có doanh thu!</div>
