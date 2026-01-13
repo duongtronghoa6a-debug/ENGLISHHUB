@@ -1,0 +1,1690 @@
+{
+	"info": {
+		"_postman_id": "ac5b22c6-e562-4905-ae14-caccb889a7e3",
+		"name": "EnglishWeb",
+		"description": "### Welcome to Postman! This is your first collection. \n\nCollections are your starting point for building and testing APIs. You can use this one to:\n\n• Group related requests\n• Test your API in real-world scenarios\n• Document and share your requests\n\nUpdate the name and overview whenever you’re ready to make it yours.\n\n[Learn more about Postman Collections.](https://learning.postman.com/docs/collections/collections-overview/)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "50942398",
+		"_collection_link": "https://hijunsu123-8596722.postman.co/workspace/36---H%C3%B9ng-Qu%C3%A2n's-Workspace~6072e39c-5d2d-43fa-8d29-b2d9eb8b83b4/collection/50941511-ac5b22c6-e562-4905-ae14-caccb889a7e3?action=share&source=collection_link&creator=50942398"
+	},
+	"item": [
+		{
+			"name": "Account",
+			"item": [
+				{
+					"name": "register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "// {\r\n//   \"email\": \"learner1@gmail.com\",\r\n//   \"password\": \"123456\",\r\n//   \"role\": \"LEARNER\"\r\n// }\r\n{\r\n  \"email\": \"admin1@gmail.com\",\r\n  \"password\": \"123456\",\r\n  \"role\": \"ADMIN\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/v1/auth/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwicm9sZSI6IkxFQVJORVIiLCJpYXQiOjE3Njc1NDE5MTAsImV4cCI6MTc2NzgwMTExMH0.QB6PJmUbJqVpVvVKDCuX-qZhWdWx0uZBujO97hDAdds",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "// {\r\n//   \"email\": \"learner1@gmail.com\",\r\n//   \"password\": \"123456\",\r\n//   \"role\": \"LEARNER\"\r\n// }\r\n\r\n{\r\n  \"email\": \"teacher3@gmail.com\",\r\n  \"password\": \"123456\",\r\n  \"role\": \"teacher\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/v1/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "me",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwicm9sZSI6IkxFQVJORVIiLCJpYXQiOjE3NjczNjUzMTUsImV4cCI6MTc2NzYyNDUxNX0.7yDzFGXAgv3V8dkQW7leQTewgYAeurYd_cWmBYE7fKE",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/v1/auth/me",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "logout",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"student5@gmail.com\",\r\n  \"password\": \"123456\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/v1/auth/logout",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "user",
+			"item": [
+				{
+					"name": "profile",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6IlRFQUNIRVIiLCJpYXQiOjE3Njc1MzgzNDEsImV4cCI6MTc2Nzc5NzU0MX0.K6GDKR1c0VhxH8mzpWceKgPHH_iuHZPfxhAm1_3AxFc",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/v1/users/profile",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "course",
+			"item": [
+				{
+					"name": "create",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6IlRFQUNIRVIiLCJpYXQiOjE3Njc2MTIxNzgsImV4cCI6MTc2Nzg3MTM3OH0.KLVC15rwHhSuir2aryNuEXIouk0m0F5Kq_AEf6_lSZ0",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "title",
+									"value": "on\n",
+									"type": "text"
+								},
+								{
+									"key": "level",
+									"value": "C2",
+									"type": "text"
+								},
+								{
+									"key": "thumbnail",
+									"type": "file",
+									"src": "屏幕截图 2025-10-29 083237.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/v1/courses",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"courses"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all courses",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwicm9sZSI6IkxFQVJORVIiLCJpYXQiOjE3Njc2MDYxMzYsImV4cCI6MTc2Nzg2NTMzNn0.VRp_sS9wTlzVeUbdkEKiCSTVyS_aGDKaZgNXpqbU_jc",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/v1/courses",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"courses"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6IlRFQUNIRVIiLCJpYXQiOjE3Njc1MzgzNDEsImV4cCI6MTc2Nzc5NzU0MX0.K6GDKR1c0VhxH8mzpWceKgPHH_iuHZPfxhAm1_3AxFc",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"price\": 3000,\r\n    \"title\": \"ahihi nha tui ne\",\r\n    \"level\": \"C2\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/v1/courses/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"courses",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6IlRFQUNIRVIiLCJpYXQiOjE3Njc1MzkxNDAsImV4cCI6MTc2Nzc5ODM0MH0.-SCk6DseN9xF0wIWzIiI_G8ZQPP12rpuFgp3MbPgsUs",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/v1/courses/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"courses",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get a course ( by id)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6IlRFQUNIRVIiLCJpYXQiOjE3Njc1MzkxNDAsImV4cCI6MTc2Nzc5ODM0MH0.-SCk6DseN9xF0wIWzIiI_G8ZQPP12rpuFgp3MbPgsUs",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/v1/courses/3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"courses",
+								"3"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "lesson",
+			"item": [
+				{
+					"name": "get a lesson",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6IlRFQUNIRVIiLCJpYXQiOjE3Njc1MzgzNDEsImV4cCI6MTc2Nzc5NzU0MX0.K6GDKR1c0VhxH8mzpWceKgPHH_iuHZPfxhAm1_3AxFc",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/v1/lessons/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"lessons",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all lessons (idCOURSE)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwicm9sZSI6IkxFQVJORVIiLCJpYXQiOjE3Njc2MDQ3NjAsImV4cCI6MTc2Nzg2Mzk2MH0.I6lUm4zy7p7ZQ4OY9shwc5sQ4qhX4aclfXTsxvvT8RU",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/v1/lessons/4/lessons",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"lessons",
+								"4",
+								"lessons"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create (with couseId)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6IlRFQUNIRVIiLCJpYXQiOjE3Njc2MTQ1NzksImV4cCI6MTc2Nzg3Mzc3OX0.GzV6G8FWq1wCd8nBk5pwO6AFsSUxFn4Nr0H1ZRQRY-c",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "title",
+									"value": "Grammar: Verb Tenses Overview",
+									"type": "text"
+								},
+								{
+									"key": "contentType",
+									"value": "Reading",
+									"type": "text"
+								},
+								{
+									"key": "learningType",
+									"value": "Grammar",
+									"type": "text"
+								},
+								{
+									"key": "textContent",
+									"value": "CÂU HỎI NGỮ PHÁP\\n\\n1. Đặc điểm chung\\nDạng câu hỏi này yêu cầu người học lựa chọn hoặc chia đúng thì, thể hoặc dạng của động từ trong câu. Các yếu tố cần chú ý bao gồm chủ ngữ, trạng từ thời gian và cấu trúc câu.\\n\\n2. Các trường hợp cụ thể\\n\\n2.1. Chia thì động từ\\nCác thì thường gặp bao gồm thì hiện tại đơn, hiện tại tiếp diễn, quá khứ đơn, hiện tại hoàn thành và tương lai đơn.\\n\\nVí dụ:\\nMs. Morgan recruited the individuals that the company ___ for the next three months.\\n(A) will employ\\n(B) to employ\\n(C) has been employed\\n(D) employ\\n\\nPhân tích:\\nCâu có hai mệnh đề nối với nhau bằng \\\"that\\\". Mệnh đề thứ hai có chủ ngữ \\\"the company\\\" nhưng chưa có động từ chính.\\nCụm \\\"for the next three months\\\" là dấu hiệu của thì tương lai.\\n→ Đáp án đúng là (A) will employ.\\n\\n2.2. Chia thể động từ\\nNgười học cần phân biệt giữa thể chủ động và thể bị động dựa trên mối quan hệ giữa chủ ngữ và hành động.\\n\\n2.3. Chia dạng động từ\\nCần xác định động từ theo sau là to V, V-ing hay V nguyên mẫu dựa vào cấu trúc trước đó.\\n\\nLưu ý:\\nKhông bị đánh lừa bởi thì của mệnh đề chính. Luôn xác định rõ mệnh đề chứa chỗ trống cần điền",
+									"type": "text"
+								},
+								{
+									"key": "durationMinutes",
+									"value": "1200",
+									"type": "text"
+								},
+								{
+									"key": "video",
+									"type": "file",
+									"src": "15019681_1920_1080_30fps.mp4"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/v1/lessons/4",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"lessons",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6IlRFQUNIRVIiLCJpYXQiOjE3Njc1Mzk0MDEsImV4cCI6MTc2Nzc5ODYwMX0.PoGkV_n8Lmtm7BEv4ABjRiuh2NCvBK62PTAeoMAGW1A",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"sau khi da sua ok\",\r\n    \"durationMinutes\": 150000\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/v1/lessons/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"lessons",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6IlRFQUNIRVIiLCJpYXQiOjE3Njc1Mzk0MDEsImV4cCI6MTc2Nzc5ODYwMX0.PoGkV_n8Lmtm7BEv4ABjRiuh2NCvBK62PTAeoMAGW1A",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/v1/lessons/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"lessons",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "enrollment",
+			"item": [
+				{
+					"name": "create",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwicm9sZSI6IkxFQVJORVIiLCJpYXQiOjE3Njc2MDYxMzYsImV4cCI6MTc2Nzg2NTMzNn0.VRp_sS9wTlzVeUbdkEKiCSTVyS_aGDKaZgNXpqbU_jc",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"courseId\": 4\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/v1/enrollments/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"enrollments",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "my-courses",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwicm9sZSI6IkxFQVJORVIiLCJpYXQiOjE3Njc2MDI3MzMsImV4cCI6MTc2Nzg2MTkzM30.2PEn-l1gXvvV-fJBwmduZO4xbUt6R1hxGKRpNHc5pqo",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"idACCOUNT\": 4\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/v1/enrollments/my-courses",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"enrollments",
+								"my-courses"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "check/:courseId",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwicm9sZSI6IkxFQVJORVIiLCJpYXQiOjE3Njc1NDE5MTAsImV4cCI6MTc2NzgwMTExMH0.QB6PJmUbJqVpVvVKDCuX-qZhWdWx0uZBujO97hDAdds",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/v1/enrollments/check/4",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"enrollments",
+								"check",
+								"4"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "learningProgress",
+			"item": [
+				{
+					"name": "get Proccess by course",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwicm9sZSI6IkxFQVJORVIiLCJpYXQiOjE3Njc2MDMwNDIsImV4cCI6MTc2Nzg2MjI0Mn0.JlExhjQ0vtbOTSQ_ox_bULfwo9k41kDexr0L_FjSwv0",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/v1/progress/4",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"progress",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "sync (dong bo vi tri video da xem)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwicm9sZSI6IkxFQVJORVIiLCJpYXQiOjE3Njc2MDQ1MzQsImV4cCI6MTc2Nzg2MzczNH0.eVSViPBmfY0mkit7FIesWLeZgg93fD3s0o5ZgILXD-A",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"lessonId\": 2,\r\n    \"currentTime\": null,\r\n    \"isCompleted\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/v1/progress/sync",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"progress",
+								"sync"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "reviews",
+			"item": [
+				{
+					"name": "create (lessonId)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwicm9sZSI6IkxFQVJORVIiLCJpYXQiOjE3Njc2MDYxMzYsImV4cCI6MTc2Nzg2NTMzNn0.VRp_sS9wTlzVeUbdkEKiCSTVyS_aGDKaZgNXpqbU_jc",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"courseId\": 4,\r\n    \"rating\": 5,\r\n    \"comment\": \"bai nay hay phet nho\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/v1/reviews",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"reviews"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get reviews from a course",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwicm9sZSI6IkxFQVJORVIiLCJpYXQiOjE3Njc2MDYxMzYsImV4cCI6MTc2Nzg2NTMzNn0.VRp_sS9wTlzVeUbdkEKiCSTVyS_aGDKaZgNXpqbU_jc",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"courseId\": 4,\r\n    \"rating\": 5,\r\n    \"comment\": \"bai nay hay phet nho\"\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/v1/reviews/course/4/reviews",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"reviews",
+								"course",
+								"4",
+								"reviews"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwicm9sZSI6IkxFQVJORVIiLCJpYXQiOjE3Njc2MDYxMzYsImV4cCI6MTc2Nzg2NTMzNn0.VRp_sS9wTlzVeUbdkEKiCSTVyS_aGDKaZgNXpqbU_jc",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"courseId\": 4,\r\n    \"rating\": 3,\r\n    \"comment\": \"bai nay ok\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/v1/reviews/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"reviews",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwicm9sZSI6IkxFQVJORVIiLCJpYXQiOjE3Njc2MDYxMzYsImV4cCI6MTc2Nzg2NTMzNn0.VRp_sS9wTlzVeUbdkEKiCSTVyS_aGDKaZgNXpqbU_jc",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/v1/reviews/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"reviews",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "oders",
+			"item": [
+				{
+					"name": "create",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwicm9sZSI6IkxFQVJORVIiLCJpYXQiOjE3Njc2MDYxMzYsImV4cCI6MTc2Nzg2NTMzNn0.VRp_sS9wTlzVeUbdkEKiCSTVyS_aGDKaZgNXpqbU_jc",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"courseIds\": [3, 1],\r\n    \"paymentMethod\": \"paypal\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/v1/orders",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get My Oders",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwicm9sZSI6IkxFQVJORVIiLCJpYXQiOjE3Njc2MDYxMzYsImV4cCI6MTc2Nzg2NTMzNn0.VRp_sS9wTlzVeUbdkEKiCSTVyS_aGDKaZgNXpqbU_jc",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/v1/orders",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "process Payment (thanh toan don)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwicm9sZSI6IkxFQVJORVIiLCJpYXQiOjE3Njc2MDYxMzYsImV4cCI6MTc2Nzg2NTMzNn0.VRp_sS9wTlzVeUbdkEKiCSTVyS_aGDKaZgNXpqbU_jc",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/v1/orders/1/pay",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"orders",
+								"1",
+								"pay"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "cart",
+			"item": [
+				{
+					"name": "add",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwicm9sZSI6IkxFQVJORVIiLCJpYXQiOjE3Njc2MTIzMzQsImV4cCI6MTc2Nzg3MTUzNH0.Df54MOSoP8Q0BziiqT3kKRxVzbYM55V43YTaXCF2GxI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"courseId\": 8\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/v1/cart",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"cart"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "my Cart",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwicm9sZSI6IkxFQVJORVIiLCJpYXQiOjE3Njc2MTIzMzQsImV4cCI6MTc2Nzg3MTUzNH0.Df54MOSoP8Q0BziiqT3kKRxVzbYM55V43YTaXCF2GxI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/v1/cart",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"cart"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "toggle Selection (bỏ chọn)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwicm9sZSI6IkxFQVJORVIiLCJpYXQiOjE3Njc1NDE5MTAsImV4cCI6MTc2NzgwMTExMH0.QB6PJmUbJqVpVvVKDCuX-qZhWdWx0uZBujO97hDAdds",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"isSelected\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/v1/cart/2/select",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"cart",
+								"2",
+								"select"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwicm9sZSI6IkxFQVJORVIiLCJpYXQiOjE3Njc1NDE5MTAsImV4cCI6MTc2NzgwMTExMH0.QB6PJmUbJqVpVvVKDCuX-qZhWdWx0uZBujO97hDAdds",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/v1/cart/3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"cart",
+								"3"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "question",
+			"item": [
+				{
+					"name": "create",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6IlRFQUNIRVIiLCJpYXQiOjE3Njc2MTM3MzksImV4cCI6MTc2Nzg3MjkzOX0.9dxP1-n8WnJyFmxSoBph9e1_vHujLrkA2vxixUIFvzo",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"lessonId\": 2,\r\n    \"questionText\": \"A HIHI CÂU HỎI NÈ\",\r\n    \"optionsJson\": [\"A: câu trả lời A\",\"B: Câu trả lời B\"],\r\n    \"correctAnswer\": \"CÂU NÀO CŨNG ĐÚNG\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/v1/questions",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"questions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get Questions by lesson",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6IlRFQUNIRVIiLCJpYXQiOjE3Njc2MTM3MzksImV4cCI6MTc2Nzg3MjkzOX0.9dxP1-n8WnJyFmxSoBph9e1_vHujLrkA2vxixUIFvzo",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/v1/questions/lesson/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"questions",
+								"lesson",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6IlRFQUNIRVIiLCJpYXQiOjE3Njc2MTQ3NTMsImV4cCI6MTc2Nzg3Mzk1M30.9-ihrtfwU2OYPm5whfEHbmLr9SZj_zjc7isSRMW6o20",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"questionText\": \"A HIHI ĐƯỢC SỬA RỒI NHA\",\r\n    \"optionsJson\": [\"A: câu trả lời A\",\"B: Câu trả lời B\"],\r\n    \"correctAnswer\": \"CÂU NÀO CŨNG ĐÚNG\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/v1/questions/6",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"questions",
+								"6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6IlRFQUNIRVIiLCJpYXQiOjE3Njc2MTQ3NTMsImV4cCI6MTc2Nzg3Mzk1M30.9-ihrtfwU2OYPm5whfEHbmLr9SZj_zjc7isSRMW6o20",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"questionText\": \"A HIHI ĐƯỢC SỬA RỒI NHA\",\r\n    \"optionsJson\": [\"A: câu trả lời A\",\"B: Câu trả lời B\"],\r\n    \"correctAnswer\": \"CÂU NÀO CŨNG ĐÚNG\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/v1/questions/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"questions",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "offlineSchedule",
+			"item": [
+				{
+					"name": "create",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6IlRFQUNIRVIiLCJpYXQiOjE3Njc2MTQ3NTMsImV4cCI6MTc2Nzg3Mzk1M30.9-ihrtfwU2OYPm5whfEHbmLr9SZj_zjc7isSRMW6o20",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"idCOURSE\": 6,\r\n    \"location\": \"Số 123, Đường ABC, Quận 1, TP.HCM\",\r\n    \"startTime\": \"2026-02-20T12:20:00Z\",\r\n    \"maxStudents\": 20,\r\n    \"syllabus\": \"Học trực tiếp về giao tiếp tiếng Anh cơ bản trong 4 tuần.\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/v1/offlineSchedule",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"offlineSchedule"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get by Course",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6IlRFQUNIRVIiLCJpYXQiOjE3Njc2MTQ3NTMsImV4cCI6MTc2Nzg3Mzk1M30.9-ihrtfwU2OYPm5whfEHbmLr9SZj_zjc7isSRMW6o20",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"idCOURSE\": 6,\r\n    \"location\": \"Số 123, Đường ABC, Quận 1, TP.HCM\",\r\n    \"startTime\": \"2026-02-20T12:20:00Z\",\r\n    \"maxStudents\": 20,\r\n    \"syllabus\": \"Học trực tiếp về giao tiếp tiếng Anh cơ bản trong 4 tuần.\"\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/v1/offlineSchedule/course/6",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"offlineSchedule",
+								"course",
+								"6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6IlRFQUNIRVIiLCJpYXQiOjE3Njc2MTQ3NTMsImV4cCI6MTc2Nzg3Mzk1M30.9-ihrtfwU2OYPm5whfEHbmLr9SZj_zjc7isSRMW6o20",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"idCOURSE\": 6,\r\n    \"location\": \"UPDATE SUCCESSFULLY!!! \",\r\n    \"startTime\": \"2026-02-20T12:20:00Z\",\r\n    \"maxStudents\": 20,\r\n    \"syllabus\": \"Học trực tiếp về giao tiếp tiếng Anh cơ bản trong 4 tuần.\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/v1/offlineSchedule/5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"offlineSchedule",
+								"5"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "admin",
+			"item": [
+				{
+					"name": "dashboard",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzY3NzA1NjcxLCJleHAiOjE3Njc5NjQ4NzF9.mJdrK53ddh4Qkg-GIH_7sCqVtmsETO7WKM4CdE603DM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/v1/admin/dashboard",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"admin",
+								"dashboard"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "accounts",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzY3NzA1NjcxLCJleHAiOjE3Njc5NjQ4NzF9.mJdrK53ddh4Qkg-GIH_7sCqVtmsETO7WKM4CdE603DM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/v1/admin/accounts",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"admin",
+								"accounts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update (quan li account users)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzY3NzA1NjcxLCJleHAiOjE3Njc5NjQ4NzF9.mJdrK53ddh4Qkg-GIH_7sCqVtmsETO7WKM4CdE603DM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"status\": \"active\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/v1/admin/accounts/3/status",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"admin",
+								"accounts",
+								"3",
+								"status"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
