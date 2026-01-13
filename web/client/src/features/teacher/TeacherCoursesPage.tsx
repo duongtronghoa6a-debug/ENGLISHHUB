@@ -7,7 +7,8 @@ import {
     Trash2,
     Eye,
     BookOpen,
-    Users
+    Users,
+    Send
 } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
 import { teacherService } from '../../services/teacher.service';
@@ -19,6 +20,7 @@ interface Course {
     price: number;
     level: string;
     status: string;
+    approval_status: string;
     thumbnail_url: string;
     created_at: string;
     lessonCount: number;
@@ -103,6 +105,21 @@ const TeacherCoursesPage = () => {
         }
     };
 
+    const handleSubmitForReview = async (courseId: string) => {
+        if (!confirm('Gửi khóa học này để duyệt?')) return;
+        console.log('[DEBUG] Submitting course for review:', courseId);
+        try {
+            const result = await teacherService.submitCourseForReview(courseId);
+            console.log('[DEBUG] Submit result:', result);
+            fetchCourses();
+            alert('Đã gửi khóa học để duyệt!');
+        } catch (error: any) {
+            console.error('[DEBUG] Submit error:', error);
+            console.error('[DEBUG] Error response:', error.response?.data);
+            alert(error.response?.data?.message || 'Lỗi khi gửi duyệt');
+        }
+    };
+
     const openEditModal = (course: Course) => {
         setEditingCourse(course);
         setFormData({
@@ -120,22 +137,22 @@ const TeacherCoursesPage = () => {
         course.title.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
-    const getStatusBadge = (status: string) => {
+    const getStatusBadge = (approvalStatus: string) => {
         const colors: Record<string, string> = {
             'draft': 'bg-gray-500',
-            'pending': 'bg-yellow-500',
-            'published': 'bg-green-500',
-            'archived': 'bg-red-500'
+            'pending_review': 'bg-yellow-500',
+            'approved': 'bg-green-500',
+            'rejected': 'bg-red-500'
         };
         const labels: Record<string, string> = {
             'draft': 'Nháp',
-            'pending': 'Chờ duyệt',
-            'published': 'Đã xuất bản',
-            'archived': 'Đã lưu trữ'
+            'pending_review': 'Chờ duyệt',
+            'approved': 'Đã duyệt',
+            'rejected': 'Bị từ chối'
         };
         return (
-            <span className={`${colors[status] || 'bg-gray-500'} text-white text-xs px-2 py-1 rounded-full`}>
-                {labels[status] || status}
+            <span className={`${colors[approvalStatus] || 'bg-gray-500'} text-white text-xs px-2 py-1 rounded-full`}>
+                {labels[approvalStatus] || approvalStatus}
             </span>
         );
     };
@@ -200,7 +217,7 @@ const TeacherCoursesPage = () => {
                                     />
                                 )}
                                 <div className="absolute top-3 right-3">
-                                    {getStatusBadge(course.status)}
+                                    {getStatusBadge(course.approval_status)}
                                 </div>
                             </div>
 
@@ -228,20 +245,32 @@ const TeacherCoursesPage = () => {
                                     <button
                                         onClick={() => navigate(`/teacher/courses/${course.id}/lessons`)}
                                         className="flex-1 flex items-center justify-center gap-1 py-2 bg-blue-500/10 text-blue-500 rounded-lg hover:bg-blue-500/20 transition-colors"
+                                        title="Xem nội dung"
                                     >
                                         <Eye size={16} />
-                                        Xem
                                     </button>
                                     <button
                                         onClick={() => openEditModal(course)}
                                         className="flex-1 flex items-center justify-center gap-1 py-2 bg-yellow-500/10 text-yellow-500 rounded-lg hover:bg-yellow-500/20 transition-colors"
+                                        title="Chỉnh sửa"
                                     >
                                         <Edit size={16} />
-                                        Sửa
+                                    </button>
+                                    {/* DEBUG: always show button */}
+                                    <button
+                                        onClick={() => {
+                                            console.log('[BTN CLICK] Course:', course.id, 'approval_status:', course.approval_status);
+                                            handleSubmitForReview(course.id);
+                                        }}
+                                        className="flex-1 flex items-center justify-center gap-1 py-2 bg-green-500/10 text-green-500 rounded-lg hover:bg-green-500/20 transition-colors"
+                                        title={`Gửi duyệt (status: ${course.approval_status})`}
+                                    >
+                                        <Send size={16} />
                                     </button>
                                     <button
                                         onClick={() => handleDeleteCourse(course.id)}
                                         className="py-2 px-3 bg-red-500/10 text-red-500 rounded-lg hover:bg-red-500/20 transition-colors"
+                                        title="Xóa"
                                     >
                                         <Trash2 size={16} />
                                     </button>

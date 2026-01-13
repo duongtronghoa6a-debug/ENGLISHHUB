@@ -338,7 +338,7 @@ const TeacherOfflineClassesPage = () => {
                                 <div className="grid grid-cols-2 gap-4 mb-4">
                                     <div className="flex items-center gap-2 text-sm">
                                         <Users className="text-green-400" size={16} />
-                                        <span>{cls.current_enrolled || 0}/{cls.capacity} học viên</span>
+                                        <span>{cls.enrolledCount ?? cls.current_enrolled ?? 0}/{cls.capacity} học viên</span>
                                     </div>
                                     <div className="flex items-center gap-2 text-sm">
                                         <Calendar className="text-yellow-400" size={16} />

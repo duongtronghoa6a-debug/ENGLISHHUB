@@ -78,17 +78,31 @@ exports.getAllClasses = async (req, res, next) => {
         const classes = await OfflineClass.findAndCountAll({
             where,
             include: [
-                { model: Account, as: 'teacher', attributes: ['id', 'email'] }
+                { model: Account, as: 'teacher', attributes: ['id', 'email'] },
+                {
+                    model: db.ClassEnrollment,
+                    as: 'enrollments',
+                    where: { status: 'approved' },
+                    required: false,
+                    attributes: ['id']
+                }
             ],
             limit: parseInt(limit),
             offset: parseInt(offset),
             order: [['start_date', 'DESC']]
         });
 
+        // Add actual enrollment count to each class
+        const classesWithCount = classes.rows.map(cls => {
+            const classData = cls.toJSON();
+            classData.enrollment_count = classData.enrollments?.length || 0;
+            return classData;
+        });
+
         res.status(200).json({
             success: true,
             count: classes.count,
-            data: classes.rows
+            data: classesWithCount
         });
 
     } catch (error) {
@@ -107,6 +121,13 @@ exports.getClassById = async (req, res, next) => {
                 {
                     model: Attendance,
                     as: 'attendances',
+                    include: [{ model: Account, as: 'learner', attributes: ['id', 'email'] }]
+                },
+                {
+                    model: db.ClassEnrollment,
+                    as: 'enrollments',
+                    where: { status: 'approved' },
+                    required: false,
                     include: [{ model: Account, as: 'learner', attributes: ['id', 'email'] }]
                 }
             ]

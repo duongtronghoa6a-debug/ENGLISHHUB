@@ -11,6 +11,10 @@ module.exports = (sequelize, DataTypes) => {
                 foreignKey: 'class_id',
                 as: 'attendances'
             });
+            OfflineClass.hasMany(models.ClassEnrollment, {
+                foreignKey: 'class_id',
+                as: 'enrollments'
+            });
         }
     }
 

@@ -12,7 +12,8 @@ import {
     Upload,
     Headphones,
     PenTool,
-    BookOpen
+    BookOpen,
+    Send
 } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
 import { teacherService } from '../../services/teacher.service';
@@ -135,11 +136,17 @@ const TeacherExamsPage = () => {
                 formData.append('file', questionFile);
             }
 
-            await api.post('/teacher/questions', formData, {
+            const response = await api.post('/teacher/questions', formData, {
                 headers: { 'Content-Type': 'multipart/form-data' }
             });
 
-            addNotification('Thành công', 'Đã tạo câu hỏi mới!', 'success');
+            // Auto-add new question to selectedQuestions
+            const newQuestionId = response.data?.data?.id;
+            if (newQuestionId) {
+                setSelectedQuestions(prev => [...prev, newQuestionId]);
+            }
+
+            addNotification('Thành công', 'Đã tạo câu hỏi mới và thêm vào đề thi!', 'success');
             setShowCreateQuestionModal(false);
             resetQuestionForm();
             fetchQuestions();
@@ -213,17 +220,34 @@ const TeacherExamsPage = () => {
         );
     };
 
+    const handleSubmitExamForReview = async (examId: string) => {
+        if (!confirm('Gửi đề thi này để admin duyệt?')) return;
+        try {
+            await api.put(`/teacher/exams/${examId}/submit-review`);
+            addNotification('Thành công', 'Đã gửi đề thi để duyệt!', 'success');
+            fetchExams();
+        } catch (error: any) {
+            console.error('Failed to submit exam:', error);
+            addNotification('Lỗi', error.response?.data?.message || 'Lỗi khi gửi duyệt', 'error');
+        }
+    };
+
     const filteredExams = exams.filter(exam =>
         exam.title.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
-    const getStatusBadge = (status: string) => {
+    const getStatusBadge = (status: string, approvalStatus?: string) => {
+        // Use approval_status if available
+        const effectiveStatus = approvalStatus || status;
         const configs: Record<string, { bg: string; text: string; label: string }> = {
             'draft': { bg: 'bg-gray-500/20', text: 'text-gray-500', label: 'Nháp' },
+            'pending_review': { bg: 'bg-yellow-500/20', text: 'text-yellow-500', label: 'Chờ duyệt' },
+            'approved': { bg: 'bg-green-500/20', text: 'text-green-500', label: 'Đã duyệt' },
             'published': { bg: 'bg-green-500/20', text: 'text-green-500', label: 'Đã xuất bản' },
+            'rejected': { bg: 'bg-red-500/20', text: 'text-red-500', label: 'Bị từ chối' },
             'archived': { bg: 'bg-red-500/20', text: 'text-red-500', label: 'Đã lưu trữ' }
         };
-        const config = configs[status] || configs['draft'];
+        const config = configs[effectiveStatus] || configs['draft'];
         return (
             <span className={`${config.bg} ${config.text} text-xs px-2 py-1 rounded-full`}>
                 {config.label}
@@ -258,13 +282,22 @@ const TeacherExamsPage = () => {
             {/* Header */}
             <div className="flex justify-between items-center">
                 <h1 className="text-3xl font-bold">Quản lý đề thi</h1>
-                <button
-                    onClick={() => { resetForm(); setShowCreateModal(true); }}
-                    className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl font-medium"
-                >
-                    <Plus size={20} />
-                    Tạo đề thi
-                </button>
+                <div className="flex gap-2">
+                    <button
+                        onClick={() => setShowCreateQuestionModal(true)}
+                        className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl font-medium"
+                    >
+                        <Plus size={20} />
+                        Tạo câu hỏi
+                    </button>
+                    <button
+                        onClick={() => { resetForm(); setShowCreateModal(true); }}
+                        className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl font-medium"
+                    >
+                        <Plus size={20} />
+                        Tạo đề thi
+                    </button>
+                </div>
             </div>
 
             {/* Stats Cards */}
@@ -340,7 +373,7 @@ const TeacherExamsPage = () => {
                                     </td>
                                     <td className="px-6 py-4">{exam.list_question_ids?.length || 0} câu</td>
                                     <td className="px-6 py-4">{getGradingBadge(exam.grading_method)}</td>
-                                    <td className="px-6 py-4">{getStatusBadge(exam.status)}</td>
+                                    <td className="px-6 py-4">{getStatusBadge(exam.status, (exam as any).approval_status)}</td>
                                     <td className="px-6 py-4">
                                         <div className="flex gap-2">
                                             <button
@@ -357,6 +390,15 @@ const TeacherExamsPage = () => {
                                             >
                                                 <Edit size={16} />
                                             </button>
+                                            {((exam as any).approval_status === 'draft' || (!((exam as any).approval_status) && exam.status === 'draft')) && (
+                                                <button
+                                                    onClick={() => handleSubmitExamForReview(exam.id)}
+                                                    className="p-2 bg-yellow-500/10 text-yellow-500 rounded-lg hover:bg-yellow-500/20"
+                                                    title="Gửi duyệt"
+                                                >
+                                                    <Send size={16} />
+                                                </button>
+                                            )}
                                             <button
                                                 onClick={() => handleDeleteExam(exam.id)}
                                                 className="p-2 bg-red-500/10 text-red-500 rounded-lg hover:bg-red-500/20"
@@ -547,6 +589,13 @@ const TeacherExamsPage = () => {
                         </div>
 
                         <div className="flex gap-3 mt-4 pt-4 border-t border-gray-200">
+                            <button
+                                onClick={() => setShowCreateQuestionModal(true)}
+                                className="flex-1 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium flex items-center justify-center gap-2"
+                            >
+                                <Plus size={18} />
+                                Tạo câu hỏi mới
+                            </button>
                             <button
                                 onClick={() => setShowQuestionModal(false)}
                                 className="flex-1 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium"

@@ -1,7 +1,7 @@
 /**
  * 05. Offline Classes Seeder
  * Creates offline classes from offline_courses.json
- * Also creates Attendance records based on current_enrolled
+ * Also creates ClassEnrollment and Attendance records based on current_enrolled
  */
 
 const db = require('../../../src/app/models');
@@ -18,9 +18,10 @@ async function seedOfflineClasses() {
     }
 
     let createdCount = 0;
+    let enrollmentCount = 0;
     let attendanceCount = 0;
 
-    // Get some learner accounts for attendance
+    // Get some learner accounts for enrollment
     const learnerAccounts = await db.Account.findAll({
         where: { role: 'learner' },
         limit: 50
@@ -50,10 +51,29 @@ async function seedOfflineClasses() {
             });
             createdCount++;
 
-            // Create Attendance records for each current_enrolled
+            // Create ClassEnrollment records (đăng ký lớp) for each current_enrolled
             const enrolledCount = cls.current_enrolled || 0;
             for (let i = 0; i < enrolledCount && i < learnerAccounts.length; i++) {
                 try {
+                    // Create ClassEnrollment (đăng ký lớp)
+                    const [enrollment, enrollCreated] = await db.ClassEnrollment.findOrCreate({
+                        where: {
+                            class_id: offlineClass.id,
+                            learner_account_id: learnerAccounts[i].id
+                        },
+                        defaults: {
+                            id: uuidv4(),
+                            class_id: offlineClass.id,
+                            learner_account_id: learnerAccounts[i].id,
+                            status: 'approved',
+                            requested_at: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000),
+                            reviewed_at: new Date(),
+                            note: null
+                        }
+                    });
+                    if (enrollCreated) enrollmentCount++;
+
+                    // Also create Attendance (điểm danh) 
                     await db.Attendance.findOrCreate({
                         where: {
                             class_id: offlineClass.id,
@@ -78,7 +98,9 @@ async function seedOfflineClasses() {
     }
 
     console.log(`  ✅ Created ${createdCount} offline classes`);
+    console.log(`  ✅ Created ${enrollmentCount} class enrollments`);
     console.log(`  ✅ Created ${attendanceCount} attendance records`);
 }
 
 module.exports = seedOfflineClasses;
+

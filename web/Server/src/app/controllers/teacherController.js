@@ -4,7 +4,7 @@
  */
 
 const db = require('../models');
-const { Course, Lesson, Teacher, Enrollment, Account, Order, OrderItem, OfflineClass, ClassEnrollment, Learner, Review } = db;
+const { Course, Lesson, Teacher, Enrollment, Account, Order, OrderItem, OfflineClass, ClassEnrollment, Learner, Review, Module } = db;
 const { Op } = require('sequelize');
 
 /**
@@ -300,12 +300,23 @@ const createCourse = async (req, res) => {
 
         const { title, description, price, level, category, thumbnail_url, status } = req.body;
 
+        // Map level values to valid enum values
+        const LEVEL_MAP = {
+            'beginner': 'B1',
+            'intermediate': 'B2',
+            'advanced': 'C1',
+            'BEGINNER': 'B1',
+            'INTERMEDIATE': 'B2',
+            'ADVANCED': 'C1'
+        };
+        const validLevel = LEVEL_MAP[level] || level || 'B1';
+
         const course = await Course.create({
             teacher_id: teacher.id,
             title,
             description,
             price: price || 0,
-            level: level || 'beginner',
+            level: validLevel,
             category: category || 'general',
             thumbnail_url,
             status: status || 'draft',
@@ -392,6 +403,12 @@ const deleteCourse = async (req, res) => {
             });
         }
 
+        // Delete related data first (cascade delete)
+        await Lesson.destroy({ where: { course_id: courseId } });
+        if (Module) {
+            await Module.destroy({ where: { course_id: courseId } });
+        }
+
         await course.destroy();
         res.status(200).json({ success: true, message: 'Course deleted successfully' });
     } catch (error) {
@@ -430,8 +447,12 @@ const getCourseLessons = async (req, res) => {
                 return res.status(400).json({ success: false, message: 'Teacher profile not found' });
             }
 
+            // Find course by either teacher.id or accountId (for compatibility)
             course = await Course.findOne({
-                where: { id: courseId, teacher_id: teacher.id },
+                where: {
+                    id: courseId,
+                    teacher_id: { [Op.in]: [teacher.id, accountId] }
+                },
                 include: [{
                     model: Lesson,
                     as: 'lessons',
@@ -740,15 +761,23 @@ const submitCourseForReview = async (req, res) => {
     try {
         const accountId = req.user.id;
         const courseId = req.params.id;
+        console.log('[submitCourseForReview] accountId:', accountId, 'courseId:', courseId);
+
         const teacher = await Teacher.findOne({ where: { account_id: accountId } });
 
         if (!teacher) {
             return res.status(400).json({ success: false, message: 'Teacher profile not found' });
         }
+        console.log('[submitCourseForReview] teacher.id:', teacher.id);
 
+        // Find course by either teacher.id or accountId (for compatibility)
         const course = await Course.findOne({
-            where: { id: courseId, teacher_id: teacher.id }
+            where: {
+                id: courseId,
+                teacher_id: { [Op.in]: [teacher.id, accountId] }
+            }
         });
+        console.log('[submitCourseForReview] course found:', !!course, course?.id);
 
         if (!course) {
             return res.status(404).json({ success: false, message: 'Course not found or not owned by you' });
@@ -767,6 +796,18 @@ const submitCourseForReview = async (req, res) => {
             approval_status: 'pending_review',
             rejection_reason: null
         });
+
+        // Send notification to all admins
+        const { sendNotificationToRole } = require('./notificationController');
+        await sendNotificationToRole('admin', {
+            title: '📝 Khóa học mới cần duyệt',
+            message: `Giáo viên ${teacher.full_name} đã gửi khóa học "${course.title}" để duyệt.`,
+            type: 'info',
+            category: 'course_review',
+            related_id: course.id,
+            related_type: 'course',
+            action_url: `/admin/courses/${course.id}`
+        }, accountId);
 
         res.status(200).json({
             success: true,
@@ -932,6 +973,62 @@ const deleteModule = async (req, res) => {
     }
 };
 
+/**
+ * Submit exam for admin review
+ * PUT /api/v1/teacher/exams/:id/submit-review
+ */
+const submitExamForReview = async (req, res) => {
+    try {
+        const accountId = req.user.id;
+        const examId = req.params.id;
+
+        const { Exam } = require('../models');
+
+        const exam = await Exam.findOne({
+            where: { id: examId, creator_id: accountId }
+        });
+
+        if (!exam) {
+            return res.status(404).json({ success: false, message: 'Exam not found or not owned by you' });
+        }
+
+        // Check if exam has questions
+        if (!exam.list_question_ids || exam.list_question_ids.length === 0) {
+            return res.status(400).json({
+                success: false,
+                message: 'Đề thi cần có ít nhất 1 câu hỏi trước khi gửi duyệt'
+            });
+        }
+
+        await exam.update({
+            approval_status: 'pending_review',
+            rejection_reason: null
+        });
+
+        // Send notification to all admins
+        const { sendNotificationToRole } = require('./notificationController');
+        const teacher = await Teacher.findOne({ where: { account_id: accountId } });
+        await sendNotificationToRole('admin', {
+            title: '📝 Đề thi mới cần duyệt',
+            message: `Giáo viên ${teacher?.full_name || 'Unknown'} đã gửi đề thi "${exam.title}" để duyệt.`,
+            type: 'info',
+            category: 'exam_review',
+            related_id: exam.id,
+            related_type: 'exam',
+            action_url: `/admin/exams`
+        }, accountId);
+
+        res.status(200).json({
+            success: true,
+            message: 'Đã gửi đề thi để admin duyệt',
+            data: exam
+        });
+    } catch (error) {
+        console.error('submitExamForReview error:', error);
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
 module.exports = {
     getDashboardStats,
     getRecentActivity,
@@ -948,6 +1045,7 @@ module.exports = {
     getCourseStudents,
     getPendingEnrollmentRequests,
     submitCourseForReview,
+    submitExamForReview,
     getCourseModules,
     createModule,
     updateModule,

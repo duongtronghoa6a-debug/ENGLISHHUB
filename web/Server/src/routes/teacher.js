@@ -28,8 +28,8 @@ router.get('/my-courses', teacherController.getMyCourses);
 
 // Course CRUD
 router.post('/courses', teacherController.createCourse);
-router.put('/courses/:id', teacherController.updateCourse);
-router.put('/courses/:id/submit-review', teacherController.submitCourseForReview);
+router.put('/courses/:id/submit-review', (req, res, next) => { console.log('HIT: submit-review route', req.params.id); next(); }, teacherController.submitCourseForReview);
+router.put('/courses/:id', (req, res, next) => { console.log('HIT: update course route', req.params.id); next(); }, teacherController.updateCourse);
 router.delete('/courses/:id', teacherController.deleteCourse);
 router.get('/courses/:id/lessons', teacherController.getCourseLessons);
 
@@ -88,6 +88,9 @@ router.post('/questions', questionUpload.single('file'), async (req, res, next) 
         next(error);
     }
 });
+
+// Exam submit for review
+router.put('/exams/:id/submit-review', teacherController.submitExamForReview);
 
 // Module CRUD
 router.get('/courses/:id/modules', teacherController.getCourseModules);

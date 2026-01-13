@@ -4,6 +4,8 @@ import { lessonService } from '../../services/lesson.service';
 import { ArrowLeft, PlayCircle, CheckCircle, Menu, Download, FileText, Headphones, ExternalLink, BookOpen } from 'lucide-react';
 import { progressService } from '../../services/progress.service';
 import { useNotification } from '../../context/NotificationContext';
+import { useTheme } from '../../context/ThemeContext';
+import CourseReviews from '../../components/reviews/CourseReviews';
 
 interface Lesson {
     id: string | number;
@@ -24,10 +26,12 @@ const LessonPage = () => {
     const { courseId, lessonId } = useParams();
     const navigate = useNavigate();
     const { addNotification } = useNotification();
+    const { isDarkMode } = useTheme();
     const [lessons, setLessons] = useState<Lesson[]>([]);
     const [currentLesson, setCurrentLesson] = useState<Lesson | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+    const [completedLessons, setCompletedLessons] = useState<Set<string>>(new Set());
 
     useEffect(() => {
         const fetchLessons = async () => {
@@ -42,6 +46,18 @@ const LessonPage = () => {
                     setCurrentLesson(found || lessonsList[0]);
                 } else if (lessonsList.length > 0) {
                     setCurrentLesson(lessonsList[0]);
+                }
+
+                // Fetch progress to mark completed lessons
+                try {
+                    const progressData = await progressService.getCourseProgress(courseId);
+                    if (progressData?.data?.completedLessons) {
+                        setCompletedLessons(new Set(progressData.data.completedLessons.map((id: any) => String(id))));
+                    } else if (progressData?.completedLessons) {
+                        setCompletedLessons(new Set(progressData.completedLessons.map((id: any) => String(id))));
+                    }
+                } catch (progressError) {
+                    console.log('Could not fetch progress, user may not be enrolled');
                 }
             } catch (error) {
                 console.error("Failed to fetch lessons", error);
@@ -61,6 +77,10 @@ const LessonPage = () => {
         if (!courseId || !currentLesson) return;
         try {
             await progressService.updateProgress(courseId, String(currentLesson.id));
+
+            // Mark lesson as completed in local state
+            setCompletedLessons(prev => new Set([...prev, String(currentLesson.id)]));
+
             addNotification('Thành công', 'Đã hoàn thành bài học!', 'success');
 
             const currentIndex = lessons.findIndex(l => l.id === currentLesson.id);
@@ -344,6 +364,7 @@ const LessonPage = () => {
                 <div className="flex-1 overflow-y-auto p-3 space-y-2">
                     {lessons.map((lesson, idx) => {
                         const isActive = currentLesson?.id === lesson.id;
+                        const isCompleted = completedLessons.has(String(lesson.id));
 
                         return (
                             <div
@@ -351,23 +372,40 @@ const LessonPage = () => {
                                 onClick={() => handleLessonSelect(lesson)}
                                 className={`group relative p-3 rounded-xl cursor-pointer transition-all duration-200 ${isActive
                                     ? 'bg-gradient-to-r from-cyan-500/20 to-teal-500/10 border border-cyan-500/50'
-                                    : 'bg-gray-50 dark:bg-[#1a2438] hover:bg-gray-100 dark:hover:bg-[#1e2a42] border border-transparent'
+                                    : isCompleted
+                                        ? 'bg-green-50 dark:bg-green-900/20 hover:bg-green-100 dark:hover:bg-green-900/30 border border-green-200 dark:border-green-800/50'
+                                        : 'bg-gray-50 dark:bg-[#1a2438] hover:bg-gray-100 dark:hover:bg-[#1e2a42] border border-transparent'
                                     }`}
                             >
                                 <div className="flex items-center gap-3">
                                     {/* Icon */}
-                                    <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${isActive ? 'bg-cyan-500/20' : 'bg-gray-200 dark:bg-[#0d1526]'}`}>
-                                        {getSidebarIcon(lesson.content_type)}
+                                    <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${isCompleted
+                                            ? 'bg-green-500/20'
+                                            : isActive
+                                                ? 'bg-cyan-500/20'
+                                                : 'bg-gray-200 dark:bg-[#0d1526]'
+                                        }`}>
+                                        {isCompleted ? (
+                                            <CheckCircle size={20} className="text-green-500" />
+                                        ) : (
+                                            getSidebarIcon(lesson.content_type)
+                                        )}
                                     </div>
 
                                     {/* Content */}
                                     <div className="flex-1 min-w-0">
-                                        <h4 className={`font-medium text-sm line-clamp-2 ${isActive ? 'text-cyan-600 dark:text-cyan-400' : 'text-gray-800 dark:text-gray-100'}`}>
+                                        <h4 className={`font-medium text-sm line-clamp-2 ${isCompleted
+                                                ? 'text-green-600 dark:text-green-400'
+                                                : isActive
+                                                    ? 'text-cyan-600 dark:text-cyan-400'
+                                                    : 'text-gray-800 dark:text-gray-100'
+                                            }`}>
                                             {idx + 1}. {lesson.title}
                                         </h4>
                                         <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 capitalize">
                                             {lesson.content_type || 'document'}
-                                            {lesson.is_free && <span className="ml-2 text-green-500">• Miễn phí</span>}
+                                            {isCompleted && <span className="ml-2 text-green-500 font-medium">✓ Đã học</span>}
+                                            {!isCompleted && lesson.is_free && <span className="ml-2 text-green-500">• Miễn phí</span>}
                                         </p>
                                     </div>
                                 </div>
@@ -444,6 +482,13 @@ const LessonPage = () => {
                                 </button>
                             )}
                         </div>
+
+                        {/* Course Reviews Section */}
+                        {courseId && (
+                            <div className="mt-8">
+                                <CourseReviews courseId={courseId} isDarkMode={isDarkMode} />
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>

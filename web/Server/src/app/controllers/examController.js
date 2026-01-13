@@ -193,7 +193,10 @@ exports.getPublishedExams = async (req, res, next) => {
         const { limit = 50, offset = 0 } = req.query;
 
         const exams = await Exam.findAndCountAll({
-            where: { status: 'published' },
+            where: {
+                status: 'published',
+                approval_status: 'approved'  // Only show approved exams
+            },
             include: [
                 { model: Account, as: 'creator', attributes: ['id', 'email'] }
             ],

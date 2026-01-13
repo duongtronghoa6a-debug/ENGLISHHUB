@@ -252,7 +252,9 @@ exports.approveCourse = async (req, res, next) => {
     try {
         const { id } = req.params;
 
-        const course = await Course.findByPk(id);
+        const course = await Course.findByPk(id, {
+            include: [{ model: Teacher, as: 'teacher' }]
+        });
         if (!course) {
             throw HttpError(404, 'Course not found');
         }
@@ -262,6 +264,20 @@ exports.approveCourse = async (req, res, next) => {
             is_published: true,
             rejection_reason: null
         });
+
+        // Send notification to teacher
+        if (course.teacher?.account_id) {
+            const { sendNotification } = require('./notificationController');
+            await sendNotification(course.teacher.account_id, {
+                title: '✅ Khóa học đã được duyệt!',
+                message: `Khóa học "${course.title}" của bạn đã được admin duyệt và xuất bản thành công.`,
+                type: 'success',
+                category: 'course_review',
+                related_id: course.id,
+                related_type: 'course',
+                action_url: `/teacher/courses/${course.id}`
+            }, req.user.id);
+        }
 
         res.status(200).json({
             success: true,
@@ -279,15 +295,32 @@ exports.rejectCourse = async (req, res, next) => {
         const { id } = req.params;
         const { reason } = req.body;
 
-        const course = await Course.findByPk(id);
+        const course = await Course.findByPk(id, {
+            include: [{ model: Teacher, as: 'teacher' }]
+        });
         if (!course) {
             throw HttpError(404, 'Course not found');
         }
 
+        const rejectionReason = reason || 'Không đạt yêu cầu';
         await course.update({
             approval_status: 'rejected',
-            rejection_reason: reason || 'Không đạt yêu cầu'
+            rejection_reason: rejectionReason
         });
+
+        // Send notification to teacher
+        if (course.teacher?.account_id) {
+            const { sendNotification } = require('./notificationController');
+            await sendNotification(course.teacher.account_id, {
+                title: '❌ Khóa học bị từ chối',
+                message: `Khóa học "${course.title}" đã bị từ chối. Lý do: ${rejectionReason}`,
+                type: 'warning',
+                category: 'course_review',
+                related_id: course.id,
+                related_type: 'course',
+                action_url: `/teacher/courses/${course.id}`
+            }, req.user.id);
+        }
 
         res.status(200).json({
             success: true,
@@ -371,10 +404,11 @@ exports.getAllCourses = async (req, res, next) => {
         const offset = (page - 1) * limit;
 
         const where = {};
-        if (status === 'published') where.is_published = true;
-        if (status === 'draft') where.is_published = false;
+        if (status === 'published') where.approval_status = 'approved';
+        if (status === 'draft') where.approval_status = 'draft';
         if (status === 'pending') where.approval_status = 'pending_review';
         if (status === 'approved') where.approval_status = 'approved';
+        // Note: tab "all" (status undefined) returns ALL courses including drafts for admin
 
         const { count, rows } = await Course.findAndCountAll({
             where,
@@ -385,6 +419,14 @@ exports.getAllCourses = async (req, res, next) => {
                 { model: Teacher, as: 'teacher', attributes: ['id', 'full_name'] }
             ]
         });
+
+        // Get stats for all courses (not filtered)
+        const [totalAll, totalPending, totalApproved, totalDraft] = await Promise.all([
+            Course.count(),
+            Course.count({ where: { approval_status: 'pending_review' } }),
+            Course.count({ where: { approval_status: 'approved' } }),
+            Course.count({ where: { approval_status: 'draft' } })
+        ]);
 
         // Map rows to include teacher name (fallback to 'Admin' if no teacher)
         const coursesWithTeacher = rows.map(course => {
@@ -403,6 +445,12 @@ exports.getAllCourses = async (req, res, next) => {
                 page: parseInt(page),
                 limit: parseInt(limit),
                 totalPages: Math.ceil(count / limit)
+            },
+            stats: {
+                total: totalAll,
+                pending: totalPending,
+                published: totalApproved,
+                draft: totalDraft
             }
         });
     } catch (error) {
@@ -581,6 +629,83 @@ exports.updateExam = async (req, res, next) => {
         });
 
         res.status(200).json({ success: true, message: 'Exam updated', data: exam });
+    } catch (error) {
+        next(error);
+    }
+};
+
+// 17b. [PUT] /admin/exams/:id/approve - Approve exam
+exports.approveExam = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+
+        const exam = await Exam.findByPk(id);
+        if (!exam) {
+            throw HttpError(404, 'Exam not found');
+        }
+
+        await exam.update({
+            approval_status: 'approved',
+            status: 'published',
+            rejection_reason: null
+        });
+
+        // Send notification to creator
+        const { sendNotification } = require('./notificationController');
+        await sendNotification(exam.creator_id, {
+            title: '✅ Đề thi đã được duyệt!',
+            message: `Đề thi "${exam.title}" của bạn đã được admin duyệt và xuất bản thành công.`,
+            type: 'success',
+            category: 'exam_review',
+            related_id: exam.id,
+            related_type: 'exam',
+            action_url: `/teacher/exams`
+        }, req.user.id);
+
+        res.status(200).json({
+            success: true,
+            message: 'Đề thi đã được duyệt và xuất bản',
+            data: exam
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+// 17c. [PUT] /admin/exams/:id/reject - Reject exam
+exports.rejectExam = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const { reason } = req.body;
+
+        const exam = await Exam.findByPk(id);
+        if (!exam) {
+            throw HttpError(404, 'Exam not found');
+        }
+
+        const rejectionReason = reason || 'Không đạt yêu cầu';
+        await exam.update({
+            approval_status: 'rejected',
+            rejection_reason: rejectionReason
+        });
+
+        // Send notification to creator
+        const { sendNotification } = require('./notificationController');
+        await sendNotification(exam.creator_id, {
+            title: '❌ Đề thi bị từ chối',
+            message: `Đề thi "${exam.title}" đã bị từ chối. Lý do: ${rejectionReason}`,
+            type: 'warning',
+            category: 'exam_review',
+            related_id: exam.id,
+            related_type: 'exam',
+            action_url: `/teacher/exams`
+        }, req.user.id);
+
+        res.status(200).json({
+            success: true,
+            message: 'Đề thi đã bị từ chối',
+            data: exam
+        });
     } catch (error) {
         next(error);
     }

@@ -65,18 +65,21 @@ const AdminCourseLessonsPage = () => {
 
     const handleAddLesson = async () => {
         if (!courseId || !newLesson.title.trim()) return;
+        console.log('[DEBUG] Creating lesson:', { courseId, newLesson, order_index: lessons.length });
         try {
-            await api.post(`/admin/courses/${courseId}/lessons`, {
+            const response = await api.post(`/admin/courses/${courseId}/lessons`, {
                 ...newLesson,
                 order_index: lessons.length
             });
+            console.log('[DEBUG] Create lesson response:', response.data);
             addNotification('Thành công', 'Đã thêm bài học mới!', 'success');
             setShowAddModal(false);
             setNewLesson({ title: '', content_type: 'video', content_url: '', duration: 10 });
             fetchCourseLessons();
-        } catch (error) {
-            console.error('Failed to add lesson:', error);
-            addNotification('Lỗi', 'Không thể thêm bài học', 'error');
+        } catch (error: any) {
+            console.error('[DEBUG] Failed to add lesson:', error);
+            console.error('[DEBUG] Error response:', error.response?.data);
+            addNotification('Lỗi', error.response?.data?.message || 'Không thể thêm bài học', 'error');
         }
     };
 

@@ -270,7 +270,7 @@ const DocumentDetailPage = () => {
                                 <div className="space-y-6">
 
                                     {activeOfflineTab === 'info' && (
-                                        <div className="bg-white dark:bg-[#151e32] p-8 rounded-3xl shadow-lg border border-gray-100 dark:border-white/5 animate-fade-in-up">
+                                        <div className={`p-8 rounded-3xl shadow-lg border animate-fade-in-up ${isDarkMode ? 'bg-[#151e32] border-white/5' : 'bg-white border-gray-100'}`}>
                                             <h2 className="text-2xl font-bold mb-6">Thông tin chi tiết</h2>
                                             <div className="space-y-4 text-sm md:text-base opacity-80">
                                                 <div className="flex items-start gap-4">
@@ -296,7 +296,7 @@ const DocumentDetailPage = () => {
                                     )}
 
                                     {activeOfflineTab === 'curriculum' && (
-                                        <div className="bg-white dark:bg-[#151e32] p-8 rounded-3xl shadow-lg border border-gray-100 dark:border-white/5 animate-fade-in-up">
+                                        <div className={`p-8 rounded-3xl shadow-lg border animate-fade-in-up ${isDarkMode ? 'bg-[#151e32] border-white/5' : 'bg-white border-gray-100'}`}>
                                             <h3 className="text-xl font-bold mb-6">Lộ trình học tập</h3>
                                             <div className="relative border-l-2 border-cyan-500/30 ml-3 space-y-8 pl-8 py-2">
                                                 {doc.offlineDetails?.curriculum?.map((item: any, idx: number) => (
@@ -383,18 +383,20 @@ const DocumentDetailPage = () => {
                             {/* Main Video Area */}
                             <div className="bg-white dark:bg-[#151e32] rounded-3xl shadow-lg overflow-hidden mb-6">
                                 {/* Course Header */}
-                                <div className="p-4 border-b border-gray-100 dark:border-white/10">
-                                    <span className="px-3 py-1 rounded-full bg-purple-500/10 text-purple-500 text-xs font-bold">
-                                        {doc.category || 'VIDEO COURSE'}
-                                    </span>
-                                    <h1 className="text-xl md:text-2xl font-bold mt-2">{doc.title}</h1>
-                                    <div className="flex flex-wrap gap-4 text-sm mt-2 opacity-70">
-                                        <span className="flex items-center gap-1">
-                                            <User size={14} /> {doc.author}
+                                <div className="p-4 border-b border-gray-100 dark:border-white/10 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                                    <div>
+                                        <span className="px-3 py-1 rounded-full bg-purple-500/10 text-purple-500 text-xs font-bold">
+                                            {doc.category || 'VIDEO COURSE'}
                                         </span>
-                                        <span className="flex items-center gap-1">
-                                            <PlayCircle size={14} /> {doc.total_lessons || 'Nhiều'} bài học
-                                        </span>
+                                        <h1 className="text-xl md:text-2xl font-bold mt-2">{doc.title}</h1>
+                                        <div className="flex flex-wrap gap-4 text-sm mt-2 opacity-70">
+                                            <span className="flex items-center gap-1">
+                                                <User size={14} /> {doc.author}
+                                            </span>
+                                            <span className="flex items-center gap-1">
+                                                <PlayCircle size={14} /> {doc.total_lessons || 'Nhiều'} bài học
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -441,51 +443,29 @@ const DocumentDetailPage = () => {
                                 </div>
                             </div>
 
-                            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                                <div className="lg:col-span-2">
-                                    <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
-                                        <span className="w-2 h-8 bg-cyan-500 rounded-full"></span>
-                                        Nội dung bài học
-                                    </h2>
-                                    <div className="bg-white dark:bg-[#151e32] p-8 rounded-3xl shadow-sm prose dark:prose-invert max-w-none">
-                                        <p>
-                                            Chào mừng các bạn đến với bài học <strong>{doc.title}</strong>. Trong video này, chúng ta sẽ cùng tìm hiểu sâu về:
-                                        </p>
-                                        <ul>
-                                            <li>Các mẫu câu giao tiếp thông dụng.</li>
-                                            <li>Cách phát âm chuẩn giọng bản xứ.</li>
-                                            <li>Luyện tập phản xạ nghe nói.</li>
-                                        </ul>
-                                        <p>
-                                            Hãy nhớ ghi chép đầy đủ và luyện tập theo hướng dẫn của giảng viên <strong>{doc.author}</strong> nhé!
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <div className="space-y-6">
-                                    <div className="bg-white dark:bg-[#151e32] p-6 rounded-3xl shadow-sm">
-                                        <h3 className="font-bold mb-4">Thông tin khóa học</h3>
-                                        <div className="space-y-4 text-sm opacity-80">
-                                            <div className="flex justify-between">
-                                                <span className="flex items-center gap-2"><Clock size={16} /> Thời lượng</span>
-                                                <span>45 phút</span>
-                                            </div>
-                                            <div className="flex justify-between">
-                                                <span className="flex items-center gap-2"><User size={16} /> Giảng viên</span>
-                                                <span>{doc.author}</span>
-                                            </div>
-                                        </div>
-                                        <button
-                                            onClick={handleEnroll}
-                                            disabled={enrolling}
-                                            className="w-full mt-6 bg-cyan-500/10 text-cyan-500 py-3 rounded-xl font-bold hover:bg-cyan-500 hover:text-white transition-all border border-cyan-500/20 disabled:opacity-50">
-                                            {enrolling ? 'Đang xử lý...' : 'Vào học ngay'}
-                                        </button>
-                                    </div>
-                                    {/* Reviews Section */}
-                                    {id && <CourseReviews courseId={id} isDarkMode={isDarkMode} />}
+                            {/* Course Content Section */}
+                            <div className="mb-8">
+                                <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
+                                    <span className="w-2 h-8 bg-cyan-500 rounded-full"></span>
+                                    Nội dung bài học
+                                </h2>
+                                <div className={`p-8 rounded-3xl shadow-sm max-w-none ${isDarkMode ? 'bg-[#151e32] text-gray-100' : 'bg-white text-gray-800 border border-gray-100'}`}>
+                                    <p>
+                                        Chào mừng các bạn đến với bài học <strong>{doc.title}</strong>. Trong video này, chúng ta sẽ cùng tìm hiểu sâu về:
+                                    </p>
+                                    <ul>
+                                        <li>Các mẫu câu giao tiếp thông dụng.</li>
+                                        <li>Cách phát âm chuẩn giọng bản xứ.</li>
+                                        <li>Luyện tập phản xạ nghe nói.</li>
+                                    </ul>
+                                    <p>
+                                        Hãy nhớ ghi chép đầy đủ và luyện tập theo hướng dẫn của giảng viên <strong>{doc.author}</strong> nhé!
+                                    </p>
                                 </div>
                             </div>
+
+                            {/* Reviews Section - Full Width */}
+                            {id && <CourseReviews courseId={id} isDarkMode={isDarkMode} />}
                         </div>
                     ) : (
                         // DOCUMENT/TEXT LAYOUT (Image 3 similar)

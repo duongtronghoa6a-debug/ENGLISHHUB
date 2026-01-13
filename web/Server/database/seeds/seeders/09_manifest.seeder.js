@@ -11,25 +11,25 @@ const db = require('../../../src/app/models');
 const bcrypt = require('bcryptjs');
 const { TEST_ACCOUNTS } = require('../helpers/seedUtils');
 
-// Teacher name mapping - IIG goes to ENGLISH HUB (02), Study4 stays separate (03)
+// Teacher name mapping - Map to normalized names
 const TEACHER_MAPPING = {
     'ENGLISH HUB': 'ENGLISH HUB',
     'EnglishHUB': 'ENGLISH HUB',
     'ENGLISHHUB': 'ENGLISH HUB',
     'IIG': 'ENGLISH HUB',
-    'Study4': 'Study4 Teacher',
-    'study4': 'Study4 Teacher',
     'misc': 'ENGLISH HUB',
     '7.-Tai-lieu-B1-B2-Vstep-20260108T132920Z-3-001': 'ENGLISH HUB',
+    'Study4': 'Study4',
+    'study4': 'Study4',
     'PREP-2023': 'PREP',
     'PREP-2024': 'PREP',
     'PREP': 'PREP',
+    'ielts-Prep': 'PREP',
     'Mai-Phuong': 'Mai Phương',
     'MaiPhuong': 'Mai Phương',
     'KHOA-LAY-GOC-48-NGAY-CO-MAI-PHUONG': 'Mai Phương',
     'Ielts-NguyenHuyen': 'Nguyễn Huyên',
     'NguyenHuyen': 'Nguyễn Huyên',
-    'ielts-Prep': 'IELTS Prep',
     'Tham': 'Thầy Tham'
 };
 
@@ -37,9 +37,9 @@ const ENGLISH_HUB_CATEGORIES = ['giao-tiep', 'vstep'];
 
 const TEACHER_PRICES = {
     'ENGLISH HUB': 0,
+    'Study4': 299000,
     'Mai Phương': 299000,
     'Nguyễn Huyên': 249000,
-    'IELTS Prep': 199000,
     'PREP': 399000,
     'Thầy Tham': 199000
 };

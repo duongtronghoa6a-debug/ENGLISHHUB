@@ -63,19 +63,19 @@ const TeacherOfflineClassDetailPage = () => {
     const fetchData = async () => {
         try {
             setLoading(true);
-            // Get class details (includes attendances)
+            // Get class details (includes enrollments)
             const classRes = await api.get(`/offline-classes/${classId}`);
             if (classRes.data.success) {
                 const classData = classRes.data.data;
                 setOfflineClass(classData);
 
-                // Extract attendees from attendances array
-                if (classData.attendances && Array.isArray(classData.attendances)) {
-                    const attendeesList = classData.attendances.map((att: any) => ({
-                        id: att.id,
-                        email: att.learner?.email || 'N/A',
-                        full_name: att.learner?.email?.split('@')[0] || 'Học viên',
-                        joined_at: att.created_at || att.createdAt
+                // Extract attendees from enrollments array (approved class enrollments)
+                if (classData.enrollments && Array.isArray(classData.enrollments)) {
+                    const attendeesList = classData.enrollments.map((enrollment: any) => ({
+                        id: enrollment.id,
+                        email: enrollment.learner?.email || 'N/A',
+                        full_name: enrollment.learner?.email?.split('@')[0] || 'Học viên',
+                        joined_at: enrollment.reviewed_at || enrollment.requested_at
                     }));
                     setAttendees(attendeesList);
                 }
@@ -206,7 +206,7 @@ const TeacherOfflineClassDetailPage = () => {
                         <Users className="w-5 h-5 text-purple-500" />
                         <div>
                             <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Sĩ số</p>
-                            <p className="font-medium">{offlineClass?.current_enrolled || 0}/{offlineClass?.capacity}</p>
+                            <p className="font-medium">{attendees.length}/{offlineClass?.capacity}</p>
                         </div>
                     </div>
                     <div className="flex items-center gap-3">

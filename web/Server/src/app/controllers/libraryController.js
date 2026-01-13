@@ -8,7 +8,7 @@ const fs = require('fs');
 exports.getStats = async (req, res, next) => {
     try {
         const [totalCourses, totalTeachers, totalLessons] = await Promise.all([
-            Course.count({ where: { is_published: true } }),
+            Course.count({ where: { is_published: true, approval_status: 'approved' } }),
             Teacher.count(),
             Lesson.count()
         ]);
@@ -16,7 +16,7 @@ exports.getStats = async (req, res, next) => {
         // Get unique categories
         const categories = await Course.findAll({
             attributes: [[fn('DISTINCT', col('category')), 'category']],
-            where: { is_published: true },
+            where: { is_published: true, approval_status: 'approved' },
             raw: true
         });
 
@@ -39,7 +39,7 @@ exports.getCategories = async (req, res, next) => {
     try {
         const categories = await Course.findAll({
             attributes: [[fn('DISTINCT', col('category')), 'category']],
-            where: { is_published: true },
+            where: { is_published: true, approval_status: 'approved' },
             raw: true
         });
 
@@ -58,7 +58,7 @@ exports.getTeachers = async (req, res, next) => {
         if (exam) {
             // Get teachers who have courses in this category
             const courses = await Course.findAll({
-                where: { category: exam, is_published: true },
+                where: { category: exam, is_published: true, approval_status: 'approved' },
                 attributes: ['teacher_id'],
                 raw: true
             });
@@ -84,7 +84,7 @@ exports.getCourses = async (req, res, next) => {
     try {
         const { exam, teacher } = req.query;
 
-        const whereClause = { is_published: true };
+        const whereClause = { is_published: true, approval_status: 'approved' };
         if (exam) whereClause.category = exam;
 
         if (teacher) {
@@ -144,7 +144,7 @@ exports.getFiles = async (req, res, next) => {
         const offset = (parseInt(page) - 1) * parseInt(limit);
 
         // Build course filter
-        const courseWhere = { is_published: true };
+        const courseWhere = { is_published: true, approval_status: 'approved' };
         if (exam) courseWhere.category = exam;
 
         if (teacher) {

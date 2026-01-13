@@ -11,6 +11,7 @@ interface Course {
     level: string;
     price: number;
     status: string;
+    approval_status: string;
     is_published: boolean;
     thumbnail_url: string;
     created_at: string;
@@ -35,6 +36,7 @@ const AdminCoursesPage = () => {
     const [totalCourses, setTotalCourses] = useState(0);
     const [newCourse, setNewCourse] = useState({ title: '', description: '', price: 0, level: 'B1' });
     const [createdCourseId, setCreatedCourseId] = useState<string | null>(null);
+    const [stats, setStats] = useState({ total: 0, pending: 0, published: 0, draft: 0 });
 
     useEffect(() => {
         fetchCourses();
@@ -49,6 +51,10 @@ const AdminCoursesPage = () => {
             setCourses(response.data.data || []);
             setTotalPages(response.data.pagination?.totalPages || 1);
             setTotalCourses(response.data.pagination?.total || response.data.data?.length || 0);
+            // Use stats from API if available
+            if (response.data.stats) {
+                setStats(response.data.stats);
+            }
         } catch (error) {
             console.error('Failed to fetch courses:', error);
         } finally {
@@ -85,21 +91,37 @@ const AdminCoursesPage = () => {
         }
     };
 
-    const handleUpdateStatus = async (courseId: string, newStatus: string) => {
+    const handleUpdateStatus = async (courseId: string, newApprovalStatus: string) => {
+        // Map UI status to approval_status values
+        const approvalStatusMap: Record<string, string> = {
+            'published': 'approved',
+            'rejected': 'rejected',
+            'draft': 'draft'
+        };
+        const mappedStatus = approvalStatusMap[newApprovalStatus] || newApprovalStatus;
+        console.log('[DEBUG] Updating course:', courseId, 'to approval_status:', mappedStatus);
+
         try {
-            await api.put(`/admin/courses/${courseId}`, { status: newStatus, is_published: newStatus === 'published' });
+            await api.put(`/admin/courses/${courseId}`, {
+                approval_status: mappedStatus,
+                is_published: mappedStatus === 'approved'
+            });
+            console.log('[DEBUG] Update successful!');
             fetchCourses();
-        } catch (error) {
-            console.error('Failed to update status:', error);
-            alert('Lỗi khi cập nhật trạng thái');
+            alert('Cập nhật trạng thái thành công!');
+        } catch (error: any) {
+            console.error('[DEBUG] Update failed:', error.response?.data || error);
+            alert(error.response?.data?.message || 'Lỗi khi cập nhật trạng thái');
         }
     };
 
-    // Helper to determine effective status
+    // Helper to determine effective status based on approval_status
     const getEffectiveStatus = (course: Course): string => {
-        if (course.is_published || course.status === 'published') return 'published';
-        if (course.status === 'pending') return 'pending';
-        if (course.status === 'rejected') return 'rejected';
+        // Use approval_status as the source of truth (ignore is_published which may be stale)
+        const status = course.approval_status;
+        if (status === 'approved') return 'published';
+        if (status === 'pending_review') return 'pending';
+        if (status === 'rejected') return 'rejected';
         return 'draft';
     };
 
@@ -135,12 +157,7 @@ const AdminCoursesPage = () => {
         c.title.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
-    const stats = {
-        total: totalCourses,
-        pending: courses.filter(c => getEffectiveStatus(c) === 'pending').length,
-        published: courses.filter(c => getEffectiveStatus(c) === 'published').length,
-        draft: courses.filter(c => getEffectiveStatus(c) === 'draft').length
-    };
+    // Stats now come from API (see fetchCourses)
 
     return (
         <div className="space-y-6">

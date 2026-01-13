@@ -55,6 +55,12 @@ exports.updateLesson = async (req, res, next) => {
         const updates = req.body;
         const { id: accountId, role } = req.user;
 
+        console.log('[updateLesson] Lesson ID:', id);
+        console.log('[updateLesson] Has file:', !!req.file);
+        if (req.file) {
+            console.log('[updateLesson] File:', req.file.originalname, req.file.mimetype);
+        }
+
         const lesson = await Lesson.findByPk(id, {
             include: [{
                 model: Course,
@@ -72,9 +78,39 @@ exports.updateLesson = async (req, res, next) => {
             }
         }
 
+        // Handle file upload if present
+        let content_url = updates.content_url !== undefined ? updates.content_url : lesson.content_url;
+        let content_type = updates.content_type !== undefined ? updates.content_type : lesson.content_type;
+
+        if (req.file) {
+            try {
+                const { uploadFile, getContentType } = require('../services/r2Storage');
+                const fileContentType = getContentType(req.file.originalname);
+                const result = await uploadFile(
+                    req.file.buffer,
+                    req.file.originalname,
+                    `lessons/${lesson.course_id}`,
+                    fileContentType
+                );
+                content_url = result.url;
+
+                // Determine content_type from file extension
+                const ext = req.file.originalname.split('.').pop().toLowerCase();
+                if (ext === 'pdf') content_type = 'pdf';
+                else if (['mp3', 'wav', 'ogg'].includes(ext)) content_type = 'audio';
+                else if (['mp4', 'webm'].includes(ext)) content_type = 'video';
+
+                console.log('[updateLesson] File uploaded to:', content_url);
+            } catch (uploadError) {
+                console.error('[updateLesson] Upload error:', uploadError);
+                throw HttpError(500, 'Failed to upload file: ' + uploadError.message);
+            }
+        }
+
         await lesson.update({
             title: updates.title !== undefined ? updates.title : lesson.title,
-            content_url: updates.content_url !== undefined ? updates.content_url : lesson.content_url,
+            content_url: content_url,
+            content_type: content_type,
             duration_minutes: updates.duration_minutes !== undefined ? updates.duration_minutes : lesson.duration_minutes,
             is_free: updates.is_free !== undefined ? updates.is_free : lesson.is_free,
             order_index: updates.order_index !== undefined ? updates.order_index : lesson.order_index
@@ -86,6 +122,7 @@ exports.updateLesson = async (req, res, next) => {
             data: lesson
         });
     } catch (error) {
+        console.error('[updateLesson] Error:', error);
         next(error);
     }
 };

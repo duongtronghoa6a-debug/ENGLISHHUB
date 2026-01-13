@@ -43,6 +43,8 @@ router.get('/exams', adminController.getAllExams);
 router.post('/exams', adminController.createExam);
 router.put('/exams/:id', adminController.updateExam);
 router.delete('/exams/:id', adminController.deleteExam);
+router.put('/exams/:id/approve', adminController.approveExam);
+router.put('/exams/:id/reject', adminController.rejectExam);
 
 // Question CRUD (within exams)
 router.get('/exams/:examId/questions', adminController.getExamQuestions);

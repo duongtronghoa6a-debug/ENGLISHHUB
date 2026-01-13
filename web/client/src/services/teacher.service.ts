@@ -66,6 +66,11 @@ export const teacherService = {
         return response.data;
     },
 
+    submitCourseForReview: async (id: string) => {
+        const response = await api.put(`/teacher/courses/${id}/submit-review`);
+        return response.data;
+    },
+
     // ============ LESSONS ============
     getCourseLessons: async (courseId: string) => {
         const response = await api.get(`/teacher/courses/${courseId}/lessons`);

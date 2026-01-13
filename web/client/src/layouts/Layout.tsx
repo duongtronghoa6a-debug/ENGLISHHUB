@@ -108,11 +108,11 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                                                         <div
                                                             key={n.id}
                                                             onClick={() => markAsRead(n.id)}
-                                                            className={`p-4 border-b border-gray-100/5 hover:bg-black/5 dark:hover:bg-white/5 cursor-pointer transition-colors ${!n.read ? 'bg-blue-50/50 dark:bg-blue-900/10' : ''}`}
+                                                            className={`p-4 border-b border-gray-100/5 hover:bg-black/5 dark:hover:bg-white/5 cursor-pointer transition-colors ${!n.is_read ? 'bg-blue-50/50 dark:bg-blue-900/10' : ''}`}
                                                         >
                                                             <h4 className={`text-sm font-bold mb-1 ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>{n.title}</h4>
                                                             <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>{n.message}</p>
-                                                            <span className="text-[10px] text-gray-400 mt-2 block">{new Date(n.timestamp).toLocaleTimeString()}</span>
+                                                            <span className="text-[10px] text-gray-400 mt-2 block">{new Date(n.created_at).toLocaleTimeString()}</span>
                                                         </div>
                                                     ))
                                                 )}

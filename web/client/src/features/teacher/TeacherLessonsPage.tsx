@@ -58,7 +58,7 @@ interface Student {
 const TeacherLessonsPage = () => {
     const { isDarkMode } = useTheme();
     const navigate = useNavigate();
-    const { courseId: urlCourseId } = useParams<{ courseId: string }>();
+    const { id: urlCourseId } = useParams<{ id: string }>();
     const [courses, setCourses] = useState<Course[]>([]);
     const [selectedCourse, setSelectedCourse] = useState<string>('');
     const [modules, setModules] = useState<Module[]>([]);
@@ -96,17 +96,29 @@ const TeacherLessonsPage = () => {
         }
     }, [selectedCourse]);
 
+    // Effect to handle URL courseId changes
+    useEffect(() => {
+        if (urlCourseId && urlCourseId !== selectedCourse) {
+            console.log('[DEBUG] URL courseId detected:', urlCourseId);
+            setSelectedCourse(urlCourseId);
+        }
+    }, [urlCourseId]);
+
     const fetchCourses = async () => {
         try {
             const response = await teacherService.getMyCourses({ limit: 100 });
             // API returns {success, data: {courses}}, service unwraps to response.data
             const courseList = response.data?.courses || response.courses || [];
+            console.log('[DEBUG] fetchCourses - got', courseList.length, 'courses');
+            console.log('[DEBUG] urlCourseId:', urlCourseId);
             setCourses(courseList);
-            // Use courseId from URL if available, otherwise use first course
-            if (urlCourseId && courseList.some((c: Course) => c.id === urlCourseId)) {
-                setSelectedCourse(urlCourseId);
-            } else if (courseList.length > 0) {
+
+            // Only set first course if no URL param and no selection yet
+            if (!urlCourseId && !selectedCourse && courseList.length > 0) {
                 setSelectedCourse(courseList[0].id);
+            } else if (urlCourseId) {
+                // Force use URL param
+                setSelectedCourse(urlCourseId);
             }
         } catch (error) {
             console.error('Failed to fetch courses:', error);
@@ -120,22 +132,62 @@ const TeacherLessonsPage = () => {
             const response = await teacherService.getCourseLessons(selectedCourse);
             // API returns lessons directly as array or in data object
             const data = response.data || response;
-            // Group lessons into modules (or create default module)
             const lessons = data.lessons || [];
+            console.log('[DEBUG] fetchLessons - lessons count:', lessons.length);
+
+            // First try to fetch real modules
+            try {
+                const modulesResponse = await api.get(`/teacher/courses/${selectedCourse}/modules`);
+                if (modulesResponse.data?.success && modulesResponse.data.data?.length > 0) {
+                    const realModules = modulesResponse.data.data;
+                    console.log('[DEBUG] Real modules found:', realModules.length);
+                    console.log('[DEBUG] Lessons to assign:', lessons.length);
+
+                    // Check if any module has lessons from API
+                    const totalModuleLessons = realModules.reduce((sum: number, mod: Module) => sum + (mod.lessons?.length || 0), 0);
+
+                    let modulesWithLessons;
+                    if (totalModuleLessons === 0 && lessons.length > 0) {
+                        // No lessons in modules but we have lessons - put all in first module
+                        modulesWithLessons = realModules.map((mod: Module, index: number) => ({
+                            ...mod,
+                            lessons: index === 0 ? lessons : []
+                        }));
+                    } else {
+                        // Modules already have their lessons from API
+                        modulesWithLessons = realModules;
+                    }
+
+                    setModules(modulesWithLessons);
+                    setExpandedModules(new Set([modulesWithLessons[0].id]));
+                    console.log('[DEBUG] Final modules:', modulesWithLessons.map((m: Module) => ({ id: m.id, title: m.title, lessonCount: m.lessons?.length })));
+                    return;
+                }
+            } catch (modError) {
+                console.log('[DEBUG] No modules found, using default');
+            }
+
+            // No real modules - create default module with all lessons
             if (lessons.length > 0) {
-                // Create a default module if none exist
+                const courseTitle = data.course?.title || courses.find(c => c.id === selectedCourse)?.title || 'Bài học';
                 setModules([{
                     id: 'default',
-                    title: data.course?.title || 'Bài học',
+                    title: courseTitle,
                     order_index: 0,
                     lessons: lessons
                 }]);
                 setExpandedModules(new Set(['default']));
             } else {
-                setModules([]);
+                // No lessons - still show a default empty module
+                const courseTitle = courses.find(c => c.id === selectedCourse)?.title || 'Bài học';
+                setModules([{
+                    id: 'default',
+                    title: courseTitle,
+                    order_index: 0,
+                    lessons: []
+                }]);
+                setExpandedModules(new Set(['default']));
             }
-            // Also fetch real modules from API
-            fetchModules();
         } catch (error) {
             console.error('Failed to fetch lessons:', error);
             setModules([]);
@@ -143,16 +195,9 @@ const TeacherLessonsPage = () => {
     };
 
     const fetchModules = async () => {
-        try {
-            const response = await api.get(`/teacher/courses/${selectedCourse}/modules`);
-            if (response.data?.success && response.data.data?.length > 0) {
-                setModules(response.data.data);
-                // Expand first module by default
-                setExpandedModules(new Set([response.data.data[0].id]));
-            }
-        } catch (error) {
-            console.error('Failed to fetch modules:', error);
-        }
+        // This function is now integrated into fetchLessons
+        // Keeping it for backward compatibility but it does nothing
+        console.log('[DEBUG] fetchModules called - no-op, handled by fetchLessons');
     };
 
     const fetchStudents = async () => {
@@ -185,6 +230,11 @@ const TeacherLessonsPage = () => {
 
     const handleCreateLesson = async () => {
         if (!lessonForm.title.trim()) return;
+        console.log('[DEBUG] handleCreateLesson called');
+        console.log('[DEBUG] lessonForm:', lessonForm);
+        console.log('[DEBUG] selectedCourse:', selectedCourse);
+        console.log('[DEBUG] selectedFile:', selectedFile?.name);
+
         setIsUploading(true);
         try {
             // Use FormData for file upload
@@ -198,12 +248,15 @@ const TeacherLessonsPage = () => {
                 formData.append('order_index', (modules[0]?.lessons?.length || 0).toString());
                 formData.append('file', selectedFile);
 
-                await api.post('/teacher/lessons/upload', formData, {
+                console.log('[DEBUG] Uploading file via /teacher/lessons/upload');
+                const response = await api.post('/teacher/lessons/upload', formData, {
                     headers: { 'Content-Type': 'multipart/form-data' }
                 });
+                console.log('[DEBUG] Upload response:', response.data);
             } else {
                 // No file - use regular API
-                await teacherService.createLesson({
+                console.log('[DEBUG] Creating lesson via teacherService.createLesson');
+                const response = await teacherService.createLesson({
                     course_id: selectedCourse,
                     title: lessonForm.title,
                     content_type: lessonForm.content_type,
@@ -211,13 +264,15 @@ const TeacherLessonsPage = () => {
                     duration_minutes: lessonForm.duration,
                     order_index: modules[0]?.lessons?.length || 0
                 });
+                console.log('[DEBUG] Create lesson response:', response);
             }
             resetLessonForm();
             setShowLessonModal(false);
             fetchLessons();
-        } catch (error) {
-            console.error('Failed to create lesson:', error);
-            alert('Lỗi khi tạo bài học');
+        } catch (error: any) {
+            console.error('[DEBUG] Failed to create lesson:', error);
+            console.error('[DEBUG] Error response:', error.response?.data);
+            alert(error.response?.data?.message || 'Lỗi khi tạo bài học');
         } finally {
             setIsUploading(false);
         }

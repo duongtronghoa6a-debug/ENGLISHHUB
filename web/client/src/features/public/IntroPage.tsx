@@ -29,7 +29,7 @@ const IntroPage = () => {
                     </p>
                     <div className="flex flex-wrap gap-4">
                         <button
-                            onClick={() => navigate('/test/301/take')}
+                            onClick={() => navigate('/test/00000000-0000-0000-0001-000000000001/take')}
                             className="bg-cyan-500 text-white text-lg font-bold px-8 py-4 rounded-xl hover:bg-cyan-400 transition-all shadow-lg hover:shadow-cyan-500/30 transform hover:-translate-y-1"
                         >
                             Làm bài kiểm tra đầu vào

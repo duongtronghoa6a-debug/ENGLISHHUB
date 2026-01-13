@@ -71,6 +71,12 @@ exports.getAllCourses = async (req, res, next) => {
             where.is_published = true; // Default to published only
         }
 
+        // IMPORTANT: For public view, only show approved courses
+        // Unless explicitly showing all (admin mode)
+        if (is_published !== 'all') {
+            where.approval_status = 'approved';
+        }
+
         const courses = await Course.findAndCountAll({
             where,
             include: [
@@ -245,12 +251,12 @@ exports.publishCourse = async (req, res, next) => {
 // 7. [GET] /courses/teachers - Get unique teachers for filter dropdown (PUBLIC)
 exports.getTeachersPublic = async (req, res, next) => {
     try {
-        // Get all unique teachers who have published courses
+        // Get all unique teachers who have published and approved courses
         const teachers = await Teacher.findAll({
             include: [{
                 model: Course,
                 as: 'courses',
-                where: { is_published: true },
+                where: { is_published: true, approval_status: 'approved' },
                 attributes: [],
                 required: true
             }],

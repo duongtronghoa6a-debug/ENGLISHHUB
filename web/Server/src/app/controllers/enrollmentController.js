@@ -13,7 +13,9 @@ exports.createEnrollment = async (req, res, next) => {
             throw HttpError(400, 'Course ID is required');
         }
 
-        const course = await Course.findByPk(courseId);
+        const course = await Course.findByPk(courseId, {
+            include: [{ model: Teacher, as: 'teacher' }]
+        });
         if (!course) {
             throw HttpError(404, 'Course not found');
         }
@@ -45,6 +47,20 @@ exports.createEnrollment = async (req, res, next) => {
             course_id: courseId,
             status: 'active'
         });
+
+        // Send notification to teacher
+        if (course.teacher?.account_id) {
+            const { sendNotification } = require('./notificationController');
+            await sendNotification(course.teacher.account_id, {
+                title: '📚 Học viên mới đăng ký!',
+                message: `${learner.full_name} đã đăng ký khóa học "${course.title}" của bạn.`,
+                type: 'info',
+                category: 'enrollment',
+                related_id: course.id,
+                related_type: 'course',
+                action_url: `/teacher/courses/${course.id}/students`
+            }, accountId);
+        }
 
         res.status(201).json({
             success: true,

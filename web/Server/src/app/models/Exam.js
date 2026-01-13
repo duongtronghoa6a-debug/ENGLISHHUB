@@ -55,6 +55,14 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.ENUM('draft', 'published', 'archived'),
             defaultValue: 'draft'
         },
+        approval_status: {
+            type: DataTypes.ENUM('draft', 'pending_review', 'approved', 'rejected'),
+            defaultValue: 'draft'
+        },
+        rejection_reason: {
+            type: DataTypes.TEXT,
+            allowNull: true
+        },
         created_at: {
             type: DataTypes.DATE,
             defaultValue: DataTypes.NOW

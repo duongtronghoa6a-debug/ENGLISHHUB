@@ -43,6 +43,9 @@ db.Review = require('./Review')(sequelize, Sequelize.DataTypes);
 db.UserActivity = require('./UserActivity')(sequelize, Sequelize.DataTypes);
 db.Achievement = require('./Achievement')(sequelize, Sequelize.DataTypes);
 
+// --- Notifications ---
+db.Notification = require('./Notification')(sequelize, Sequelize.DataTypes);
+
 // --- Chat System ---
 db.Conversation = require('./Conversation')(sequelize, Sequelize.DataTypes);
 db.ConversationParticipant = require('./ConversationParticipant')(sequelize, Sequelize.DataTypes);
