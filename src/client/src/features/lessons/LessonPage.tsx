@@ -6,6 +6,9 @@ import { progressService } from '../../services/progress.service';
 import { useNotification } from '../../context/NotificationContext';
 import { useTheme } from '../../context/ThemeContext';
 import CourseReviews from '../../components/reviews/CourseReviews';
+import { enrollmentService } from '../../services/enrollment.service';
+import { courseService } from '../../services/course.service';
+
 
 interface Lesson {
     id: string | number;
@@ -65,8 +68,32 @@ const LessonPage = () => {
                 setIsLoading(false);
             }
         };
-        fetchLessons();
+        if (courseId) {
+            checkAndEnroll(courseId);
+            fetchLessons();
+        }
     }, [courseId, lessonId]);
+
+    const checkAndEnroll = async (id: string) => {
+        try {
+            const status = await enrollmentService.checkEnrollment(id);
+            if (!status.isEnrolled) {
+                const courseData = await courseService.getCourseById(id);
+                const course = courseData.data || courseData;
+
+                // If free, auto enroll
+                if (course && (Number(course.price) === 0 || course.is_free)) {
+                    console.log('Auto enrolling in free course...');
+                    await enrollmentService.enroll(id);
+                    // Refresh progress logic if needed, or just let the user proceed
+                    // Maybe fetch progress again?
+                }
+            }
+        } catch (err) {
+            console.error('Error checking enrollment:', err);
+        }
+    };
+
 
     const handleLessonSelect = (lesson: Lesson) => {
         setCurrentLesson(lesson);
@@ -380,10 +407,10 @@ const LessonPage = () => {
                                 <div className="flex items-center gap-3">
                                     {/* Icon */}
                                     <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${isCompleted
-                                            ? 'bg-green-500/20'
-                                            : isActive
-                                                ? 'bg-cyan-500/20'
-                                                : 'bg-gray-200 dark:bg-[#0d1526]'
+                                        ? 'bg-green-500/20'
+                                        : isActive
+                                            ? 'bg-cyan-500/20'
+                                            : 'bg-gray-200 dark:bg-[#0d1526]'
                                         }`}>
                                         {isCompleted ? (
                                             <CheckCircle size={20} className="text-green-500" />
@@ -395,10 +422,10 @@ const LessonPage = () => {
                                     {/* Content */}
                                     <div className="flex-1 min-w-0">
                                         <h4 className={`font-medium text-sm line-clamp-2 ${isCompleted
-                                                ? 'text-green-600 dark:text-green-400'
-                                                : isActive
-                                                    ? 'text-cyan-600 dark:text-cyan-400'
-                                                    : 'text-gray-800 dark:text-gray-100'
+                                            ? 'text-green-600 dark:text-green-400'
+                                            : isActive
+                                                ? 'text-cyan-600 dark:text-cyan-400'
+                                                : 'text-gray-800 dark:text-gray-100'
                                             }`}>
                                             {idx + 1}. {lesson.title}
                                         </h4>

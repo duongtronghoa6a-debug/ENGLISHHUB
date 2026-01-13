@@ -7,6 +7,8 @@ import IntroPage from './features/public/IntroPage';
 import CourseListPage from './features/courses/CourseListPage';
 import LoginPage from './features/auth/LoginPage';
 import RegisterPage from './features/auth/RegisterPage';
+import ForgotPasswordPage from './features/auth/ForgotPasswordPage';
+import ResetPasswordPage from './features/auth/ResetPasswordPage';
 import DocumentsPage from './features/documents/DocumentsPage';
 import DocumentDetailPage from './features/documents/DocumentDetailPage';
 import ProfilePage from './features/profile/ProfilePage';
@@ -63,6 +65,8 @@ function App() {
                 <Route path="/home" element={<LandingPage />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<RegisterPage />} />
+                <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+                <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
                 <Route path="/documents/free" element={<DocumentsPage type="free" />} />
                 <Route path="/documents/paid" element={<DocumentsPage type="paid" />} />
                 <Route path="/courses" element={<CourseListPage />} />

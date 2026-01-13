@@ -3,6 +3,7 @@ const HttpError = require('http-errors');
 const { signAuth } = require('../middlewares/authMiddleware');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
+const sendEmail = require('../utils/emailService');
 
 // Helper to parse device info from user-agent
 const parseDeviceInfo = (userAgent = '') => {
@@ -280,4 +281,119 @@ exports.logout = async (req, res, next) => {
     } catch (error) {
         next(error);
     }
-};
+
+
+    exports.forgotPassword = async (req, res, next) => {
+        try {
+            const { email } = req.body;
+            const user = await Account.findOne({ where: { email } });
+
+            if (!user) {
+                throw HttpError(404, 'User not found with that email');
+            }
+
+            // Generate reset token
+            const resetToken = crypto.randomBytes(32).toString('hex');
+            // Hash token to save in DB
+            const passwordResetToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+            // Token expires in 10 minutes
+            const passwordResetExpires = Date.now() + 10 * 60 * 1000;
+
+            user.reset_password_token = passwordResetToken;
+            user.reset_password_expires = passwordResetExpires;
+            await user.save();
+
+            // Create reset URL (Frontend URL)
+            // Assuming client runs on localhost:5173 or process.env.CLIENT_URL
+            const clientUrl = process.env.CLIENT_URL || 'http://localhost:5173';
+            const resetUrl = `${clientUrl}/reset-password/${resetToken}`;
+
+            const message = `
+            You have requested a password reset. 
+            Please make a PUT request to: \n\n ${resetUrl} \n\n
+            This link covers 10 minutes.
+        `;
+
+            const html = `
+            <h1>Password Reset</h1>
+            <p>You have requested a password reset.</p>
+            <p>Click the link below to reset your password:</p>
+            <a href="${resetUrl}" target="_blank">${resetUrl}</a>
+            <p>This link expires in 10 minutes.</p>
+        `;
+
+            try {
+                await sendEmail({
+                    email: user.email,
+                    subject: 'EnglishHub - Password Reset Token',
+                    message,
+                    html
+                });
+
+                res.status(200).json({
+                    success: true,
+                    message: 'Token sent to email!'
+                });
+            } catch (err) {
+                user.reset_password_token = null;
+                user.reset_password_expires = null;
+                await user.save();
+                console.error('Email send error:', err);
+                throw HttpError(500, 'There was an error sending the email. Try again later!');
+            }
+        } catch (error) {
+            next(error);
+        }
+    };
+
+    exports.resetPassword = async (req, res, next) => {
+        try {
+            const { token } = req.params;
+            const { password } = req.body;
+
+            // Hash the token from param to compare with DB
+            const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
+
+            const user = await Account.findOne({
+                where: {
+                    reset_password_token: hashedToken,
+                    reset_password_expires: { [require('sequelize').Op.gt]: Date.now() } // Expires > Now
+                }
+            });
+
+            if (!user) {
+                throw HttpError(400, 'Token is invalid or has expired');
+            }
+
+            // Set new password
+            const salt = await bcrypt.genSalt(10);
+            user.password_hash = await bcrypt.hash(password, salt);
+            user.reset_password_token = null;
+            user.reset_password_expires = null;
+            await user.save();
+
+            // Log activity
+            if (ActivityLog) {
+                await ActivityLog.log({
+                    account_id: user.id,
+                    action: 'reset_password',
+                    action_type: 'success',
+                    description: 'Khôi phục mật khẩu thành công',
+                    ip_address: req.ip
+                });
+            }
+
+            // Log user in directly? Or just send success. Let's send success and token.
+            const newToken = signAuth(user);
+
+            res.status(200).json({
+                success: true,
+                message: 'Password reset successful!',
+                token: newToken,
+                user: { id: user.id, email: user.email, role: user.role }
+            });
+
+        } catch (error) {
+            next(error);
+        }
+    };
