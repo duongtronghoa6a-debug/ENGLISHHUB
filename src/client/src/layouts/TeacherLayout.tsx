@@ -13,7 +13,8 @@ import {
     Sun,
     Moon,
     Calendar,
-    MessageCircle
+    MessageCircle,
+    DollarSign
 } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import { useAuth } from '../context/AuthContext';
@@ -44,6 +45,7 @@ const TeacherLayout = () => {
         { path: '/teacher/lessons', icon: FileText, label: 'Bài học' },
         { path: '/teacher/offline-classes', icon: Calendar, label: 'Khóa học offline' },
         { path: '/teacher/exams', icon: ClipboardList, label: 'Quản lí đề thi' },
+        { path: '/teacher/revenue', icon: DollarSign, label: 'Doanh thu' },
         { path: '/teacher/chat', icon: MessageCircle, label: 'Tin nhắn' },
         { path: '/teacher/settings', icon: Settings, label: 'Cài đặt' },
         { path: '/teacher/profile', icon: User, label: 'Hồ sơ' },

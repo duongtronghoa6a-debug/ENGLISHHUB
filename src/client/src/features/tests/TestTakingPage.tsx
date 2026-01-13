@@ -254,18 +254,40 @@ const TestTakingPage = () => {
                             </div>
                         </div>
 
-                        {/* Media */}
-                        {currentQuestion.media_url && currentQuestion.media_type !== 'none' && (
+                        {/* Media - from media_url or content_url */}
+                        {(currentQuestion.media_url || currentQuestion.content_url) && (
                             <div className="mb-6">
-                                {currentQuestion.media_type === 'image' && (
+                                {/* Image */}
+                                {currentQuestion.media_type === 'image' && currentQuestion.media_url && (
                                     <img src={currentQuestion.media_url} alt="Question media" className="max-w-full h-auto rounded-lg" />
                                 )}
-                                {currentQuestion.media_type === 'audio' && (
+
+                                {/* Audio from media_url or content_url for listening skill */}
+                                {(currentQuestion.media_type === 'audio' || currentQuestion.skill === 'listening') && (currentQuestion.media_url || currentQuestion.content_url) && (
                                     <div className={`p-4 rounded-lg ${isDarkMode ? 'bg-white/5' : 'bg-gray-100'}`}>
                                         <div className="flex items-center gap-3">
                                             <Volume2 className="text-cyan-500" />
-                                            <audio controls src={currentQuestion.media_url} className="w-full" />
+                                            <audio controls src={currentQuestion.media_url || currentQuestion.content_url} className="w-full" />
                                         </div>
+                                    </div>
+                                )}
+
+                                {/* PDF for reading skill */}
+                                {currentQuestion.skill === 'reading' && currentQuestion.content_url && currentQuestion.content_url.includes('.pdf') && (
+                                    <div className={`p-4 rounded-lg ${isDarkMode ? 'bg-white/5' : 'bg-gray-100'}`}>
+                                        <a
+                                            href={currentQuestion.content_url}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="flex items-center gap-3 text-cyan-500 hover:underline"
+                                        >
+                                            📄 Xem tài liệu PDF đính kèm
+                                        </a>
+                                        <iframe
+                                            src={currentQuestion.content_url}
+                                            className="w-full h-96 mt-4 rounded-lg"
+                                            title="PDF Document"
+                                        />
                                     </div>
                                 )}
                             </div>

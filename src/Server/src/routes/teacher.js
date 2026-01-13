@@ -98,4 +98,9 @@ router.post('/modules', teacherController.createModule);
 router.put('/modules/:id', teacherController.updateModule);
 router.delete('/modules/:id', teacherController.deleteModule);
 
+// Revenue & Withdrawals
+router.get('/revenue-stats', teacherController.getRevenueStats);
+router.get('/withdrawals', teacherController.getWithdrawals);
+router.post('/withdrawals', teacherController.requestWithdrawal);
+
 module.exports = router;

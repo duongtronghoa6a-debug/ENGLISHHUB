@@ -4,9 +4,9 @@ export const APP_INFO = {
         last: "HUB"
     },
     contact: {
-        phone: "+84 1234567890",
+        phone: "+84 332242241",
         address: "Hồ Chí Minh city",
-        email: "abc@company.com"
+        email: "g1hlq.host@gmail.com"
     },
     socials: {
         facebook: "#",

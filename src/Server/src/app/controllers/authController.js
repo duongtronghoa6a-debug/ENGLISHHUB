@@ -138,7 +138,7 @@ exports.register = async (req, res, next) => {
 
 exports.login = async (req, res, next) => {
     try {
-        const { email, password } = req.body;
+        const { email, password, role: selectedRole } = req.body;
 
         const user = await Account.findOne({ where: { email } });
 
@@ -156,6 +156,25 @@ exports.login = async (req, res, next) => {
 
         if (!user.is_active) {
             throw HttpError(403, 'Your account has been locked or is pending approval.');
+        }
+
+        // Validate selected role matches actual account role
+        if (selectedRole) {
+            const normalizedSelectedRole = selectedRole.toLowerCase();
+            const actualRole = user.role.toLowerCase();
+
+            // Allow admin to login with any selection
+            if (actualRole !== 'admin') {
+                // For learner and teacher, must match exactly
+                if (normalizedSelectedRole !== actualRole) {
+                    const roleNames = {
+                        'learner': 'Học sinh',
+                        'teacher': 'Giáo viên',
+                        'admin': 'Admin'
+                    };
+                    throw HttpError(403, `Tài khoản này là ${roleNames[actualRole] || actualRole}. Vui lòng chọn đúng vai trò.`);
+                }
+            }
         }
 
         // 4. Kiểm tra mật khẩu

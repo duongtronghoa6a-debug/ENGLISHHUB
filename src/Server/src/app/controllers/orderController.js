@@ -96,7 +96,10 @@ exports.processPayment = async (req, res, next) => {
 
         if (order.status === 'completed') throw HttpError(400, 'Order already paid');
 
-        // Kích hoạt khóa học
+        // Kích hoạt khóa học và thu thập info cho notification
+        const courseNames = [];
+        const teacherAccountIds = new Set();
+
         for (const item of order.items) {
             const existing = await Enrollment.findOne({
                 where: { learner_id: learner.id, course_id: item.course_id }
@@ -109,12 +112,50 @@ exports.processPayment = async (req, res, next) => {
                     status: 'active'
                 }, { transaction: t });
             }
+
+            // Get course and teacher info for notifications
+            const course = await Course.findByPk(item.course_id, {
+                include: [{ model: require('../models').Teacher, as: 'teacher' }]
+            });
+            if (course) {
+                courseNames.push(course.title);
+                if (course.teacher?.account_id) {
+                    teacherAccountIds.add(course.teacher.account_id);
+                }
+            }
         }
 
         // Update order status to 'completed'
         await order.update({ status: 'completed' }, { transaction: t });
 
         await t.commit();
+
+        // Send notifications after commit
+        const { sendNotification } = require('./notificationController');
+
+        // Notification to learner
+        await sendNotification(accountId, {
+            title: '🎉 Thanh toán thành công!',
+            message: `Bạn đã mua thành công: ${courseNames.join(', ')}. Chúc bạn học tập hiệu quả!`,
+            type: 'success',
+            category: 'purchase',
+            related_id: order.id,
+            related_type: 'order',
+            action_url: '/my-courses'
+        });
+
+        // Notification to each teacher
+        for (const teacherAccountId of teacherAccountIds) {
+            await sendNotification(teacherAccountId, {
+                title: '💰 Có học viên mới mua khóa học!',
+                message: `Một học viên vừa mua khóa học của bạn. Doanh thu: ${new Intl.NumberFormat('vi-VN').format(order.total_amount)}₫`,
+                type: 'success',
+                category: 'purchase',
+                related_id: order.id,
+                related_type: 'order',
+                action_url: '/teacher/revenue'
+            });
+        }
 
         res.status(200).json({
             success: true,

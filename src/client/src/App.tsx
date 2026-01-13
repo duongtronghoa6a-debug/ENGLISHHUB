@@ -41,6 +41,7 @@ import TeacherChatPage from './features/teacher/TeacherChatPage';
 import TeacherSettingsPage from './features/teacher/TeacherSettingsPage';
 import TeacherCourseStudentsPage from './features/teacher/TeacherCourseStudentsPage';
 import TeacherOfflineClassDetailPage from './features/teacher/TeacherOfflineClassDetailPage';
+import TeacherRevenuePage from './features/teacher/TeacherRevenuePage';
 
 // Admin imports
 import AdminCoursesPage from './features/admin/AdminCoursesPage';
@@ -50,6 +51,7 @@ import AdminSettingsPage from './features/admin/AdminSettingsPage';
 import AdminAccountPage from './features/admin/AdminAccountPage';
 import AdminExamsPage from './features/admin/AdminExamsPage';
 import AdminCourseLessonsPage from './features/admin/AdminCourseLessonsPage';
+import AdminWithdrawalsPage from './features/admin/AdminWithdrawalsPage';
 
 import { NotificationProvider } from './context/NotificationContext';
 
@@ -101,6 +103,7 @@ function App() {
                   <Route path="courses/:id/lessons" element={<TeacherLessonsPage />} />
                   <Route path="courses/:id/students" element={<TeacherCourseStudentsPage />} />
                   <Route path="chat" element={<TeacherChatPage />} />
+                  <Route path="revenue" element={<TeacherRevenuePage />} />
                   <Route path="settings" element={<TeacherSettingsPage />} />
                 </Route>
 
@@ -115,6 +118,7 @@ function App() {
                   <Route path="stats" element={<AdminStatsPage />} />
                   <Route path="settings" element={<AdminSettingsPage />} />
                   <Route path="account" element={<AdminAccountPage />} />
+                  <Route path="withdrawals" element={<AdminWithdrawalsPage />} />
                   <Route path="*" element={<div className="p-10">Page under construction</div>} />
                 </Route>
               </Routes>

@@ -2,8 +2,8 @@ import api from './api';
 
 export const authService = {
     // POST /api/v1/auth/login
-    login: async (email: string, password: string) => {
-        const response = await api.post('/auth/login', { email, password });
+    login: async (email: string, password: string, role?: string) => {
+        const response = await api.post('/auth/login', { email, password, role });
         return response.data;
     },
 

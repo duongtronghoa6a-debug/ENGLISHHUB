@@ -7,3 +7,15 @@
 
     --font-sans: "Inter", sans-serif;
 }
+
+/* Global fix for select dropdown options in dark mode */
+select option {
+    background-color: #1e293b !important;
+    color: #ffffff !important;
+}
+
+/* Light mode select options */
+.light select option {
+    background-color: #ffffff !important;
+    color: #1f2937 !important;
+}

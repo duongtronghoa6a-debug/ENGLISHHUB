@@ -1,5 +1,5 @@
 const db = require('../models');
-const { Account, Course, Teacher, Learner, Enrollment, Exam, Order, Question, Lesson } = db;
+const { Account, Course, Teacher, Learner, Enrollment, Exam, Order, OrderItem, Question, Lesson, Withdrawal } = db;
 const HttpError = require('http-errors');
 const { Op } = require('sequelize');
 
@@ -600,11 +600,13 @@ exports.updateUser = async (req, res, next) => {
 // 14. [POST] /admin/exams - Create exam
 exports.createExam = async (req, res, next) => {
     try {
-        const { title, description, duration_minutes, course_id, skill } = req.body;
+        const { title, description, duration_minutes, course_id, skill, list_question_ids } = req.body;
 
         if (!title) {
             throw HttpError(400, 'Title is required');
         }
+
+        console.log('[createExam] Creating with list_question_ids:', list_question_ids);
 
         const exam = await Exam.create({
             title,
@@ -612,11 +614,14 @@ exports.createExam = async (req, res, next) => {
             duration_minutes: duration_minutes || 60,
             course_id: course_id || null,
             skill: skill || 'reading',
-            creator_id: req.user.id  // Add creator_id from current logged in user
+            creator_id: req.user.id,
+            approval_status: 'approved',  // Admin-created exams are auto-approved
+            list_question_ids: list_question_ids || []
         });
 
         res.status(201).json({ success: true, message: 'Exam created', data: exam });
     } catch (error) {
+        console.error('[createExam] Error:', error);
         next(error);
     }
 };
@@ -685,12 +690,20 @@ exports.updateExam = async (req, res, next) => {
             throw HttpError(404, 'Exam not found');
         }
 
-        await exam.update({
+        // When admin publishes an exam, also approve it
+        const updateData = {
             title: title !== undefined ? title : exam.title,
             description: description !== undefined ? description : exam.description,
             duration_minutes: duration_minutes !== undefined ? duration_minutes : exam.duration_minutes,
             status: status !== undefined ? status : exam.status
-        });
+        };
+
+        // Auto-approve when publishing
+        if (status === 'published') {
+            updateData.approval_status = 'approved';
+        }
+
+        await exam.update(updateData);
 
         res.status(200).json({ success: true, message: 'Exam updated', data: exam });
     } catch (error) {
@@ -785,25 +798,43 @@ exports.getExamQuestions = async (req, res, next) => {
         if (!exam) throw HttpError(404, 'Exam not found');
 
         const questionIds = exam.list_question_ids || [];
+        console.log('[getExamQuestions] examId:', examId, 'questionIds:', questionIds);
+
+        // Return empty array if no questions
+        if (!questionIds.length) {
+            return res.status(200).json({ success: true, data: [] });
+        }
+
         const questions = await Question.findAll({
-            where: { id: questionIds },
+            where: { id: { [Op.in]: questionIds } },
             order: [['created_at', 'DESC']]
         });
 
+        console.log('[getExamQuestions] Found questions:', questions.length);
         res.status(200).json({ success: true, data: questions });
     } catch (error) {
+        console.error('[getExamQuestions] Error:', error);
         next(error);
     }
 };
 
-// 19. [POST] /admin/exams/:examId/questions - Add question to exam
+// 19. [POST] /admin/exams/:examId/questions - Add question to exam (with file upload support)
 exports.addQuestionToExam = async (req, res, next) => {
     try {
         const { examId } = req.params;
-        const { content_text, skill, type, level, options, correct_answer } = req.body;
+        const { content_text, skill, type, level, options, correct_answer, explanation, content_url } = req.body;
+
+        console.log('[addQuestionToExam] examId:', examId);
+        console.log('[addQuestionToExam] content_text:', content_text?.substring(0, 50));
 
         const exam = await Exam.findByPk(examId);
         if (!exam) throw HttpError(404, 'Exam not found');
+
+        // Parse options if it's a string (from FormData)
+        let parsedOptions = options;
+        if (typeof options === 'string') {
+            try { parsedOptions = JSON.parse(options); } catch (e) { parsedOptions = []; }
+        }
 
         // Create question
         const question = await Question.create({
@@ -812,18 +843,28 @@ exports.addQuestionToExam = async (req, res, next) => {
             skill: skill || 'reading',
             type: type || 'multiple_choice',
             level: level || 'B1',
-            options: options || [],
-            correct_answer: correct_answer || '0'
+            options: parsedOptions || [],
+            correct_answer: correct_answer || '0',
+            explanation: explanation || null,
+            content_url: content_url || null
         });
+
+        console.log('[addQuestionToExam] Created question:', question.id);
 
         // Add to exam's question list
         const currentIds = exam.list_question_ids || [];
-        await exam.update({
-            list_question_ids: [...currentIds, question.id]
-        });
+        console.log('[addQuestionToExam] Current IDs before update:', currentIds);
+
+        const newIds = [...currentIds, question.id];
+        await exam.update({ list_question_ids: newIds });
+
+        // Verify update
+        await exam.reload();
+        console.log('[addQuestionToExam] IDs after update:', exam.list_question_ids);
 
         res.status(201).json({ success: true, message: 'Question added', data: question });
     } catch (error) {
+        console.error('[addQuestionToExam] Error:', error);
         next(error);
     }
 };
@@ -937,6 +978,197 @@ exports.deleteLesson = async (req, res, next) => {
         res.status(200).json({ success: true, message: 'Lesson deleted' });
     } catch (error) {
         console.error('deleteLesson error:', error);
+        next(error);
+    }
+};
+
+// ========== REVENUE & WITHDRAWAL MANAGEMENT ==========
+
+// 24. [GET] /admin/teacher-revenues - Get all teachers with revenue stats
+exports.getTeacherRevenues = async (req, res, next) => {
+    try {
+        // Get all teachers with their profiles
+        const teachers = await Teacher.findAll({
+            include: [{
+                model: Account,
+                as: 'account',
+                attributes: ['id', 'email', 'is_active']
+            }]
+        });
+
+        // Calculate revenue for each teacher
+        const teacherRevenues = await Promise.all(teachers.map(async (teacher) => {
+            // Get courses by this teacher
+            const courses = await Course.findAll({
+                where: { teacher_id: teacher.id },
+                attributes: ['id', 'title']
+            });
+            const courseIds = courses.map(c => c.id);
+
+            // Calculate total revenue
+            let totalRevenue = 0;
+            if (courseIds.length > 0) {
+                const orderItems = await OrderItem.findAll({
+                    where: { course_id: { [Op.in]: courseIds } },
+                    include: [{
+                        model: Order,
+                        as: 'order',
+                        where: { status: 'completed' }
+                    }]
+                });
+                orderItems.forEach(item => {
+                    totalRevenue += parseFloat(item.price || 0);
+                });
+            }
+
+            // Get withdrawal stats
+            const withdrawnAmount = await Withdrawal.sum('amount', {
+                where: { teacher_id: teacher.id, status: { [Op.in]: ['approved', 'paid'] } }
+            }) || 0;
+
+            const pendingWithdrawal = await Withdrawal.sum('amount', {
+                where: { teacher_id: teacher.id, status: 'pending' }
+            }) || 0;
+
+            return {
+                id: teacher.id,
+                account_id: teacher.account?.id,
+                email: teacher.account?.email,
+                full_name: teacher.full_name,
+                avatar: teacher.avatar,
+                totalCourses: courses.length,
+                totalRevenue,
+                withdrawnAmount,
+                pendingWithdrawal,
+                availableBalance: totalRevenue - withdrawnAmount - pendingWithdrawal
+            };
+        }));
+
+        // Sort by totalRevenue descending
+        teacherRevenues.sort((a, b) => b.totalRevenue - a.totalRevenue);
+
+        res.status(200).json({ success: true, data: teacherRevenues });
+    } catch (error) {
+        console.error('getTeacherRevenues error:', error);
+        next(error);
+    }
+};
+
+// 25. [GET] /admin/withdrawals - Get all withdrawal requests
+exports.getAllWithdrawals = async (req, res, next) => {
+    try {
+        const { status } = req.query;
+
+        const where = {};
+        if (status) {
+            where.status = status;
+        }
+
+        const withdrawals = await Withdrawal.findAll({
+            where,
+            include: [{
+                model: Teacher,
+                as: 'teacher',
+                include: [{
+                    model: Account,
+                    as: 'account',
+                    attributes: ['email']
+                }]
+            }],
+            order: [['created_at', 'DESC']]
+        });
+
+        const formattedWithdrawals = withdrawals.map(w => ({
+            id: w.id,
+            teacher_id: w.teacher_id,
+            teacher_name: w.teacher?.full_name,
+            teacher_email: w.teacher?.account?.email,
+            amount: w.amount,
+            bank_name: w.bank_name,
+            bank_account: w.bank_account,
+            bank_holder_name: w.bank_holder_name,
+            status: w.status,
+            rejection_reason: w.rejection_reason,
+            processed_at: w.processed_at,
+            created_at: w.created_at
+        }));
+
+        res.status(200).json({ success: true, data: formattedWithdrawals });
+    } catch (error) {
+        console.error('getAllWithdrawals error:', error);
+        next(error);
+    }
+};
+
+// 26. [PUT] /admin/withdrawals/:id - Approve or reject a withdrawal
+exports.processWithdrawal = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const { action, rejection_reason } = req.body; // action: 'approve' | 'reject' | 'paid'
+
+        const withdrawal = await Withdrawal.findByPk(id);
+        if (!withdrawal) {
+            throw HttpError(404, 'Withdrawal request not found');
+        }
+
+        if (withdrawal.status !== 'pending' && action !== 'paid') {
+            throw HttpError(400, 'Only pending withdrawals can be processed');
+        }
+
+        let newStatus;
+        if (action === 'approve') {
+            newStatus = 'approved';
+        } else if (action === 'reject') {
+            newStatus = 'rejected';
+        } else if (action === 'paid') {
+            newStatus = 'paid';
+        } else {
+            throw HttpError(400, 'Invalid action. Use: approve, reject, or paid');
+        }
+
+        // FK constraint auto-dropped on server startup in connect.js
+        await withdrawal.update({
+            status: newStatus,
+            rejection_reason: action === 'reject' ? rejection_reason : null,
+            processed_by: req.user.id,
+            processed_at: new Date()
+        });
+
+        const statusMessages = {
+            approved: 'Đã duyệt yêu cầu rút tiền',
+            rejected: 'Đã từ chối yêu cầu rút tiền',
+            paid: 'Đã xác nhận chuyển tiền thành công'
+        };
+
+        // Send notification to teacher
+        const { sendNotification } = require('./notificationController');
+        const notificationTitles = {
+            approved: '✅ Yêu cầu rút tiền đã được duyệt',
+            rejected: '❌ Yêu cầu rút tiền bị từ chối',
+            paid: '💰 Đã chuyển tiền thành công'
+        };
+        const notificationMessages = {
+            approved: `Yêu cầu rút ${new Intl.NumberFormat('vi-VN').format(withdrawal.amount)}₫ đã được duyệt. Vui lòng chờ thanh toán.`,
+            rejected: `Yêu cầu rút tiền bị từ chối. Lý do: ${rejection_reason || 'Không đạt yêu cầu'}`,
+            paid: `Đã chuyển ${new Intl.NumberFormat('vi-VN').format(withdrawal.amount)}₫ vào tài khoản ${withdrawal.bank_account}`
+        };
+        await sendNotification(withdrawal.teacher_id, {
+            title: notificationTitles[newStatus],
+            message: notificationMessages[newStatus],
+            type: newStatus === 'rejected' ? 'warning' : 'success',
+            category: 'system',
+            related_id: withdrawal.id,
+            related_type: 'withdrawal',
+            action_url: '/teacher/revenue'
+        }, req.user.id);
+
+        res.status(200).json({
+            success: true,
+            message: statusMessages[newStatus],
+            data: withdrawal
+        });
+    } catch (error) {
+        console.error('processWithdrawal error:', error);
         next(error);
     }
 };

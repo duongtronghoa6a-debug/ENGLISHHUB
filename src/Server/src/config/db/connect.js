@@ -74,6 +74,17 @@ const connect = async () => {
         const host = sequelize.config.host || 'Railway URL';
         console.log(`🔌 Đang kết nối tới: ${host}`);
 
+        // Auto-fix: Drop old FK constraint on withdrawals table if exists
+        try {
+            await sequelize.query(`
+                ALTER TABLE IF EXISTS withdrawals 
+                DROP CONSTRAINT IF EXISTS withdrawals_processed_by_fkey
+            `);
+            console.log('✅ Fixed: withdrawals FK constraint');
+        } catch (e) {
+            // Ignore if table doesn't exist yet
+        }
+
     } catch (error) {
         console.error('Kết nối thất bại:', error);
     }

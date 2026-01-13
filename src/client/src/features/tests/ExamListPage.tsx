@@ -24,12 +24,14 @@ const ExamListPage = () => {
     const navigate = useNavigate();
     const { isDarkMode } = useTheme();
     const { isAuthenticated } = useAuth();
-    const [pagination, setPagination] = useState({ page: 1, limit: 9, totalPages: 1 });
+    const [pagination, setPagination] = useState({ page: 1, limit: 9, totalPages: 1, total: 0 });
     const [loading, setLoading] = useState(true);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [searchInput, setSearchInput] = useState('');
 
     useEffect(() => {
         loadExams();
-    }, [pagination.page]);
+    }, [pagination.page, searchQuery]);
 
     useEffect(() => {
         if (isAuthenticated && activeTab === 'completed') {
@@ -40,21 +42,40 @@ const ExamListPage = () => {
     const loadExams = async () => {
         setLoading(true);
         try {
-            const res = await examService.getPublishedExams();
+            const res = await examService.getPublishedExams({
+                page: pagination.page,
+                limit: pagination.limit,
+                search: searchQuery || undefined
+            });
             if (res.success && res.data) {
-                const examList = res.data.rows || res.data.exams || (Array.isArray(res.data) ? res.data : []);
-                const total = res.data.count || res.data.total || examList.length;
+                const examList = res.data.rows || res.data || (Array.isArray(res.data) ? res.data : []);
                 setExams(examList);
-                setPagination(prev => ({
-                    ...prev,
-                    totalPages: Math.ceil(total / prev.limit) || 1
-                }));
+                if (res.pagination) {
+                    setPagination(prev => ({
+                        ...prev,
+                        total: res.pagination.total,
+                        totalPages: res.pagination.totalPages || 1
+                    }));
+                } else {
+                    const total = res.count || examList.length;
+                    setPagination(prev => ({
+                        ...prev,
+                        total,
+                        totalPages: Math.ceil(total / prev.limit) || 1
+                    }));
+                }
             }
         } catch (error) {
             console.error(error);
         } finally {
             setLoading(false);
         }
+    };
+
+    const handleSearch = (e: React.FormEvent) => {
+        e.preventDefault();
+        setSearchQuery(searchInput);
+        setPagination(prev => ({ ...prev, page: 1 })); // Reset to page 1 on new search
     };
 
     const loadCompletedExams = async () => {
@@ -107,16 +128,38 @@ const ExamListPage = () => {
             <div className="max-w-7xl mx-auto">
                 {/* Hero Header */}
                 <div className={`rounded-3xl p-8 mb-8 ${isDarkMode ? 'bg-gradient-to-r from-indigo-900/50 to-purple-900/50' : 'bg-gradient-to-r from-indigo-100 to-purple-100'}`}>
-                    <div className="flex items-center gap-4">
-                        <div className={`p-4 rounded-2xl ${isDarkMode ? 'bg-white/10' : 'bg-white shadow-lg'}`}>
-                            <FileText size={32} className="text-indigo-500" />
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                        <div className="flex items-center gap-4">
+                            <div className={`p-4 rounded-2xl ${isDarkMode ? 'bg-white/10' : 'bg-white shadow-lg'}`}>
+                                <FileText size={32} className="text-indigo-500" />
+                            </div>
+                            <div>
+                                <h1 className="text-3xl font-bold mb-1">Bài Kiểm Tra</h1>
+                                <p className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                                    Kiểm tra trình độ và luyện tập kỹ năng tiếng Anh • {pagination.total} đề thi
+                                </p>
+                            </div>
                         </div>
-                        <div>
-                            <h1 className="text-3xl font-bold mb-1">Bài Kiểm Tra</h1>
-                            <p className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                                Kiểm tra trình độ và luyện tập kỹ năng tiếng Anh • {exams.length} đề thi
-                            </p>
-                        </div>
+                        {/* Search Box */}
+                        <form onSubmit={handleSearch} className="flex gap-2">
+                            <input
+                                type="text"
+                                placeholder="Tìm bài kiểm tra..."
+                                value={searchInput}
+                                onChange={e => setSearchInput(e.target.value)}
+                                className={`px-4 py-2.5 rounded-xl min-w-[200px] transition-all ${isDarkMode
+                                    ? 'bg-white/10 text-white placeholder-gray-400 border border-white/10 focus:border-indigo-500'
+                                    : 'bg-white text-gray-900 border border-gray-200 focus:border-indigo-500 shadow'}`}
+                            />
+                            <button
+                                type="submit"
+                                className={`px-4 py-2.5 rounded-xl font-bold transition-all ${isDarkMode
+                                    ? 'bg-indigo-600 hover:bg-indigo-700 text-white'
+                                    : 'bg-indigo-600 hover:bg-indigo-700 text-white shadow'}`}
+                            >
+                                Tìm
+                            </button>
+                        </form>
                     </div>
                 </div>
 

@@ -7,6 +7,7 @@ export interface Question {
     type: 'multiple_choice' | 'fill_in_blank' | 'essay' | 'recording' | 'matching' | 'ordering';
     level: 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2';
     content_text: string;
+    content_url?: string;  // Audio/PDF attachment URL
     media_url?: string;
     media_type: 'none' | 'image' | 'audio' | 'video';
     options?: Record<string, string>;
@@ -60,8 +61,8 @@ export const examService = {
     },
 
     // Get published exams only
-    getPublishedExams: async () => {
-        const response = await api.get('/exams/published');
+    getPublishedExams: async (params?: { page?: number; limit?: number; search?: string }) => {
+        const response = await api.get('/exams/published', { params });
         return response.data;
     },
 

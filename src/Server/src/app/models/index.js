@@ -38,6 +38,7 @@ db.CartItem = require('./CartItem')(sequelize, Sequelize.DataTypes);
 db.Order = require('./Order')(sequelize, Sequelize.DataTypes);
 db.OrderItem = require('./OrderItem')(sequelize, Sequelize.DataTypes);
 db.Review = require('./Review')(sequelize, Sequelize.DataTypes);
+db.Withdrawal = require('./Withdrawal')(sequelize, Sequelize.DataTypes);
 
 // --- Gamification & Streak ---
 db.UserActivity = require('./UserActivity')(sequelize, Sequelize.DataTypes);

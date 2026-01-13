@@ -200,6 +200,29 @@ const sendMessage = async (req, res) => {
             ]
         });
 
+        const senderName = sender.learnerInfo?.full_name || sender.teacherInfo?.full_name || sender.email.split('@')[0];
+
+        // Send notification to other participants
+        const { sendNotification } = require('./notificationController');
+        const otherParticipants = await ConversationParticipant.findAll({
+            where: {
+                conversation_id: conversationId,
+                account_id: { [Op.ne]: accountId }
+            }
+        });
+
+        for (const p of otherParticipants) {
+            await sendNotification(p.account_id, {
+                title: `💬 Tin nhắn mới từ ${senderName}`,
+                message: content.length > 50 ? content.substring(0, 50) + '...' : content,
+                type: 'info',
+                category: 'message',
+                related_id: conversationId,
+                related_type: 'conversation',
+                action_url: `/chat/${conversationId}`
+            }, accountId);
+        }
+
         res.status(201).json({
             success: true,
             data: {
@@ -211,7 +234,7 @@ const sendMessage = async (req, res) => {
                 isOwn: true,
                 sender: {
                     id: sender.id,
-                    name: sender.learnerInfo?.full_name || sender.teacherInfo?.full_name || sender.email.split('@')[0],
+                    name: senderName,
                     avatar: sender.learnerInfo?.avatar_url || sender.teacherInfo?.avatar_url
                 }
             }

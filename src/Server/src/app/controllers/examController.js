@@ -54,28 +54,44 @@ exports.createExam = async (req, res, next) => {
     }
 };
 
-// 2. [GET] /exams - List all exams
+// 2. [GET] /exams - List exams (teachers see only their own, admin sees all)
 exports.getAllExams = async (req, res, next) => {
     try {
-        const { status, limit = 50, offset = 0 } = req.query;
+        const { status, page = 1, limit = 50, search } = req.query;
+        const offset = (parseInt(page) - 1) * parseInt(limit);
 
         const where = {};
         if (status) where.status = status;
 
-        const exams = await Exam.findAndCountAll({
+        // Teachers only see their own exams, admin sees all
+        if (req.user.role === 'teacher') {
+            where.creator_id = req.user.id;
+        }
+
+        if (search) {
+            where.title = { [Op.iLike]: `%${search}%` };
+        }
+
+        const { count, rows } = await Exam.findAndCountAll({
             where,
             include: [
                 { model: Account, as: 'creator', attributes: ['id', 'email'] }
             ],
             limit: parseInt(limit),
-            offset: parseInt(offset),
+            offset: offset,
             order: [['created_at', 'DESC']]
         });
 
         res.status(200).json({
             success: true,
-            count: exams.count,
-            data: exams.rows
+            count: count,
+            data: rows,
+            pagination: {
+                total: count,
+                page: parseInt(page),
+                limit: parseInt(limit),
+                totalPages: Math.ceil(count / parseInt(limit))
+            }
         });
 
     } catch (error) {
@@ -190,25 +206,40 @@ exports.deleteExam = async (req, res, next) => {
 // 6. [GET] /exams/published - Get published exams for learners
 exports.getPublishedExams = async (req, res, next) => {
     try {
-        const { limit = 50, offset = 0 } = req.query;
+        const { page = 1, limit = 9, search } = req.query;
+        const offset = (parseInt(page) - 1) * parseInt(limit);
+
+        const where = {
+            status: 'published',
+            approval_status: 'approved'  // Only show approved exams
+        };
+
+        // Add search filter if provided
+        if (search) {
+            const { Op } = require('sequelize');
+            where.title = { [Op.iLike]: `%${search}%` };
+        }
 
         const exams = await Exam.findAndCountAll({
-            where: {
-                status: 'published',
-                approval_status: 'approved'  // Only show approved exams
-            },
+            where,
             include: [
                 { model: Account, as: 'creator', attributes: ['id', 'email'] }
             ],
             limit: parseInt(limit),
-            offset: parseInt(offset),
+            offset: offset,
             order: [['created_at', 'DESC']]
         });
 
         res.status(200).json({
             success: true,
             count: exams.count,
-            data: exams.rows
+            data: exams.rows,
+            pagination: {
+                total: exams.count,
+                page: parseInt(page),
+                limit: parseInt(limit),
+                totalPages: Math.ceil(exams.count / parseInt(limit))
+            }
         });
 
     } catch (error) {

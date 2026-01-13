@@ -4,7 +4,7 @@
  */
 
 const db = require('../models');
-const { Course, Lesson, Teacher, Enrollment, Account, Order, OrderItem, OfflineClass, ClassEnrollment, Learner, Review, Module } = db;
+const { Course, Lesson, Teacher, Enrollment, Account, Order, OrderItem, OfflineClass, ClassEnrollment, Learner, Review, Module, Withdrawal } = db;
 const { Op } = require('sequelize');
 
 /**
@@ -1037,6 +1037,204 @@ const submitExamForReview = async (req, res) => {
     }
 };
 
+/**
+ * Get detailed revenue stats for teacher
+ * GET /api/v1/teacher/revenue-stats
+ */
+const getRevenueStats = async (req, res) => {
+    try {
+        const accountId = req.user.id;
+        const teacher = await Teacher.findOne({ where: { account_id: accountId } });
+
+        if (!teacher) {
+            return res.status(200).json({
+                success: true,
+                data: {
+                    totalRevenue: 0,
+                    withdrawnAmount: 0,
+                    pendingWithdrawal: 0,
+                    availableBalance: 0,
+                    monthlyRevenue: []
+                }
+            });
+        }
+
+        // Get all courses by teacher
+        const courses = await Course.findAll({
+            where: { teacher_id: teacher.id },
+            attributes: ['id']
+        });
+        const courseIds = courses.map(c => c.id);
+
+        // Calculate total revenue from completed orders
+        let totalRevenue = 0;
+        const monthlyRevenue = {};
+
+        if (courseIds.length > 0) {
+            const orderItems = await OrderItem.findAll({
+                where: { course_id: { [Op.in]: courseIds } },
+                include: [{
+                    model: Order,
+                    as: 'order',
+                    where: { status: 'completed' },
+                    attributes: ['created_at']
+                }]
+            });
+
+            orderItems.forEach(item => {
+                const price = parseFloat(item.price || 0);
+                totalRevenue += price;
+
+                if (item.order) {
+                    const date = new Date(item.order.created_at);
+                    const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+                    monthlyRevenue[monthKey] = (monthlyRevenue[monthKey] || 0) + price;
+                }
+            });
+        }
+
+        // Get withdrawal stats
+        const withdrawnAmount = await Withdrawal.sum('amount', {
+            where: {
+                teacher_id: teacher.id,
+                status: { [Op.in]: ['approved', 'paid'] }
+            }
+        }) || 0;
+
+        const pendingWithdrawal = await Withdrawal.sum('amount', {
+            where: {
+                teacher_id: teacher.id,
+                status: 'pending'
+            }
+        }) || 0;
+
+        const availableBalance = totalRevenue - withdrawnAmount - pendingWithdrawal;
+
+        // Format monthly revenue as array for charts
+        const monthlyRevenueArray = Object.entries(monthlyRevenue)
+            .map(([month, amount]) => ({ month, amount }))
+            .sort((a, b) => a.month.localeCompare(b.month))
+            .slice(-12); // Last 12 months
+
+        res.status(200).json({
+            success: true,
+            data: {
+                totalRevenue,
+                withdrawnAmount,
+                pendingWithdrawal,
+                availableBalance,
+                monthlyRevenue: monthlyRevenueArray
+            }
+        });
+    } catch (error) {
+        console.error('getRevenueStats error:', error);
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+/**
+ * Request a withdrawal
+ * POST /api/v1/teacher/withdrawals
+ */
+const requestWithdrawal = async (req, res) => {
+    try {
+        const accountId = req.user.id;
+        const { amount, bank_name, bank_account, bank_holder_name } = req.body;
+
+        const teacher = await Teacher.findOne({ where: { account_id: accountId } });
+        if (!teacher) {
+            return res.status(400).json({ success: false, message: 'Teacher profile not found' });
+        }
+
+        // Validate amount
+        if (!amount || amount <= 0) {
+            return res.status(400).json({ success: false, message: 'Số tiền rút phải lớn hơn 0' });
+        }
+
+        // Calculate available balance
+        const courses = await Course.findAll({
+            where: { teacher_id: teacher.id },
+            attributes: ['id']
+        });
+        const courseIds = courses.map(c => c.id);
+
+        let totalRevenue = 0;
+        if (courseIds.length > 0) {
+            const orderItems = await OrderItem.findAll({
+                where: { course_id: { [Op.in]: courseIds } },
+                include: [{
+                    model: Order,
+                    as: 'order',
+                    where: { status: 'completed' }
+                }]
+            });
+            orderItems.forEach(item => {
+                totalRevenue += parseFloat(item.price || 0);
+            });
+        }
+
+        const withdrawnAmount = await Withdrawal.sum('amount', {
+            where: {
+                teacher_id: teacher.id,
+                status: { [Op.in]: ['approved', 'paid', 'pending'] }
+            }
+        }) || 0;
+
+        const availableBalance = totalRevenue - withdrawnAmount;
+
+        if (amount > availableBalance) {
+            return res.status(400).json({
+                success: false,
+                message: `Số dư khả dụng không đủ. Bạn có thể rút tối đa ${availableBalance.toLocaleString('vi-VN')}đ`
+            });
+        }
+
+        // Create withdrawal request
+        const withdrawal = await Withdrawal.create({
+            teacher_id: teacher.id,
+            amount,
+            bank_name: bank_name || '',
+            bank_account: bank_account || '',
+            bank_holder_name: bank_holder_name || '',
+            status: 'pending'
+        });
+
+        res.status(201).json({
+            success: true,
+            message: 'Yêu cầu rút tiền đã được gửi, chờ admin xét duyệt',
+            data: withdrawal
+        });
+    } catch (error) {
+        console.error('requestWithdrawal error:', error);
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+/**
+ * Get withdrawal history
+ * GET /api/v1/teacher/withdrawals
+ */
+const getWithdrawals = async (req, res) => {
+    try {
+        const accountId = req.user.id;
+        const teacher = await Teacher.findOne({ where: { account_id: accountId } });
+
+        if (!teacher) {
+            return res.status(200).json({ success: true, data: [] });
+        }
+
+        const withdrawals = await Withdrawal.findAll({
+            where: { teacher_id: teacher.id },
+            order: [['created_at', 'DESC']]
+        });
+
+        res.status(200).json({ success: true, data: withdrawals });
+    } catch (error) {
+        console.error('getWithdrawals error:', error);
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
 module.exports = {
     getDashboardStats,
     getRecentActivity,
@@ -1057,5 +1255,8 @@ module.exports = {
     getCourseModules,
     createModule,
     updateModule,
-    deleteModule
+    deleteModule,
+    getRevenueStats,
+    requestWithdrawal,
+    getWithdrawals
 };

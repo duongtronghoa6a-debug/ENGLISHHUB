@@ -41,7 +41,9 @@ const LoginPage = () => {
         }
 
         try {
-            const data = await authService.login(email, password);
+            // Map frontend role ('student') to backend role ('learner')
+            const backendRole = role === 'student' ? 'learner' : role;
+            const data = await authService.login(email, password, backendRole);
             login(data); // data contains { token, user }
 
             // Redirect based on role

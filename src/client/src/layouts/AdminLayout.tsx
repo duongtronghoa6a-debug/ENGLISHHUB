@@ -14,7 +14,8 @@ import {
     Menu,
     Sun,
     Moon,
-    ClipboardList
+    ClipboardList,
+    DollarSign
 } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import { useAuth } from '../context/AuthContext';
@@ -44,6 +45,7 @@ const AdminLayout = () => {
         { path: '/admin/users', icon: Users, label: 'Quản lí người dùng' },
         { path: '/admin/courses', icon: BookOpen, label: 'Quản lí khóa học' },
         { path: '/admin/exams', icon: ClipboardList, label: 'Quản lí bài kiểm tra' },
+        { path: '/admin/withdrawals', icon: DollarSign, label: 'Quản lý rút tiền' },
         { path: '/admin/library', icon: Library, label: 'Thư viện nội dung' },
         { path: '/admin/stats', icon: BarChart2, label: 'Thống kê' },
         { path: '/admin/settings', icon: Settings, label: 'Cài đặt' },

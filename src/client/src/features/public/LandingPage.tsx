@@ -31,7 +31,6 @@ const LandingPage = () => {
         { icon: BookOpen, label: "Tài liệu\nTrả phí", path: "/documents/paid" },
         { icon: PlayCircle, label: "Khóa học\nOnline", path: "/courses" },
         { icon: User, label: "Quản lý\ntài khoản", path: "/profile" },
-        { icon: MessageSquare, label: "Tư vấn\nmiễn phí", path: "/speaking" },
     ];
 
     return (

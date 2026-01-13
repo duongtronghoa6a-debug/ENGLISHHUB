@@ -198,6 +198,18 @@ const approveEnrollment = async (req, res) => {
         // Increment current_enrolled count
         await enrollment.offlineClass.increment('current_enrolled');
 
+        // Send notification to learner
+        const { sendNotification } = require('./notificationController');
+        await sendNotification(enrollment.learner_account_id, {
+            title: '✅ Đã được duyệt tham gia lớp học!',
+            message: `Yêu cầu tham gia lớp "${offlineClass.class_name}" đã được chấp nhận. Hãy chuẩn bị đến lớp đúng giờ!`,
+            type: 'success',
+            category: 'enrollment',
+            related_id: enrollment.class_id,
+            related_type: 'offline_class',
+            action_url: '/my-classes'
+        }, accountId);
+
         res.status(200).json({
             success: true,
             message: 'Đã duyệt yêu cầu tham gia',
@@ -238,6 +250,18 @@ const rejectEnrollment = async (req, res) => {
             status: 'rejected',
             reviewed_at: new Date()
         });
+
+        // Send notification to learner
+        const { sendNotification } = require('./notificationController');
+        await sendNotification(enrollment.learner_account_id, {
+            title: '❌ Yêu cầu tham gia bị từ chối',
+            message: `Yêu cầu tham gia lớp "${enrollment.offlineClass.class_name}" đã bị từ chối.`,
+            type: 'warning',
+            category: 'enrollment',
+            related_id: enrollment.class_id,
+            related_type: 'offline_class',
+            action_url: '/offline-classes'
+        }, accountId);
 
         res.status(200).json({
             success: true,
