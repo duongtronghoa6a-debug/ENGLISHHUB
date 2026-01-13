@@ -393,6 +393,14 @@ exports.deleteCourse = async (req, res, next) => {
             throw HttpError(404, 'Course not found');
         }
 
+        // TEMPORARY: Comment out for demo cleanup - will revert after
+        // // Check if course has been ordered (OrderItem)
+        // const orderCount = await db.OrderItem.count({ where: { course_id: id } });
+        // if (orderCount > 0) {
+        //     await t.rollback();
+        //     throw HttpError(400, 'Cannot delete course that has been ordered. Please archive it instead.');
+        // }
+
         // Get lesson IDs for this course
         const lessons = await db.Lesson.findAll({ where: { course_id: id }, attributes: ['id'], transaction: t });
         const lessonIds = lessons.map(l => l.id);
@@ -415,13 +423,13 @@ exports.deleteCourse = async (req, res, next) => {
         // Note: Exams are NOT linked to courses via course_id - they are standalone entities
         // So we don't need to delete exams when deleting a course
 
-        // Now delete direct dependencies (including OrderItem for hard delete)
+        // Now delete direct dependencies (TEMPORARY: including OrderItem for demo cleanup)
         await Promise.all([
             db.Lesson.destroy({ where: { course_id: id }, transaction: t }),
             db.Enrollment.destroy({ where: { course_id: id }, transaction: t }),
             db.Review.destroy({ where: { course_id: id }, transaction: t }),
             db.CartItem.destroy({ where: { course_id: id }, transaction: t }),
-            db.OrderItem.destroy({ where: { course_id: id }, transaction: t })
+            db.OrderItem.destroy({ where: { course_id: id }, transaction: t })  // TEMPORARY
         ]);
 
         // Delete Modules
