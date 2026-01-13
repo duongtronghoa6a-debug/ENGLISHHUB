@@ -382,17 +382,45 @@ exports.updateCourse = async (req, res, next) => {
 
 // 10. [DELETE] /admin/courses/:id - Delete course
 exports.deleteCourse = async (req, res, next) => {
+    let t;
     try {
+        t = await db.sequelize.transaction();
         const { id } = req.params;
 
         const course = await Course.findByPk(id);
         if (!course) {
+            await t.rollback();
             throw HttpError(404, 'Course not found');
         }
 
-        await course.destroy();
-        res.status(200).json({ success: true, message: 'Course deleted' });
+        // Check if course has been ordered (OrderItem)
+        const orderCount = await db.OrderItem.count({ where: { course_id: id } });
+        if (orderCount > 0) {
+            await t.rollback();
+            throw HttpError(400, 'Cannot delete course that has been ordered. Please archive it instead.');
+        }
+
+        // Delete dependencies (Lessons, Enrollments, Reviews, Exams, CartItems)
+        await Promise.all([
+            // Lessons should be deleted before Modules (if constrained), or parallel if not.
+            // Safest to delete lessons first.
+            db.Lesson.destroy({ where: { course_id: id }, transaction: t }),
+            db.Enrollment.destroy({ where: { course_id: id }, transaction: t }),
+            db.Review.destroy({ where: { course_id: id }, transaction: t }),
+            db.Exam.destroy({ where: { course_id: id }, transaction: t }),
+            db.CartItem.destroy({ where: { course_id: id }, transaction: t })
+        ]);
+
+        // Delete Modules
+        await db.Module.destroy({ where: { course_id: id }, transaction: t });
+
+        // Finally delete the course
+        await course.destroy({ transaction: t });
+
+        await t.commit();
+        res.status(200).json({ success: true, message: 'Course and specific related data deleted successfully' });
     } catch (error) {
+        if (t) await t.rollback();
         next(error);
     }
 };
