@@ -419,29 +419,14 @@ exports.deleteCourse = async (req, res, next) => {
             await db.LearningProgress.destroy({ where: { enrollment_id: enrollmentIds }, transaction: t });
         }
 
-        // Get exam IDs for this course
-        const exams = await db.Exam.findAll({ where: { course_id: id }, attributes: ['id'], transaction: t });
-        const examIds = exams.map(ex => ex.id);
-
-        if (examIds.length > 0) {
-            // Get ExamSubmission IDs
-            const submissions = await db.ExamSubmission.findAll({ where: { exam_id: examIds }, attributes: ['id'], transaction: t });
-            const submissionIds = submissions.map(s => s.id);
-
-            // Delete SubmissionAnswer first
-            if (submissionIds.length > 0) {
-                await db.SubmissionAnswer.destroy({ where: { submission_id: submissionIds }, transaction: t });
-            }
-            // Delete ExamSubmission
-            await db.ExamSubmission.destroy({ where: { exam_id: examIds }, transaction: t });
-        }
+        // Note: Exams are NOT linked to courses via course_id - they are standalone entities
+        // So we don't need to delete exams when deleting a course
 
         // Now delete direct dependencies
         await Promise.all([
             db.Lesson.destroy({ where: { course_id: id }, transaction: t }),
             db.Enrollment.destroy({ where: { course_id: id }, transaction: t }),
             db.Review.destroy({ where: { course_id: id }, transaction: t }),
-            db.Exam.destroy({ where: { course_id: id }, transaction: t }),
             db.CartItem.destroy({ where: { course_id: id }, transaction: t })
         ]);
 

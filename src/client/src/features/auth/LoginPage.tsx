@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { Eye, ArrowLeft, EyeOff } from 'lucide-react';
 import logo from '../../assets/logo.png';
 import { useTheme } from '../../context/ThemeContext';
@@ -143,7 +143,7 @@ const LoginPage = () => {
                     <div className="space-y-2">
                         <div className="flex justify-between">
                             <label className={`font-medium text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Password</label>
-                            <a href="#" className="text-blue-500 text-sm hover:underline">Forgot Password?</a>
+                            <Link to="/forgot-password" className="text-blue-500 text-sm hover:underline">Quên mật khẩu?</Link>
                         </div>
                         <div className="relative">
                             <input
