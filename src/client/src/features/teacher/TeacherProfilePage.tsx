@@ -196,7 +196,7 @@ const TeacherProfilePage = () => {
                                 {stats.thisMonthRevenue >= stats.lastMonthRevenue ? '+' : ''}
                                 {Math.round(((stats.thisMonthRevenue - stats.lastMonthRevenue) / stats.lastMonthRevenue) * 100)}% so với tháng trước
                             </div>
-                        ) : stats?.thisMonthRevenue > 0 ? (
+                        ) : (stats?.thisMonthRevenue ?? 0) > 0 ? (
                             <div className="text-sm text-emerald-500 mt-2">Tháng đầu có doanh thu!</div>
                         ) : null}
                     </div>
